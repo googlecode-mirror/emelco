@@ -1,6 +1,9 @@
 =  Changelog   =
+
+
 ==  1.0b1==
-{{{   [!] Arreglados varios bugs
+{{{
+   [!] Arreglados varios bugs
    [+] Agregados comentarios
    [+] chmod, chgrp y chown
    [+] Mejorada la función shell()
@@ -10,9 +13,11 @@
    [+] mas datos en w=info
    [!] Los links en los créditos no tienen referer
    [+] Elimina archivos también con comandos, sin usar unlink y rmdir
-   [+] Si no hay permisos para leer o escribir archivos, intenta cambiarlos}}}
+   [+] Si no hay permisos para leer o escribir archivos, intenta cambiarlos
+}}}
 ==  1.0a2==
-{{{   [+] Creditos
+{{{
+   [+] Creditos
    [+] Descarga de archivos
    [!] leerarchivo() comprueba que $ruta no sea un directorio
    [!] Cambios de apariencia en el phpinfo
@@ -24,6 +29,9 @@
    [+] Ejecutar codigo php
    [!] Los input estan mas parejos 
    [+] Nuevo mailer
-   [+] Muestra mas información }}}
+   [+] Muestra mas información 
+}}}
 ==  1.0a1==
-{{{   [+] Primera version}}}
+{{{
+   [+] Primera version
+}}}
