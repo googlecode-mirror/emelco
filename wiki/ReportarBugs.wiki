@@ -1,0 +1,19 @@
+#summary Como reportar bugs correctamente
+#labels Featured
+
+= Introducción =
+
+En el caso de que encuentres un bug, seguí estas instrucciones para reportarlo y que sea facil arreglarlo. Si no podes seguir todos estos pasos pedí ayuda o hace lo que puedas, un bug reportado con poca información es mejor que un bug desconocido.
+
+
+= Detalles =
+
+ # Asegurate de estar usando la ultima versión (disponible [http://code.google.com/p/emelco/downloads/list acá])
+ # Asegurate de que nadie haya reportado el mismo bug antes usando el [http://code.google.com/p/emelco/issues/list?can=1&q=&cells=tiles buscador]
+ # Andá a http://code.google.com/p/emelco/issues/entry
+ # Explicá el problema y como reproducirlo.
+ # Incluí información sobre la versión de php que estás usando
+ # Adjuntá un screenshot o el html (Archivo-> Guardar página como...) de la página que da el error
+ # Abrí el php de la shell y eliminá la línea que dice _error_reporting(0); //final_
+ # Adjuntá un screenshot o el html (Archivo-> Guardar página como...) de la página que da el error (Ahora deberian salir advertencias de php)
+ # Agregá cualquier otro dato que te paresca útil y enviá el reporte
