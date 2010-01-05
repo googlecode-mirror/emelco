@@ -1,0 +1,29 @@
+=  Changelog   =
+==  1.0b1==
+   [!] Arreglados varios bugs
+   [+] Agregados comentarios
+   [+] chmod, chgrp y chown
+   [+] Mejorada la función shell()
+   [+] Se puede poner clave
+   [+] Mejorada la función leerarchivo()
+   [+] Sin tiempo máximo de ejecución
+   [+] mas datos en w=info
+   [!] Los links en los créditos no tienen referer
+   [+] Elimina archivos también con comandos, sin usar unlink y rmdir
+   [+] Si no hay permisos para leer o escribir archivos, intenta cambiarlos
+==  1.0a2==
+   [+] Creditos
+   [+] Descarga de archivos
+   [!] leerarchivo() comprueba que $ruta no sea un directorio
+   [!] Cambios de apariencia en el phpinfo
+   [+] Eliminar archivos desde el navegador
+   [+] Mas iconos
+   [+] Bordes de colores en los textbox e input
+   [+] Ahora se pueden crear archivos y directorios desde el navegador
+   [+] Ahora se pueden subir archivos
+   [+] Ejecutar codigo php
+   [!] Los input estan mas parejos 
+   [+] Nuevo mailer
+   [+] Muestra mas información 
+==  1.0a1==
+   [+] Primera version
