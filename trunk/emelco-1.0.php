@@ -63,6 +63,7 @@
    [+] DDoS ?
    [+] Poner todas las imágenes en un solo archivo y mostrarlas con css para ahorrar peticiones
    [+] Usar ajax
+   [!] Evitar que de un error fatal al llamar a funciones no existentes (pasa con versiones viejas de php)
  
 */
 
