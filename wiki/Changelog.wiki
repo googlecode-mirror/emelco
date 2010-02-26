@@ -1,5 +1,15 @@
 #summary Changelog
+#labels Featured
 
+==  1.0==
+{{{
+   [!] Arreglado un loop infinito en shellpopen() que se producia cuando no se podia ejecutar el comando por safe_mode
+   [!] No se muestran los resultados vacios de la ejecución de comandos en ?w=info
+   [!] Mejorada la lectura de archivos con readfile() y file()
+   [!] Ya no se muestra la contraseña al ingresarla
+   [!] Arreglado bug que saltaba cuando output_buffering era distinto a Off
+   [!] Se eliminó un input del editor de archivos, ahora es mas facil de usar
+}}}
 ==  1.0b1==
 {{{
    [!] Arreglados varios bugs
