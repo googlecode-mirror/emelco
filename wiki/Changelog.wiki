@@ -1,6 +1,12 @@
 #summary Changelog
 #labels Featured
 
+==  1.1==
+{{{
+   [!] No se frena al encontrar funciones no existentes (Compatible con PHP 4.2)
+   [+] Te avisa cuando no cambiaste la contraseña
+   [!] Sirve para RFI y LFI
+}}}
 ==  1.0==
 {{{
    [!] Arreglado un loop infinito en shellpopen() que se producia cuando no se podia ejecutar el comando por safe_mode
