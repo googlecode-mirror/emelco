@@ -1,6 +1,17 @@
 #summary Changelog
 #labels Featured
 
+==  1.2==
+{{{
+    [+] Explota un bug con ini_restore para saltearse safe_mode y open_basedir PHP <= 5.1.6 / 4.4.4
+    [!] Cambió el orden de los error_reporting para que sea mas facil debuggear
+    [!] Intenta modificar memory_limit
+    [!] Al listar archivos los va mostrando de a uno, para no llegar al limite de memoria (funciona bien con los 8mb default)
+    [!] Las lineas del textarea de w=shell se acomodan a las lineas de la salida del comando
+    [!] Arreglado un bug en archivosdeusuarios(), que hacia que devuelva solo una ubicacion
+    [+] Agregado "<whereis ruby" y corregido .htacces por .htaccess en w=info
+}}}
+
 ==  1.1==
 {{{
    [!] No se frena al encontrar funciones no existentes (Compatible con PHP 4.2)
