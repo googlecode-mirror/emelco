@@ -7,6 +7,8 @@
 [http://xd-blog.com.ar/emelco/screens/emelco12.jpeg?link=true http://xd-blog.com.ar/emelco/screens/thumbnails/small-emelco12.jpeg]
 [http://xd-blog.com.ar/emelco/screens/emelco13.jpeg?link=true http://xd-blog.com.ar/emelco/screens/thumbnails/small-emelco13.jpeg]
 
+[http://xd-blog.com.ar/emelco/screens/emelco14.jpeg?link=true http://xd-blog.com.ar/emelco/screens/thumbnails/small-emelco14.jpeg]
+
 == Versión 1.2 ==
 --
 == Versión 1.1 ==
