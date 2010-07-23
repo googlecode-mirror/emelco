@@ -1,6 +1,23 @@
 #summary Changelog
 #labels Featured
 
+==  1.3==
+{{{
+    [!] Si phpinfo() está desactivado, da un error en w=phpinfo
+    [+] Muestra los modulos cargados en w=info
+    [!] Solucionado un error muy chico en w=editar, que mostraba todo seguido sin un salto de linea
+    [!] Si en w=editar se envia el formulario con enter, se vuelve a mostrar el mismo texto pero no se guarda nada. Antes era como apretar guardar
+    [+] Al subir archivos, ahora intenta usar move_uploaded_file(), leerarchivo() y escribirarchivo()
+    [+] leerarchivo() ahora llama a cat "$archivo"
+    [+] Muestra un div lateral con información importante
+    [+] Agregada shell de conexion inversa
+    [+] Agregados los links del menu en una linea abajo
+    [+] Muestra el tamaño de los archivos en el navegador
+    [+] La función shell() usa proc_open() y pcntl_exec()
+    [!] Optimizada la función guardar()
+    [+] El navegador de archivos permite copiar y mover archivos/directorios
+    [!] Las comillas dobles que estaban de mas, ahora son simples
+}}}
 ==  1.2==
 {{{
     [+] Explota un bug con ini_restore para saltearse safe_mode y open_basedir PHP <= 5.1.6 / 4.4.4
