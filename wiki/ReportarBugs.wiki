@@ -2,7 +2,7 @@
 #labels Featured
 
 = Aclaración =
-/Esto no tiene nada que ver con google. No reportes bugs en chrome, google translator o cualquier otro producto de google porque vas a ser ignorado./
+_Esto no tiene nada que ver con google. No reportes bugs en chrome, google translator o cualquier otro producto de google porque vas a ser ignorado._
 
 = Introducción =
 
