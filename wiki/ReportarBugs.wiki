@@ -1,6 +1,9 @@
 #summary Como reportar bugs correctamente
 #labels Featured
 
+= Aclaración =
+/Esto no tiene nada que ver con google. No reportes bugs en chrome, google translator o cualquier otro producto de google porque vas a ser ignorado./
+
 = Introducción =
 
 En el caso de que encuentres un bug, seguí estas instrucciones para reportarlo y que sea facil arreglarlo. Si no podes seguir todos estos pasos pedí ayuda o hace lo que puedas, un bug reportado con poca información es mejor que un bug desconocido.
